@@ -1,0 +1,21 @@
+__pycache__/
+*.py[cod]
+.venv/
+.mypy_cache/
+.ruff_cache/
+.pytest_cache/
+build/
+dist/
+*.egg-info/
+.coverage
+htmlcov/
+
+# Build outputs
+locales/*/LC_MESSAGES/*.mo
+spikes/s3_lilypond/*.pdf
+
+# OS / editors
+.DS_Store
+.idea/
+.vscode/
+locales/en_XA/
