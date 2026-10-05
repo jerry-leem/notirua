@@ -1,0 +1,473 @@
+# Translations template for Notirua.
+# Copyright (C) 2026 Notirua contributors
+# This file is distributed under the same license as the Notirua project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Notirua 0.1\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2026-10-06 03:18+0900\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.18.0\n"
+
+#, python-brace-format
+msgid "A required component is not installed: {name}."
+msgstr ""
+
+msgid "Agree to the component licenses without asking."
+msgstr ""
+
+msgid "Agree to the licenses and install? [y/N] "
+msgstr ""
+
+msgid "All components are installed."
+msgstr ""
+
+msgid "Also save MIDI."
+msgstr ""
+
+msgid "Also save MusicXML."
+msgstr ""
+
+msgid "Arranging staves and tablature"
+msgstr ""
+
+msgid "Audio or video file to read."
+msgstr ""
+
+msgid "Audio track number when the file has several."
+msgstr ""
+
+msgid "Bass"
+msgstr ""
+
+msgid "Beats per minute, if detection is wrong."
+msgstr ""
+
+msgid "Cancelled."
+msgstr ""
+
+msgid "Cannot write to the install location."
+msgstr ""
+
+msgid "Check that the file plays in another app, or convert it to WAV or MP3."
+msgstr ""
+
+msgid "Check your internet connection and try again."
+msgstr ""
+
+msgid "Choose a file that contains sound."
+msgstr ""
+
+msgid "Choose a folder you can write to."
+msgstr ""
+
+#, python-brace-format
+msgid "Choose a section of {limit} minutes or less."
+msgstr ""
+
+msgid "Choose which audio track to use."
+msgstr ""
+
+#, python-brace-format
+msgid "Components installed in {seconds} s."
+msgstr ""
+
+msgid "Delete all saved intermediate results."
+msgstr ""
+
+#, python-brace-format
+msgid "Disk space needed: {size}"
+msgstr ""
+
+msgid "Do not make one PDF per instrument."
+msgstr ""
+
+msgid "Do not make the all-instruments PDF."
+msgstr ""
+
+#, python-brace-format
+msgid "Done in {seconds} s: {count}."
+msgstr ""
+
+msgid "Downloading components needs your permission first."
+msgstr ""
+
+#, python-brace-format
+msgid "Downloading {name}"
+msgstr ""
+
+#, python-brace-format
+msgid "Downloading {name}: {received} of {total}"
+msgstr ""
+
+msgid "Drawing the score took too long and was stopped."
+msgstr ""
+
+msgid "Drawing the sheet music"
+msgstr ""
+
+#, python-brace-format
+msgid "Drawing {instrument} sheet music ({index}/{count})"
+msgstr ""
+
+msgid "Draws the finished sheet music and saves it as PDF."
+msgstr ""
+
+msgid "Drum sheet music is for reference only."
+msgstr ""
+
+msgid "Drums"
+msgstr ""
+
+msgid "End time in seconds."
+msgstr ""
+
+#, python-brace-format
+msgid "Error code: {code}"
+msgstr ""
+
+#, python-brace-format
+msgid "Error: {message}"
+msgstr ""
+
+#, python-brace-format
+msgid "File not found: {path}"
+msgstr ""
+
+msgid "Finding the beat, tempo, and key"
+msgstr ""
+
+msgid "Fitting notes to the beat"
+msgstr ""
+
+msgid "Folder for the results."
+msgstr ""
+
+msgid "For example 4/4 or 3/4."
+msgstr ""
+
+#, python-brace-format
+msgid "Free space: {size}"
+msgstr ""
+
+msgid "Free up disk space or choose another install location."
+msgstr ""
+
+#, python-brace-format
+msgid "Freed {size}."
+msgstr ""
+
+msgid "Guitar"
+msgstr ""
+
+msgid "Install from a component bundle file (no internet)."
+msgstr ""
+
+msgid "Install location."
+msgstr ""
+
+#, python-brace-format
+msgid "Install location: {path}"
+msgstr ""
+
+msgid "Install the components Notirua needs."
+msgstr ""
+
+msgid "Installed from the bundle file."
+msgstr ""
+
+#, python-brace-format
+msgid "Installing {name}"
+msgstr ""
+
+msgid "Instrument separation model"
+msgstr ""
+
+#, python-brace-format
+msgid "Instruments to include, comma separated: {choices}."
+msgstr ""
+
+msgid "Interface language, for example en or ko."
+msgstr ""
+
+msgid "Key, if detection is wrong, for example \"D minor\"."
+msgstr ""
+
+msgid "Language for labels inside the PDF."
+msgstr ""
+
+#, python-brace-format
+msgid "License: {license} ({url})"
+msgstr ""
+
+msgid "List available languages."
+msgstr ""
+
+msgid "Listening for notes"
+msgstr ""
+
+#, python-brace-format
+msgid "Listening for {instrument} notes ({index}/{count})"
+msgstr ""
+
+msgid "Make sheet music from an audio file."
+msgstr ""
+
+msgid "Move the first beat by N beats."
+msgstr ""
+
+msgid "Moved down one octave to fit the instrument."
+msgstr ""
+
+msgid "Moved up one octave to fit the instrument."
+msgstr ""
+
+msgid "No sound"
+msgstr ""
+
+#, python-brace-format
+msgid "Not enough disk space: {needed} needed, {available} available."
+msgstr ""
+
+msgid "Not selected"
+msgstr ""
+
+#, python-brace-format
+msgid "Note: {message}"
+msgstr ""
+
+msgid "Nothing was downloaded. Run “notirua setup” again any time."
+msgstr ""
+
+msgid "Notirua needs to download these components:"
+msgstr ""
+
+msgid "Open setup and install the required components."
+msgstr ""
+
+msgid "Open the log folder for details and report the problem."
+msgstr ""
+
+msgid "Other"
+msgstr ""
+
+msgid "Paper size."
+msgstr ""
+
+msgid "Piano"
+msgstr ""
+
+msgid "Reading the audio file"
+msgstr ""
+
+msgid "Remove an installed component."
+msgstr ""
+
+#, python-brace-format
+msgid "Removed {name}."
+msgstr ""
+
+msgid "Reusing earlier results"
+msgstr ""
+
+msgid "Review the components and choose “Agree and install”."
+msgstr ""
+
+msgid "Run again with --accept-licenses to agree without a prompt."
+msgstr ""
+
+msgid "Run “notirua setup” first."
+msgstr ""
+
+#, python-brace-format
+msgid "Saved intermediate results: {size} in {path}"
+msgstr ""
+
+msgid "Saving files"
+msgstr ""
+
+msgid "Score engraver (LilyPond)"
+msgstr ""
+
+msgid "Semitones to move, -12 to +12."
+msgstr ""
+
+msgid "Show detailed log output."
+msgstr ""
+
+msgid "Show installed components."
+msgstr ""
+
+msgid "Show notation, tablature, or both."
+msgstr ""
+
+msgid "Show or clear saved intermediate results."
+msgstr ""
+
+#, python-brace-format
+msgid "Size: {size}"
+msgstr ""
+
+#, python-brace-format
+msgid "Skipped {instrument}: {reason}"
+msgstr ""
+
+#, python-brace-format
+msgid "Some components are not installed yet: {names}"
+msgstr ""
+
+msgid "Some notes that cannot be played together were left out."
+msgstr ""
+
+msgid "Something went wrong."
+msgstr ""
+
+msgid "Song title printed on every page."
+msgstr ""
+
+#, python-brace-format
+msgid "Source: {domain}"
+msgstr ""
+
+msgid "Splits a song into vocals, drums, bass, guitar, piano, and other sounds."
+msgstr ""
+
+msgid "Splitting the song into instruments"
+msgstr ""
+
+msgid "Start it again whenever you are ready."
+msgstr ""
+
+msgid "Start time in seconds."
+msgstr ""
+
+#, python-brace-format
+msgid "The audio is longer than {limit} minutes."
+msgstr ""
+
+msgid "The download failed."
+msgstr ""
+
+msgid "The downloaded file is damaged (checksum mismatch)."
+msgstr ""
+
+msgid "The file appears to be damaged."
+msgstr ""
+
+msgid "The file could not be read as audio."
+msgstr ""
+
+msgid "The file has no audio track."
+msgstr ""
+
+#, python-brace-format
+msgid "The file has {count} audio tracks."
+msgstr ""
+
+msgid "The file is copy-protected (DRM) and cannot be opened."
+msgstr ""
+
+msgid ""
+"The internet is used only for this download. Notirua works offline "
+"afterwards."
+msgstr ""
+
+msgid "The score could not be drawn."
+msgstr ""
+
+msgid "The task was cancelled."
+msgstr ""
+
+msgid "There is not enough disk space."
+msgstr ""
+
+#, python-brace-format
+msgid "Total download: {size}"
+msgstr ""
+
+msgid "Transpose must be between -12 and +12."
+msgstr ""
+
+msgid "Transpose to this key, for example \"G major\"."
+msgstr ""
+
+msgid "Try a different copy of the file."
+msgstr ""
+
+msgid "Try again. If the problem continues, open the log folder and report it."
+msgstr ""
+
+msgid "Try again. The damaged file has been removed."
+msgstr ""
+
+msgid "Try fewer instruments or a shorter section."
+msgstr ""
+
+msgid "Turn a song into sheet music and tablature PDFs."
+msgstr ""
+
+#, python-brace-format
+msgid "Unknown instrument: {name}"
+msgstr ""
+
+msgid "Use a file without copy protection."
+msgstr ""
+
+msgid "Vocals"
+msgstr ""
+
+#, python-brace-format
+msgid "What to do: {hint}"
+msgstr ""
+
+#, python-brace-format
+msgid "about {time} left"
+msgstr ""
+
+msgid "command"
+msgstr ""
+
+msgid "installed"
+msgstr ""
+
+msgid "not installed"
+msgstr ""
+
+msgid "standard, drop_d, half_down, or MIDI numbers."
+msgstr ""
+
+msgid "standard, five_string, drop_d, half_down, or MIDI numbers."
+msgstr ""
+
+msgid "y"
+msgstr ""
+
+msgid "yes"
+msgstr ""
+
+#, python-brace-format
+msgid "{n} file"
+msgid_plural "{n} files"
+msgstr[0] ""
+msgstr[1] ""
+
+#, python-brace-format
+msgid "{tonic} major"
+msgstr ""
+
+#, python-brace-format
+msgid "{tonic} minor"
+msgstr ""
+
+#, python-brace-format
+msgid "♩ = {bpm} · {key}"
+msgstr ""
+
