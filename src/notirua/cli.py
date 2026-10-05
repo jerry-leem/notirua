@@ -1,0 +1,404 @@
+"""Command-line interface. Mirrors the GUI features by calling :mod:`notirua.core.pipeline`."""
+
+from __future__ import annotations
+
+import argparse
+import shutil
+import sys
+import time
+from collections.abc import Sequence
+from pathlib import Path
+from typing import TextIO
+
+from notirua import settings as settings_mod
+from notirua.core.errors import Cancelled, NotiruaError
+from notirua.core.model import STEMS
+from notirua.core.progress import CancelToken, ProgressEvent
+from notirua.i18n import _, available_languages, ngettext, resolve_language, set_language
+from notirua.i18n import translate_message as tm
+
+EXIT_OK, EXIT_ERROR, EXIT_USAGE, EXIT_CANCELLED, EXIT_SETUP = 0, 1, 2, 130, 3
+
+STATE_LABELS = {
+    "pending": "·",
+    "running": "▶",
+    "done": "✓",
+    "skipped": "–",
+    "failed": "✗",
+}
+
+
+def _format_eta(seconds: float | None) -> str:
+    if seconds is None:
+        return ""
+    seconds = int(seconds)
+    return f"{seconds // 60}:{seconds % 60:02d}"
+
+
+class ProgressPrinter:
+    """A redrawn progress bar on terminals; plain line logs otherwise (FR-11)."""
+
+    def __init__(self, stream: TextIO = sys.stderr) -> None:
+        self.stream = stream
+        self.tty = stream.isatty()
+        self._last_line = ""
+        self._last_stage_state: tuple[str, str] | None = None
+        self._last_logged = -1.0
+
+    def __call__(self, event: ProgressEvent) -> None:
+        message = tm(event.message_id, _translated_args(event.message_args))
+        pct = int(event.overall_fraction * 100)
+        if self.tty:
+            width = max(10, min(30, shutil.get_terminal_size((80, 20)).columns - 50))
+            filled = int(width * event.overall_fraction)
+            bar = "█" * filled + "░" * (width - filled)
+            eta = _format_eta(event.eta_seconds)
+            eta_text = " " + _("about {time} left").format(time=eta) if eta else ""
+            line = f"\r{bar} {pct:3d}% {message}{eta_text}"
+            pad = max(0, len(self._last_line) - len(line))
+            self.stream.write(line + " " * pad)
+            self._last_line = line
+            if event.stage_state in ("done", "failed", "skipped"):
+                self.stream.write(
+                    f"\r{STATE_LABELS[event.stage_state]} {message}"
+                    + " " * max(0, len(line) - len(message))
+                    + "\n"
+                )
+                self._last_line = ""
+            self.stream.flush()
+            return
+        key = (event.stage, event.stage_state)
+        if key != self._last_stage_state or pct - self._last_logged >= 10:
+            self.stream.write(f"[{pct:3d}%] {STATE_LABELS[event.stage_state]} {message}\n")
+            self.stream.flush()
+            self._last_stage_state = key
+            self._last_logged = pct
+
+
+def _translated_args(args: dict[str, object]) -> dict[str, object]:
+    # Instrument and component names inside events are message ids too.
+    return {k: (_(v) if isinstance(v, str) else v) for k, v in args.items()}
+
+
+def _print_error(exc: NotiruaError) -> None:
+    print(_("Error: {message}").format(message=exc.user_message()), file=sys.stderr)
+    print(_("What to do: {hint}").format(hint=exc.user_hint()), file=sys.stderr)
+    print(_("Error code: {code}").format(code=exc.code), file=sys.stderr)
+
+
+def build_parser() -> argparse.ArgumentParser:
+    parser = argparse.ArgumentParser(
+        prog="notirua",
+        description=_("Turn a song into sheet music and tablature PDFs."),
+    )
+    parser.add_argument("--lang", help=_("Interface language, for example en or ko."))
+    parser.add_argument("-v", "--verbose", action="store_true", help=_("Show detailed log output."))
+    sub = parser.add_subparsers(dest="command", metavar=_("command"))
+
+    t = sub.add_parser("transcribe", help=_("Make sheet music from an audio file."))
+    t.add_argument("file", type=Path, help=_("Audio or video file to read."))
+    t.add_argument("--out", type=Path, default=Path("."), help=_("Folder for the results."))
+    t.add_argument("--title", help=_("Song title printed on every page."))
+    t.add_argument(
+        "--stems",
+        help=_("Instruments to include, comma separated: {choices}.").format(
+            choices=",".join(STEMS)
+        ),
+    )
+    t.add_argument("--transpose", type=int, default=0, help=_("Semitones to move, -12 to +12."))
+    t.add_argument("--to-key", help=_('Transpose to this key, for example "G major".'))
+    t.add_argument("--paper", choices=["a4", "letter"], help=_("Paper size."))
+    t.add_argument("--pdf-lang", help=_("Language for labels inside the PDF."))
+    t.add_argument(
+        "--guitar-tuning", default=None, help=_("standard, drop_d, half_down, or MIDI numbers.")
+    )
+    t.add_argument(
+        "--bass-tuning",
+        default=None,
+        help=_("standard, five_string, drop_d, half_down, or MIDI numbers."),
+    )
+    t.add_argument("--time-signature", help=_("For example 4/4 or 3/4."))
+    t.add_argument("--tempo", type=float, help=_("Beats per minute, if detection is wrong."))
+    t.add_argument("--key", help=_('Key, if detection is wrong, for example "D minor".'))
+    t.add_argument(
+        "--shift-downbeat", type=int, default=0, help=_("Move the first beat by N beats.")
+    )
+    t.add_argument(
+        "--tab",
+        choices=["both", "tab", "staff"],
+        default="both",
+        help=_("Show notation, tablature, or both."),
+    )
+    t.add_argument(
+        "--no-combined", action="store_true", help=_("Do not make the all-instruments PDF.")
+    )
+    t.add_argument(
+        "--no-separate-pdfs", action="store_true", help=_("Do not make one PDF per instrument.")
+    )
+    t.add_argument("--musicxml", action="store_true", help=_("Also save MusicXML."))
+    t.add_argument("--midi", action="store_true", help=_("Also save MIDI."))
+    t.add_argument("--track", type=int, help=_("Audio track number when the file has several."))
+    t.add_argument("--start", type=float, help=_("Start time in seconds."))
+    t.add_argument("--end", type=float, help=_("End time in seconds."))
+
+    s = sub.add_parser("setup", help=_("Install the components Notirua needs."))
+    s.add_argument(
+        "--accept-licenses",
+        action="store_true",
+        help=_("Agree to the component licenses without asking."),
+    )
+    s.add_argument(
+        "--bundle", type=Path, help=_("Install from a component bundle file (no internet).")
+    )
+    s.add_argument("--dir", type=Path, help=_("Install location."))
+    s.add_argument("--remove", metavar="ID", help=_("Remove an installed component."))
+
+    sub.add_parser("components", help=_("Show installed components."))
+    c = sub.add_parser("cache", help=_("Show or clear saved intermediate results."))
+    c.add_argument("--clear", action="store_true", help=_("Delete all saved intermediate results."))
+    sub.add_parser("languages", help=_("List available languages."))
+    return parser
+
+
+def _preparse_lang(argv: Sequence[str]) -> str | None:
+    for i, arg in enumerate(argv):
+        if arg == "--lang" and i + 1 < len(argv):
+            return argv[i + 1]
+        if arg.startswith("--lang="):
+            return arg.split("=", 1)[1]
+    return None
+
+
+def main(argv: Sequence[str] | None = None) -> int:
+    argv = list(sys.argv[1:] if argv is None else argv)
+    user = settings_mod.load()
+    set_language(resolve_language(_preparse_lang(argv) or user.language))
+    parser = build_parser()
+    args = parser.parse_args(argv)
+    from notirua.core.logging_setup import configure
+
+    configure(verbose=args.verbose)
+    if args.command is None:
+        parser.print_help()
+        return EXIT_USAGE
+    try:
+        if args.command == "transcribe":
+            return cmd_transcribe(args, user)
+        if args.command == "setup":
+            return cmd_setup(args, user)
+        if args.command == "components":
+            return cmd_components(user)
+        if args.command == "cache":
+            return cmd_cache(args, user)
+        if args.command == "languages":
+            for lang in available_languages():
+                print(lang)
+            return EXIT_OK
+    except Cancelled:
+        print("\n" + _("Cancelled."), file=sys.stderr)
+        return EXIT_CANCELLED
+    except NotiruaError as exc:
+        print(file=sys.stderr)
+        _print_error(exc)
+        return EXIT_ERROR
+    return EXIT_USAGE
+
+
+def _default_paper() -> str:
+    import locale
+
+    try:
+        region = (locale.getlocale()[0] or "").split("_")[-1].upper()
+    except ValueError:
+        region = ""
+    return "letter" if region in {"US", "CA", "MX", "PH"} else "a4"
+
+
+def cmd_transcribe(args: argparse.Namespace, user: settings_mod.Settings) -> int:
+    from notirua.components.manager import manager_from_settings
+    from notirua.core.pipeline import INSTRUMENT_NAMES, JobOptions, Pipeline
+
+    manager = manager_from_settings(user)
+    missing = manager.missing()
+    if missing:
+        names = ", ".join(_(c.name_id) for c in missing)
+        print(
+            _("Some components are not installed yet: {names}").format(names=names), file=sys.stderr
+        )
+        print(_("Run “notirua setup” first."), file=sys.stderr)
+        return EXIT_SETUP
+    if not args.file.is_file():
+        print(_("File not found: {path}").format(path=args.file), file=sys.stderr)
+        return EXIT_USAGE
+    stems = [s.strip() for s in args.stems.split(",")] if args.stems else None
+    if stems:
+        unknown = [s for s in stems if s not in STEMS]
+        if unknown:
+            print(_("Unknown instrument: {name}").format(name=", ".join(unknown)), file=sys.stderr)
+            return EXIT_USAGE
+    if not -12 <= args.transpose <= 12:
+        print(_("Transpose must be between -12 and +12."), file=sys.stderr)
+        return EXIT_USAGE
+    ts = None
+    if args.time_signature:
+        num, _sep, den = args.time_signature.partition("/")
+        ts = (int(num), int(den or 4))
+    options = JobOptions(
+        title=args.title,
+        stems=stems,
+        transpose=args.transpose,
+        target_key=args.to_key,
+        paper=args.paper or user.paper or _default_paper(),
+        guitar_tuning=args.guitar_tuning or user.guitar_tuning,
+        bass_tuning=args.bass_tuning or user.bass_tuning,
+        time_signature=ts,
+        tempo_bpm=args.tempo,
+        key=args.key,
+        downbeat_shift=args.shift_downbeat,
+        tab_mode=args.tab,
+        per_stem_pdfs=not args.no_separate_pdfs,
+        combined_pdf=not args.no_combined,
+        export_musicxml=args.musicxml,
+        export_midi=args.midi,
+        pdf_language=args.pdf_lang or user.pdf_language,
+        stream_index=args.track,
+        start_s=args.start,
+        end_s=args.end,
+        tab_weights=user.tab_weights,
+    )
+    cancel = CancelToken()
+    pipeline = Pipeline(
+        stage_weights=user.stage_weights, cache_limit_bytes=int(user.cache_limit_gb * 1024**3)
+    )
+    try:
+        result = pipeline.run(
+            args.file, args.out, options, progress=ProgressPrinter(), cancel=cancel
+        )
+    except KeyboardInterrupt:
+        cancel.cancel()
+        raise Cancelled() from None
+    files = [
+        *result.pdfs.values(),
+        *([result.combined_pdf] if result.combined_pdf else []),
+        *result.other_files,
+    ]
+    print(
+        _("Done in {seconds} s: {count}.").format(
+            seconds=round(result.elapsed_s),
+            count=ngettext("{n} file", "{n} files", len(files)).format(n=len(files)),
+        )
+    )
+    for f in files:
+        print(f"  {f}")
+    for stem, reason in result.skipped.items():
+        print(
+            _("Skipped {instrument}: {reason}").format(
+                instrument=_(INSTRUMENT_NAMES[stem]), reason=_(reason)
+            )
+        )
+    for w in result.warnings:
+        print(_("Note: {message}").format(message=_(w)))
+    if "drums" in result.pdfs:
+        print(_("Drum sheet music is for reference only."))
+    return EXIT_OK
+
+
+def cmd_setup(args: argparse.Namespace, user: settings_mod.Settings) -> int:
+    from notirua.components.manager import ComponentManager, human_size, manager_from_settings
+    from notirua.components.manifest import by_id
+
+    if args.dir:
+        user.components_dir = str(args.dir.expanduser().resolve())
+    manager = ComponentManager(user.components_path) if args.dir else manager_from_settings(user)
+    printer = ProgressPrinter()
+    if args.remove:
+        manager.remove(by_id(args.remove))
+        print(_("Removed {name}.").format(name=args.remove))
+        return EXIT_OK
+    if args.bundle:
+        installed = manager.install_from_bundle(args.bundle, progress=printer)
+        user.consent = manager.make_consent(installed)
+        settings_mod.save(user)
+        print(_("Installed from the bundle file."))
+        return EXIT_OK
+    todo = manager.missing(required_only=False)
+    if not todo:
+        # Installed earlier (e.g. from a bundle); record the versions in use.
+        if not manager.consent_is_current(user.consent, manager.components):
+            user.consent = manager.make_consent(manager.components)
+            settings_mod.save(user)
+        print(_("All components are installed."))
+        return EXIT_OK
+    plan = manager.plan(todo)
+    print(_("Notirua needs to download these components:"))
+    for c in todo:
+        f = c.file_for(manager.platform_key)
+        print(f"\n  • {_(c.name_id)} {c.version}")
+        print(f"    {_(c.purpose_id)}")
+        print("    " + _("Size: {size}").format(size=human_size(f.size if f else 0)))
+        print("    " + _("Source: {domain}").format(domain=f.domain if f else "-"))
+        print(
+            "    " + _("License: {license} ({url})").format(license=c.license_id, url=c.license_url)
+        )
+    print()
+    print(_("Total download: {size}").format(size=human_size(plan.download_bytes)))
+    print(_("Disk space needed: {size}").format(size=human_size(plan.install_bytes)))
+    print(_("Free space: {size}").format(size=human_size(plan.free_bytes)))
+    print(_("Install location: {path}").format(path=plan.install_dir))
+    print(_("The internet is used only for this download. Notirua works offline afterwards."))
+    if not plan.enough_space:
+        print(_("There is not enough disk space."), file=sys.stderr)
+        return EXIT_ERROR
+    if not args.accept_licenses:
+        if not sys.stdin.isatty():
+            print(_("Run again with --accept-licenses to agree without a prompt."), file=sys.stderr)
+            return EXIT_USAGE
+        answer = input(_("Agree to the licenses and install? [y/N] ")).strip().lower()
+        if answer not in ("y", "yes", _("y"), _("yes")):
+            print(_("Nothing was downloaded. Run “notirua setup” again any time."))
+            return EXIT_SETUP
+    consent = manager.make_consent(todo)
+    user.consent = consent
+    settings_mod.save(user)
+    started = time.monotonic()
+    try:
+        manager.install(todo, consent, progress=printer)
+    except KeyboardInterrupt:
+        raise Cancelled() from None
+    print(
+        _("Components installed in {seconds} s.").format(seconds=round(time.monotonic() - started))
+    )
+    return EXIT_OK
+
+
+def cmd_components(user: settings_mod.Settings) -> int:
+    from notirua.components.manager import human_size, manager_from_settings
+
+    manager = manager_from_settings(user)
+    for st in manager.status():
+        state = _("installed") if st.installed else _("not installed")
+        size = human_size(st.size_on_disk) if st.installed else "-"
+        print(f"{st.component.id:14s} {st.component.version:28s} {state:14s} {size}")
+    return EXIT_OK
+
+
+def cmd_cache(args: argparse.Namespace, user: settings_mod.Settings) -> int:
+    from notirua import paths
+    from notirua.components.manager import human_size
+    from notirua.core import cache
+
+    root = paths.cache_dir() / "jobs"
+    if args.clear:
+        freed = cache.clear(root)
+        print(_("Freed {size}.").format(size=human_size(freed)))
+    else:
+        print(
+            _("Saved intermediate results: {size} in {path}").format(
+                size=human_size(cache.cache_size(root)), path=root
+            )
+        )
+    return EXIT_OK
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
