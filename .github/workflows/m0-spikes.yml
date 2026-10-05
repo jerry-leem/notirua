@@ -1,0 +1,43 @@
+name: M0 spikes
+
+# Cross-platform validation of SPEC 8 / M0 (S2-S6). Downloads ~300 MB of
+# components per OS, so it only runs on demand.
+on:
+  workflow_dispatch:
+
+jobs:
+  spikes:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-22.04, windows-latest, macos-latest, macos-15-intel]
+    runs-on: ${{ matrix.os }}
+    env:
+      NOTIRUA_TEST_COMPONENTS_DIR: ${{ github.workspace }}/.components
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+      - name: Install
+        run: uv sync --locked
+      - name: Cache components
+        uses: actions/cache@v4
+        with:
+          path: .components
+          key: components-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('src/notirua/components/manifest.py') }}
+      - name: Install components (S2, S3)
+        run: uv run notirua setup --accept-licenses --dir .components
+      - name: S3/S4 end-to-end tests
+        run: uv run pytest -m slow -v
+      - name: S2 separation timing (60 s mix)
+        # `setup --dir` stored .components in the user settings, so the spike finds it.
+        run: uv run python spikes/s2_separate.py --seconds 60
+      - name: S5/S6 bundle smoke test
+        shell: bash
+        run: |
+          uv run pybabel compile -d locales -D notirua
+          uv run pyinstaller --noconfirm --log-level WARN --distpath dist spikes/s5_bundle/s5.spec
+          du -sh dist/notirua-spike || true
+          if [ "$RUNNER_OS" = "Windows" ]; then ./dist/notirua-spike/notirua-spike.exe --smoke; else ./dist/notirua-spike/notirua-spike --smoke; fi
+          if find dist -iname '*torch*' -o -iname '*tensorflow*' | grep -q .; then echo "torch/tensorflow found in bundle"; exit 1; fi
