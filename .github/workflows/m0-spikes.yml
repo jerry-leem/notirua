@@ -57,3 +57,30 @@ jobs:
           du -sh dist/notirua-spike || true
           if [ "$RUNNER_OS" = "Windows" ]; then ./dist/notirua-spike/notirua-spike.exe --smoke; else ./dist/notirua-spike/notirua-spike --smoke; fi
           if find dist -iname '*torch*' -o -iname '*tensorflow*' | grep -q .; then echo "torch/tensorflow found in bundle"; exit 1; fi
+
+  # The real components on glibc 2.31 (Ubuntu 20.04): LilyPond's binary and
+  # onnxruntime must run there too (DECISIONS D14).
+  glibc-2-31:
+    runs-on: ubuntu-latest
+    container: ubuntu:20.04
+    env:
+      DEBIAN_FRONTEND: noninteractive
+      QT_QPA_PLATFORM: offscreen
+      NOTIRUA_TEST_COMPONENTS_DIR: ${{ github.workspace }}/.components
+    steps:
+      - name: System packages
+        run: |
+          apt-get update
+          apt-get install -y --no-install-recommends ca-certificates curl git \
+            libegl1 libgl1 libxkbcommon0 libfontconfig1 libdbus-1-3
+          ldd --version | head -1
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+      - name: Install
+        run: uv sync --locked
+      - name: Bundled CJK fonts
+        run: uv run python packaging/fetch_fonts.py
+      - name: Install components
+        run: uv run notirua setup --accept-licenses --dir .components
+      - name: End-to-end tests
+        run: uv run pytest -m slow -v

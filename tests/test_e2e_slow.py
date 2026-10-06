@@ -28,20 +28,25 @@ def pipeline(tmp_path_factory: pytest.TempPathFactory) -> Pipeline:
 
 
 def _pdf_text(path: Path) -> tuple[int, list[str]]:
-    """Page count and text per page, extracted with PDFium (QtPdf).
+    """Page count and text per page from two extractors joined together.
 
-    pypdf mis-maps glyphs of some system fallback fonts (seen with macOS kana)
-    although the page renders correctly; PDFium reads them as Qt displays them.
+    pypdf mis-maps glyphs of some fallback fonts (macOS kana); the PDFium in
+    Qt 6.9 skips some runs (the footer). Each finds what the other misses.
     """
+    from pypdf import PdfReader
     from PySide6.QtPdf import QPdfDocument
     from PySide6.QtWidgets import QApplication
 
     _app = QApplication.instance() or QApplication([])
     doc = QPdfDocument()
     assert doc.load(str(path)) == QPdfDocument.Error.None_
-    texts = [doc.getAllText(i).text() for i in range(doc.pageCount())]
+    pdfium = [doc.getAllText(i).text() for i in range(doc.pageCount())]
     doc.close()
-    return len(texts), texts
+    pages = PdfReader(str(path)).pages
+    assert len(pages) == len(pdfium)
+    return len(pdfium), [
+        f"{a}\n{b.extract_text() or ''}" for a, b in zip(pdfium, pages, strict=True)
+    ]
 
 
 # Fonts LilyPond brings itself; anything else in a PDF is a system fallback font.

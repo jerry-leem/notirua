@@ -19,8 +19,10 @@ dependencies = [
     "platformdirs>=4.2",
     "babel>=2.15",
     "music21>=10,<11",
-    "PySide6-Essentials>=6.8",
-    "PySide6-Addons>=6.8",
+    # PySide6 6.10+ Linux wheels need glibc 2.34; 6.9 is the last line on manylinux_2_28,
+    # which keeps glibc 2.31 supported (DECISIONS D14). Same Qt on every platform.
+    "PySide6-Essentials>=6.9,<6.10",
+    "PySide6-Addons>=6.9,<6.10",
 ]
 
 [project.scripts]
@@ -39,6 +41,7 @@ dev = [
     "ruff>=0.8",
     "mypy>=1.13",
     "scipy-stubs; python_version >= '3.11'",
+    "pypdf>=5.0",
 ]
 
 [build-system]
@@ -72,7 +75,7 @@ mypy_path = "src"
 packages = ["notirua"]
 
 [[tool.mypy.overrides]]
-module = ["av.*", "soxr.*", "onnxruntime.*"]
+module = ["av.*", "soxr.*", "onnxruntime.*", "pypdf.*"]
 ignore_missing_imports = true
 
 [[tool.mypy.overrides]]
