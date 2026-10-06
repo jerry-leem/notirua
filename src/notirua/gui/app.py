@@ -5,8 +5,10 @@ from __future__ import annotations
 import os
 import sys
 from collections.abc import Sequence
+from pathlib import Path
 
 from PySide6.QtCore import QLibraryInfo, QLocale, QTranslator
+from PySide6.QtGui import QIcon
 from PySide6.QtWidgets import QApplication
 
 from notirua import settings as settings_mod
@@ -21,6 +23,17 @@ def install_qt_translations(app: QApplication, language: str) -> QTranslator | N
         app.installTranslator(translator)
         return translator
     return None
+
+
+ICONS = Path(__file__).resolve().parents[1] / "resources" / "icons"
+
+
+def app_icon() -> QIcon:
+    """The window and Dock/taskbar icon, every size drawn by packaging/make_icon.py."""
+    icon = QIcon()
+    for png in sorted(ICONS.glob("notirua-*.png")):
+        icon.addFile(str(png))
+    return icon
 
 
 def display_available() -> bool:
@@ -40,6 +53,7 @@ def main(argv: Sequence[str] | None = None, language: str | None = None) -> int:
     assert isinstance(app, QApplication)
     app.setApplicationName(APP_NAME)
     app.setApplicationDisplayName(APP_NAME)
+    app.setWindowIcon(app_icon())
     if not settings_mod.settings_path().is_file():
         settings_mod.save(settings_mod.Settings())
     user = settings_mod.load()

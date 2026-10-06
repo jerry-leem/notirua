@@ -73,3 +73,9 @@ def test_first_run_creates_settings_and_starts_on_setup(
     window = shown[0]
     assert window.stack.currentWidget() is window.setup_page  # type: ignore[attr-defined]
     window.close()  # type: ignore[attr-defined]
+
+
+def test_app_icon_has_every_size(qapp: object) -> None:
+    icon = gui_app.app_icon()
+    sizes = {s.width() for s in icon.availableSizes()}
+    assert {16, 32, 64, 128, 256, 512, 1024} <= sizes
