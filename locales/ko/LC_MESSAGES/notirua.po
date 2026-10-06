@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Notirua VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-10-06 22:40+0900\n"
+"POT-Creation-Date: 2026-10-06 22:45+0900\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: ko\n"
@@ -216,6 +216,10 @@ msgstr "전체 악기 합본 PDF를 만들지 않습니다."
 
 msgid "Done"
 msgstr "완료"
+
+#, python-brace-format
+msgid "Done ({time}) · {count}"
+msgstr "완료 ({time}) · {count}"
 
 #, python-brace-format
 msgid "Done in {seconds} s: {count}."
@@ -1014,10 +1018,6 @@ msgstr[0] "파일 {n}개"
 msgid "{n} score"
 msgid_plural "{n} scores"
 msgstr[0] "악보 {n}개"
-
-#, python-brace-format
-msgid "{title} — done ({time}) · {count}"
-msgstr "{title} — 완료 ({time}) · {count}"
 
 #, python-brace-format
 msgid "{tonic} major"

@@ -603,3 +603,41 @@ def test_menus_hold_settings_and_quit(
 
     window.quit_action.trigger()
     assert not window.isVisible()
+
+
+def test_title_can_be_changed_on_the_result_screen(
+    qtbot: QtBot, ready_user: settings_mod.Settings, job: FakeJob, song: Path
+) -> None:
+    import notirua
+
+    window = make_window(qtbot, ready_user, no_components, job.pipeline)
+    window.open_file(song)
+    window.options_page.start_button.click()
+    wait_result(qtbot, window)
+    page = window.result_page
+    assert page.title_edit.text() == "봄날 song"
+
+    page.title_edit.setText("  ")
+    page.title_edit.editingFinished.emit()
+    assert page.title_edit.text() == "봄날 song", "an empty title is put back"
+
+    page.title_edit.setText("새 제목")
+    page.title_edit.editingFinished.emit()
+    qtbot.waitUntil(
+        lambda: window.result is not None and window.result.title == "새 제목", timeout=WAIT_MS
+    )
+    assert all(p.name.startswith("새 제목") for p in window.result.pdfs.values())
+    assert window.windowTitle() == f"새 제목 — Notirua {notirua.__version__}"
+    assert job.counter.separate == 1, "only the drawing is redone"
+
+    # Transposing afterwards keeps the new title.
+    qtbot.mouseClick(page.up, Qt.MouseButton.LeftButton)
+    qtbot.waitUntil(
+        lambda: (
+            window.result is not None
+            and page.semitones == 1
+            and window.result.score.key != page.original_key
+        ),
+        timeout=WAIT_MS,
+    )
+    assert window.result.title == "새 제목"

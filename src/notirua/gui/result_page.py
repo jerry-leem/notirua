@@ -11,6 +11,7 @@ from PySide6.QtWidgets import (
     QComboBox,
     QHBoxLayout,
     QLabel,
+    QLineEdit,
     QMenu,
     QProgressBar,
     QPushButton,
@@ -27,7 +28,7 @@ from notirua.core.pipeline import (
     semitones_between,
     transposed_key,
 )
-from notirua.gui.widgets import format_duration, heading, primary_button
+from notirua.gui.widgets import format_duration, primary_button
 from notirua.i18n import _, ngettext
 
 MAX_TRANSPOSE = 12
@@ -37,6 +38,7 @@ BUSY_DELAY_MS = 300
 
 class ResultPage(QWidget):
     transpose_changed = Signal(int)
+    title_changed = Signal(str)
     save_all_requested = Signal()
     export_requested = Signal(str)  # "musicxml" | "midi"
     stem_audio_requested = Signal(str, bool)  # stem, play (True) or save (False)
@@ -48,15 +50,28 @@ class ResultPage(QWidget):
         self.original_key = "C major"
         self.result: JobResult | None = None
         self._tab_files: list[tuple[str | None, Path]] = []
+        self._elapsed_s = 0.0
         layout = QVBoxLayout(self)
         top = QHBoxLayout()
-        self.summary = heading(scale=1.1)
-        self.summary.setTextInteractionFlags(Qt.TextInteractionFlag.TextSelectableByMouse)
-        top.addWidget(self.summary, 1)
+        title_label = QLabel(_("Song title"))
+        top.addWidget(title_label)
+        # Editable here too: a new title is redrawn on every page and used in file names.
+        self.title_edit = QLineEdit()
+        self.title_edit.setAccessibleName(_("Song title"))
+        title_label.setBuddy(self.title_edit)
+        font = self.title_edit.font()
+        font.setPointSizeF(font.pointSizeF() * 1.1)
+        font.setBold(True)
+        self.title_edit.setFont(font)
+        self.title_edit.editingFinished.connect(self._title_edited)
+        top.addWidget(self.title_edit, 1)
         self.new_button = QPushButton(_("New file…"))
         self.new_button.clicked.connect(self.new_file_requested.emit)
         top.addWidget(self.new_button)
         layout.addLayout(top)
+        self.summary = QLabel()
+        self.summary.setTextInteractionFlags(Qt.TextInteractionFlag.TextSelectableByMouse)
+        layout.addWidget(self.summary)
         self.skipped = QLabel()
         self.skipped.setWordWrap(True)
         layout.addWidget(self.skipped)
@@ -181,13 +196,16 @@ class ResultPage(QWidget):
         if original_key is not None:
             self.original_key = original_key
         files = [*result.pdfs.values(), *([result.combined_pdf] if result.combined_pdf else [])]
+        if first:
+            self._elapsed_s = result.elapsed_s  # redraws keep the original job time
         self.summary.setText(
-            _("{title} — done ({time}) · {count}").format(
-                title=result.title,
-                time=format_duration(result.elapsed_s),
+            _("Done ({time}) · {count}").format(
+                time=format_duration(self._elapsed_s),
                 count=ngettext("{n} score", "{n} scores", len(files)).format(n=len(files)),
             )
         )
+        if not self.title_edit.hasFocus() or first:
+            self.title_edit.setText(result.title)
         skipped = [
             _("{instrument} ({reason})").format(instrument=_(INSTRUMENT_NAMES[s]), reason=_(reason))
             for s, reason in result.skipped.items()
@@ -225,6 +243,16 @@ class ResultPage(QWidget):
         self.set_busy(False)
         if first:
             self.save_button.setFocus()
+
+    def _title_edited(self) -> None:
+        text = self.title_edit.text().strip()
+        if self.result is None:
+            return
+        if not text:
+            self.title_edit.setText(self.result.title)  # an empty title is not allowed
+            return
+        if text != self.result.title:
+            self.title_changed.emit(text)
 
     def _show_tab(self, index: int, keep_page: int | None = None) -> None:
         if not 0 <= index < len(self._tab_files):

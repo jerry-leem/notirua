@@ -91,7 +91,7 @@ class MainWindow(QMainWindow):
         self.result: JobResult | None = None
         self._run_number = 0
         self._workdir = Path(tempfile.mkdtemp(prefix="notirua-work-"))
-        self._pending_transpose: int | None = None
+        self._rerender_pending = False
 
         central = QWidget()
         outer = QVBoxLayout(central)
@@ -133,6 +133,7 @@ class MainWindow(QMainWindow):
         self.progress_page.other_file_requested.connect(self._choose_other_file)
         self.result_page = ResultPage()
         self.result_page.transpose_changed.connect(self._transpose_changed)
+        self.result_page.title_changed.connect(self._title_changed)
         self.result_page.save_all_requested.connect(self.save_all)
         self.result_page.export_requested.connect(self.export_file)
         self.result_page.stem_audio_requested.connect(self.stem_audio)
@@ -327,28 +328,38 @@ class MainWindow(QMainWindow):
             self.tray.showMessage(title, message)
 
     # -- transposition (FR-6): only arrange and engrave run again ----------
-    def _transpose_changed(self, semitones: int) -> None:
-        self._pending_transpose = semitones
+    def _transpose_changed(self, _semitones: int) -> None:
+        self._request_rerender()
+
+    def _title_changed(self, title: str) -> None:
+        """A new title is printed on every page and used in the file names."""
+        if self.options is None:
+            return
+        self.options = replace(self.options, title=title.strip() or None)
+        self._request_rerender()
+
+    def _request_rerender(self) -> None:
+        self._rerender_pending = True
         self._transpose_timer.start(TRANSPOSE_DEBOUNCE_MS)
 
     def _rerender(self) -> None:
-        if self.options is None or self.input_path is None or self._pending_transpose is None:
+        if self.options is None or self.input_path is None or not self._rerender_pending:
             return
         if self.render_task is not None and self.render_task.running:
             # Finish (or cancel) the running render first; we come back afterwards.
             self.render_task.cancel()
             self._transpose_timer.start(TRANSPOSE_DEBOUNCE_MS)
             return
-        semitones = self._pending_transpose
-        self._pending_transpose = None
-        options = replace(self.options, transpose=semitones, target_key=None)
+        self._rerender_pending = False
+        # Only arrange and engrave run again; earlier stages come from the cache.
+        options = replace(self.options, transpose=self.result_page.semitones, target_key=None)
         path, out_dir = self.input_path, self._next_out_dir()
 
         def work(progress: ProgressCallback, cancel: CancelToken) -> JobResult:
             return self.pipeline.run(path, out_dir, options, progress=progress, cancel=cancel)
 
         self.result_page.set_busy(True)
-        task = Task(work, "transpose", self)
+        task = Task(work, "redraw", self)
         task.succeeded.connect(self._rerender_done)
         task.failed.connect(self._rerender_failed)
         task.cancelled.connect(lambda: self.result_page.set_busy(False))
@@ -356,10 +367,11 @@ class MainWindow(QMainWindow):
         task.start()
 
     def _rerender_done(self, result: JobResult) -> None:
-        if self._pending_transpose is not None:
+        if self._rerender_pending:
             return  # a newer request is waiting; keep the busy bar
         self.result = result
         self.result_page.show_result(result)
+        self.setWindowTitle(f"{result.title} — {APP_TITLE}")
 
     def _rerender_failed(self, error: BaseException) -> None:
         self.result_page.set_busy(False)
