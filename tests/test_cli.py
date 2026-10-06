@@ -102,3 +102,16 @@ def test_macos_menu_bar_uses_the_app_name() -> None:
 
     assert macos.set_app_name("Notirua")
     assert macos.app_name() == "Notirua"
+
+
+def test_redirected_output_in_a_narrow_code_page_does_not_crash(
+    opened: list[str | None], monkeypatch: pytest.MonkeyPatch
+) -> None:
+    import io
+
+    raw = io.BytesIO()
+    narrow = io.TextIOWrapper(raw, encoding="cp1252")
+    monkeypatch.setattr(sys, "stdout", narrow)
+    assert cli.main(["--lang", "ko", "cache"]) == cli.EXIT_OK
+    narrow.flush()
+    assert b"?" in raw.getvalue()

@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import io
 import math
 import shutil
 import sys
@@ -239,8 +240,17 @@ def _preparse_lang(argv: Sequence[str]) -> str | None:
     return None
 
 
+def _tolerate_unencodable_output() -> None:
+    """Redirected output uses the system code page on Windows (often cp1252), which
+    cannot hold Korean or most song titles: replace such characters, never crash."""
+    for stream in (sys.stdout, sys.stderr):
+        if isinstance(stream, io.TextIOWrapper) and not stream.isatty():
+            stream.reconfigure(errors="replace")
+
+
 def main(argv: Sequence[str] | None = None) -> int:
     argv = list(sys.argv[1:] if argv is None else argv)
+    _tolerate_unencodable_output()
     user = settings_mod.load()
     set_language(resolve_language(_preparse_lang(argv) or user.language))
     install_argparse_text()

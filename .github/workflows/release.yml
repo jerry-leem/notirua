@@ -103,6 +103,16 @@ jobs:
             packaging\windows\notirua.iss
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
           Get-ChildItem dist\*.exe
+      # Install like a user (per user, silent) and try it: components, sheet
+      # music, MP3/M4A mixes, and the window (packaging/smoke_test.py).
+      - name: Try the installed app
+        shell: pwsh
+        run: |
+          $setup = (Get-ChildItem dist\Notirua-*-setup.exe | Select-Object -First 1).FullName
+          Start-Process -FilePath $setup -Wait -ArgumentList '/VERYSILENT', '/SUPPRESSMSGBOXES', '/NORESTART', '/CURRENTUSER'
+          $dir = "$env:LOCALAPPDATA\Programs\Notirua"
+          uv run python packaging/smoke_test.py --cli "$dir\notirua-cli.exe" --gui "$dir\Notirua.exe"
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
       - uses: actions/upload-artifact@v4
         with:
           name: notirua-windows
