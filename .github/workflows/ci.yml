@@ -49,6 +49,10 @@ jobs:
             libfreetype6 libx11-6 libdbus-1-3 zlib1g libzstd1
           ldd --version | head -1
       - uses: actions/checkout@v4
+      # The container runs as root on a checkout owned by the runner user; git
+      # then refuses the repository, which tests/test_docs.py lists with git.
+      - name: Trust the checkout
+        run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
       - uses: astral-sh/setup-uv@v6
       - name: Install
         run: uv sync --locked
