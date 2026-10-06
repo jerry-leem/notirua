@@ -20,12 +20,16 @@ jobs:
       - uses: astral-sh/setup-uv@v6
         with:
           enable-cache: true
-      # Ubuntu runners ship no CJK fonts; LilyPond then drops CJK titles (DECISIONS D8).
-      - name: Qt system libraries and CJK fonts
+      - name: Qt system libraries
         if: runner.os == 'Linux'
-        run: sudo apt-get update && sudo apt-get install -y libegl1 libgl1 libxkbcommon0 libfontconfig1 libdbus-1-3 fonts-noto-cjk
+        run: sudo apt-get update && sudo apt-get install -y libegl1 libgl1 libxkbcommon0 libfontconfig1 libdbus-1-3
       - name: Install
         run: uv sync --locked --group build
+      # Ubuntu runners ship no CJK fonts, like some user systems; use the fonts the
+      # Linux build bundles so the E2E tests check that path (DECISIONS D8).
+      - name: Bundled CJK fonts (Linux)
+        if: runner.os == 'Linux'
+        run: uv run python packaging/fetch_fonts.py
       - name: Cache components
         uses: actions/cache@v4
         with:

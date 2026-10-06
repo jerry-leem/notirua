@@ -152,3 +152,24 @@ def test_combined_book_has_one_last_page_label() -> None:
     ly = render_ly(_demo_score(), ["vocals", "guitar", "drums"], EngraveOptions(), combined=True)
     assert ly.count("\\bookpart") == 3
     assert ly.count("\\label #'notirua-last-page") == 1
+
+
+def test_font_folders_are_added_before_the_score(tmp_path: Path) -> None:
+    from notirua.core.engrave.render import with_font_dirs
+
+    odd = tmp_path / 'fonts "x" \\ y'
+    source = with_font_dirs('\\version "2.26.0"', [odd])
+    first, rest = source.split("\n", 1)
+    assert first.startswith("#(ly:font-config-add-directory ")
+    assert first.endswith('\\"x\\" \\\\ y")')
+    assert rest == '\\version "2.26.0"'
+    assert with_font_dirs("x", []) == "x"
+
+
+def test_bundled_fonts_need_font_files(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    from notirua.core.engrave.render import bundled_fonts_dir
+
+    monkeypatch.setenv("NOTIRUA_FONTS_DIR", str(tmp_path))
+    assert bundled_fonts_dir() is None
+    (tmp_path / "NotoSansCJKkr-Regular.otf").write_bytes(b"otf")
+    assert bundled_fonts_dir() == tmp_path

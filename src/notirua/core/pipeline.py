@@ -161,9 +161,10 @@ def default_engines(settings: Any = None) -> Engines:
         return RuleBasedDrumTranscriber()
 
     def engraver() -> Engraver:
-        from notirua.core.engrave.render import LilyPondEngraver
+        from notirua.core.engrave.render import LilyPondEngraver, bundled_fonts_dir
 
-        return LilyPondEngraver(manager.require("lilypond"))
+        fonts = bundled_fonts_dir()
+        return LilyPondEngraver(manager.require("lilypond"), [fonts] if fonts else [])
 
     return Engines(separator, pitched, drums, engraver)
 

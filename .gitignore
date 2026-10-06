@@ -19,3 +19,4 @@ spikes/s3_lilypond/*.pdf
 .idea/
 .vscode/
 locales/en_XA/
+packaging/fonts/
