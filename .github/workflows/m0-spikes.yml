@@ -72,7 +72,7 @@ jobs:
         run: |
           apt-get update
           apt-get install -y --no-install-recommends ca-certificates curl git \
-            libegl1 libgl1 libxkbcommon0 libfontconfig1 libdbus-1-3
+            libegl1 libgl1 libglib2.0-0 libxkbcommon0 libfontconfig1 libdbus-1-3
           ldd --version | head -1
       - uses: actions/checkout@v4
       - uses: astral-sh/setup-uv@v6

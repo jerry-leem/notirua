@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import gzip
 import hashlib
 import http.server
 import io
@@ -59,8 +60,12 @@ def serve() -> Iterator[str]:
 
 
 def tar_with(entry: str, content: bytes) -> bytes:
+    """A .tar.gz with fixed timestamps, so every call yields the same bytes and checksum."""
     buf = io.BytesIO()
-    with tarfile.open(fileobj=buf, mode="w:gz") as tar:
+    with (
+        gzip.GzipFile(fileobj=buf, mode="wb", mtime=0) as gz,
+        tarfile.open(fileobj=gz, mode="w") as tar,
+    ):
         info = tarfile.TarInfo(entry)
         info.size = len(content)
         info.mode = 0o755
