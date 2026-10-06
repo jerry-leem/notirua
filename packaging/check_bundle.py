@@ -19,7 +19,8 @@ from pathlib import Path
 
 FORBIDDEN_PARTS = ("torch", "tensorflow", "tflite_runtime", "coremltools", "matplotlib")
 # Only QtPdf and QtPdfWidgets come from PySide6-Addons.
-FORBIDDEN_QT = ("QtWebEngine", "Qt3D", "QtQuick", "QtQml", "QtMultimedia", "QtCharts")
+# QtQuick (macOS), libQt6Quick.so.6 (Linux), Qt6Quick.dll (Windows).
+FORBIDDEN_QT = re.compile(r"Qt6?(WebEngine|3D|Quick|Qml|Multimedia|Charts|VirtualKeyboard)")
 GPL_FFMPEG = re.compile(rb"--enable-gpl|--enable-nonfree|libx264|libx265|(?<![L])GPL version \d")
 FFMPEG_LIB = re.compile(r"(avcodec|avformat|avutil|swresample|avfilter|swscale)", re.IGNORECASE)
 
@@ -54,7 +55,7 @@ def problems(bundle: Path, expected_version: str | None) -> list[str]:
         parts = set(re.split(r"[/.\-_]", rel.lower()))
         if parts & set(FORBIDDEN_PARTS):
             found.append(f"forbidden framework: {rel}")
-        if any(q in p.name for q in FORBIDDEN_QT):
+        if FORBIDDEN_QT.search(p.name):
             found.append(f"unused Qt module: {rel}")
         if is_ffmpeg(p) and GPL_FFMPEG.search(p.read_bytes()):
             found.append(f"FFmpeg library is not LGPL-only: {rel}")

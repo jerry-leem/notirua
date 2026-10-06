@@ -4,13 +4,17 @@ Usage: python packaging/linux/make_appimage.py [--app dist/linux/app/Notirua] [-
 
 The AppImage starts the window with no arguments and the command line with
 any (``Notirua.AppImage transcribe song.mp3 --out out``), like ``notirua``
-from source. appimagetool and the AppImage runtime (both MIT) are pinned.
+from source.
+
+An AppImage is the AppImage runtime (pinned, MIT) followed by a squashfs image
+of the AppDir; this is what appimagetool does. appimagetool itself is not used:
+being an AppImage, it does not start under x86_64 emulation (Docker on Apple
+Silicon).
 """
 
 from __future__ import annotations
 
 import argparse
-import os
 import shutil
 import stat
 import subprocess
@@ -22,11 +26,6 @@ ROOT = Path(__file__).resolve().parents[2]
 WORK = ROOT / "build" / "appimage"
 
 # (url, size, sha256)
-APPIMAGETOOL = (
-    "https://github.com/AppImage/appimagetool/releases/download/1.9.1/appimagetool-x86_64.AppImage",
-    15_092_216,
-    "ed4ce84f0d9caff66f50bcca6ff6f35aae54ce8135408b3fa33abfc3cb384eb0",
-)
 RUNTIME = (
     "https://github.com/AppImage/type2-runtime/releases/download/20251108/runtime-x86_64",
     944_632,
@@ -68,7 +67,6 @@ def main() -> int:
     parser.add_argument("--out", type=Path, default=ROOT / "dist")
     args = parser.parse_args()
 
-    tool = fetch(APPIMAGETOOL, "appimagetool-x86_64.AppImage")
     runtime = fetch(RUNTIME, "runtime-x86_64")
     appdir = WORK / "Notirua.AppDir"
     shutil.rmtree(appdir, ignore_errors=True)
@@ -82,14 +80,19 @@ def main() -> int:
     (appdir / ".DirIcon").symlink_to("notirua.png")
 
     image = args.out / f"Notirua-{version('notirua')}-linux-x86_64.AppImage"
-    image.unlink(missing_ok=True)
-    # No FUSE inside Docker: let appimagetool unpack itself instead of mounting.
-    env = {**os.environ, "ARCH": "x86_64", "APPIMAGE_EXTRACT_AND_RUN": "1"}
+    squashfs = WORK / "Notirua.squashfs"
+    squashfs.unlink(missing_ok=True)
     subprocess.run(
-        [str(tool), "--no-appstream", "--runtime-file", str(runtime), str(appdir), str(image)],
+        ["mksquashfs", str(appdir), str(squashfs), "-root-owned", "-noappend",
+         "-comp", "zstd", "-b", "1M", "-quiet"],
         check=True,
-        env=env,
-    )
+    )  # fmt: skip
+    with image.open("wb") as out:
+        out.write(runtime.read_bytes())
+        with squashfs.open("rb") as fs:
+            shutil.copyfileobj(fs, out)
+    image.chmod(0o755)
+    squashfs.unlink()
     print(image, f"{image.stat().st_size / 1e6:.1f} MB")
     return 0
 

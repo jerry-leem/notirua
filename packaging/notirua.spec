@@ -7,6 +7,7 @@
 #   notirua-cli  command line (a different name: macOS and Windows file
 #                systems ignore case, so "notirua" would clash with "Notirua")
 import os
+import re
 import sys
 from importlib.metadata import version
 from pathlib import Path
@@ -64,13 +65,15 @@ EXCLUDES += [
 
 # The virtual keyboard input plugin pulls in QtQuick and QtQml (about 30 MB);
 # Linux keeps its other input plugins (ibus, compose) for Korean input.
-UNUSED_QT_BINARY = ("qtvirtualkeyboard", "QtVirtualKeyboard", "QtQuick", "QtQml")
+# Qt names its libraries QtQuick (macOS frameworks), libQt6Quick.so.6 (Linux),
+# and Qt6Quick.dll (Windows).
+UNUSED_QT_BINARY = re.compile(r"qtvirtualkeyboard|Qt6?(VirtualKeyboard|Quick|Qml)", re.IGNORECASE)
 
 
 def keep(entry):
     """Drop data and libraries Notirua never uses."""
     dest = entry[0].replace("\\", "/")
-    if any(name in dest for name in UNUSED_QT_BINARY):
+    if UNUSED_QT_BINARY.search(dest):
         return False
     # music21's bundled corpus (scores) is never used.
     if dest.startswith("music21/corpus/") and not dest.endswith(".py"):

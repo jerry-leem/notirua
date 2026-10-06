@@ -54,3 +54,10 @@ def test_ffmpeg_libraries_are_recognized() -> None:
         assert check_bundle.is_ffmpeg(Path(name))
     assert not check_bundle.is_ffmpeg(Path("libavcodec.txt"))
     assert not check_bundle.is_ffmpeg(Path("QtCore.dll"))
+
+
+def test_unused_qt_modules_are_recognized_on_every_platform() -> None:
+    for name in ("QtQuick", "libQt6Quick.so.6", "Qt6Qml.dll", "libQt6VirtualKeyboard.so.6"):
+        assert check_bundle.FORBIDDEN_QT.search(name), name
+    for name in ("QtPdf", "libQt6PdfWidgets.so.6", "Qt6Widgets.dll", "libQt6XcbQpa.so.6"):
+        assert not check_bundle.FORBIDDEN_QT.search(name), name

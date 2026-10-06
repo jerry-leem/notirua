@@ -24,23 +24,26 @@ jobs:
           arch: x64
       - uses: msys2/setup-msys2@v2
         with:
-          msystem: MSYS
+          msystem: UCRT64
           path-type: inherit
           update: false
-          install: make diffutils nasm tar xz
+          install: >-
+            make diffutils tar xz
+            mingw-w64-ucrt-x86_64-gcc mingw-w64-ucrt-x86_64-nasm
       - name: FFmpeg cache
         id: ffmpeg-cache
         uses: actions/cache@v4
         with:
           path: build/lgpl-av/ffmpeg
-          key: lgpl-ffmpeg-win64-${{ hashFiles('packaging/build_lgpl_av.py') }}
-      - name: Build LGPL-only FFmpeg with MSVC
+          key: lgpl-ffmpeg-win64-${{ hashFiles('packaging/build_lgpl_av.py', '.github/workflows/release.yml') }}
+      # GCC (UCRT, like MSVC) rather than MSVC: with only the needed parts
+      # enabled, MSVC crashes on libavformat/cbs.c (C1001). FFmpeg's mingw build
+      # also writes MSVC import libraries (.lib) for PyAV, which builds with MSVC.
+      - name: Build LGPL-only FFmpeg with MinGW GCC
         if: steps.ffmpeg-cache.outputs.cache-hit != 'true'
         shell: msys2 {0}
         run: |
           set -euo pipefail
-          # MSYS's own link.exe would shadow MSVC's linker.
-          rm -f /usr/bin/link.exe
           ROOT="$(pwd)"
           PREFIX="$ROOT/build/lgpl-av/ffmpeg"
           VERSION=$(uv run --no-project --python 3.11 python -c "import sys; sys.path.insert(0, 'packaging'); import build_lgpl_av as b; print(b.FFMPEG_VERSION, b.FFMPEG_SHA256, b.FFMPEG_URL)")
@@ -51,10 +54,10 @@ jobs:
           echo "$FF_SHA  ffmpeg.tar.xz" | sha256sum -c -
           tar xf ffmpeg.tar.xz
           cd "ffmpeg-$FF_VERSION"
-          ./configure --toolchain=msvc $FLAGS
+          ./configure $FLAGS
           make -j"$(nproc)"
           make install
-          # MSVC builds install the import libraries next to the DLLs.
+          # The import libraries are installed next to the DLLs.
           cp -n "$PREFIX"/bin/*.lib "$PREFIX/lib/" || true
           ls "$PREFIX/bin" "$PREFIX/lib"
       - name: Install
