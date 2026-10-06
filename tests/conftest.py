@@ -1,11 +1,15 @@
 from __future__ import annotations
 
+import os
 from collections.abc import Iterator
 from pathlib import Path
 
 import pytest
 
 from notirua import i18n
+
+# GUI tests never open real windows; set before pytest-qt creates the QApplication.
+os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 
 
 @pytest.fixture(autouse=True)
@@ -32,6 +36,14 @@ def real_components_dir() -> Path | None:
         else Path(PlatformDirs("notirua", appauthor=False).user_data_dir) / "components"
     )
     return path if (path / "installed.json").is_file() else None
+
+
+@pytest.fixture
+def server() -> Iterator[str]:
+    """Base URL of a local HTTP server serving ``component_fakes.Handler.files``."""
+    from tests.component_fakes import serve
+
+    yield from serve()
 
 
 def pytest_addoption(parser: pytest.Parser) -> None:

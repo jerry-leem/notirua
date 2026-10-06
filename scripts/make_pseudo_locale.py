@@ -28,22 +28,27 @@ def pseudo(text: str) -> str:
     return f"[{out}{padding}]"
 
 
-def main() -> None:
-    root = Path(__file__).resolve().parents[1] / "locales"
-    with (root / "notirua.pot").open("rb") as fp:
-        template = read_po(fp)
+def build(template: Path, target: Path) -> Path:
+    """Write a pseudo-translated catalog of ``template`` to ``target``."""
+    with template.open("rb") as fp:
+        source = read_po(fp)
     catalog = Catalog(locale="en", project="Notirua")
-    for message in template:
+    for message in source:
         if not message.id:
             continue
         if isinstance(message.id, tuple):
             catalog.add(message.id, tuple(pseudo(i) for i in message.id))
         else:
             catalog.add(message.id, pseudo(message.id))
-    target = root / "en_XA" / "LC_MESSAGES" / "notirua.po"
     target.parent.mkdir(parents=True, exist_ok=True)
     with target.open("wb") as fp:
         write_po(fp, catalog)
+    return target
+
+
+def main() -> None:
+    root = Path(__file__).resolve().parents[1] / "locales"
+    target = build(root / "notirua.pot", root / "en_XA" / "LC_MESSAGES" / "notirua.po")
     print(f"wrote {target}")
 
 
