@@ -1,14 +1,14 @@
-# Translations template for Notirua.
-# Copyright (C) 2026 Notirua contributors
-# This file is distributed under the same license as the Notirua project.
+# Translations template for PROJECT.
+# Copyright (C) 2026 ORGANIZATION
+# This file is distributed under the same license as the PROJECT project.
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
 #
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: Notirua 0.1\n"
+"Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-10-06 03:18+0900\n"
+"POT-Creation-Date: 2026-10-06 21:14+0900\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,6 +16,18 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.18.0\n"
+
+#, python-format
+msgid " (default: %(default)s)"
+msgstr ""
+
+#, python-format
+msgid "%(heading)s:"
+msgstr ""
+
+#, python-format
+msgid "%(prog)s: error: %(message)s\n"
+msgstr ""
 
 #, python-brace-format
 msgid "A required component is not installed: {name}."
@@ -432,19 +444,101 @@ msgstr ""
 msgid "about {time} left"
 msgstr ""
 
+#, python-format
+msgid "ambiguous option: %(option)s could match %(matches)s"
+msgstr ""
+
+#, python-format
+msgid "argument \"-\" with mode %r"
+msgstr ""
+
+#, python-format
+msgid "argument %(argument_name)s: %(message)s"
+msgstr ""
+
+#, python-format
+msgid "can't open '%(filename)s': %(error)s"
+msgstr ""
+
 msgid "command"
+msgstr ""
+
+#, python-format
+msgid "expected %s argument"
+msgid_plural "expected %s arguments"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "expected at least one argument"
+msgstr ""
+
+msgid "expected at most one argument"
+msgstr ""
+
+msgid "expected one argument"
+msgstr ""
+
+#, python-format
+msgid "ignored explicit argument %r"
 msgstr ""
 
 msgid "installed"
 msgstr ""
 
+#, python-format
+msgid "invalid %(type)s value: %(value)r"
+msgstr ""
+
+#, python-format
+msgid "invalid choice: %(value)r (choose from %(choices)s)"
+msgstr ""
+
+#, python-format
+msgid "not allowed with argument %s"
+msgstr ""
+
 msgid "not installed"
+msgstr ""
+
+#, python-format
+msgid "one of the arguments %s is required"
+msgstr ""
+
+msgid "options"
+msgstr ""
+
+msgid "positional arguments"
+msgstr ""
+
+msgid "show program's version number and exit"
+msgstr ""
+
+msgid "show this help message and exit"
 msgstr ""
 
 msgid "standard, drop_d, half_down, or MIDI numbers."
 msgstr ""
 
 msgid "standard, five_string, drop_d, half_down, or MIDI numbers."
+msgstr ""
+
+#, python-format
+msgid "the following arguments are required: %s"
+msgstr ""
+
+#, python-format
+msgid "unexpected option string: %s"
+msgstr ""
+
+#, python-format
+msgid "unknown parser %(parser_name)r (choices: %(choices)s)"
+msgstr ""
+
+#, python-format
+msgid "unrecognized arguments: %s"
+msgstr ""
+
+msgid "usage: "
 msgstr ""
 
 msgid "y"

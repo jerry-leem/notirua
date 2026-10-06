@@ -16,6 +16,8 @@ from notirua import i18n
 ROOT = Path(__file__).resolve().parents[1]
 LOCALES = ROOT / "locales"
 PLACEHOLDER = re.compile(r"\{(\w+)\}")
+# printf-style placeholders used by argparse messages: %(name)s, %s, %r
+PRINTF_PLACEHOLDER = re.compile(r"%(?:\((\w+)\))?[sdr]")
 
 
 def test_fallback_chain() -> None:
@@ -69,9 +71,21 @@ def test_placeholders_match_source(po: Path) -> None:
         ids = m.id if isinstance(m.id, tuple) else (m.id,)
         strings = m.string if isinstance(m.string, tuple) else (m.string,)
         expected = set(PLACEHOLDER.findall(ids[0]))
+        expected_printf = sorted(PRINTF_PLACEHOLDER.findall(ids[0]))
         for s in strings:
             if s:
                 assert set(PLACEHOLDER.findall(s)) == expected, m.id
+                assert sorted(PRINTF_PLACEHOLDER.findall(s)) == expected_printf, m.id
+
+
+@pytest.mark.parametrize("po", _catalogs(), ids=lambda p: p.parts[-3])
+def test_catalog_has_every_template_message(po: Path) -> None:
+    """A catalog missing new ids was not merged; run the pybabel update command in AGENTS.md."""
+    with (LOCALES / "notirua.pot").open("rb") as fp:
+        template = {m.id for m in read_po(fp) if m.id}
+    with po.open("rb") as fp:
+        present = {m.id for m in read_po(fp) if m.id}
+    assert not template - present, sorted(map(str, template - present))
 
 
 @pytest.mark.parametrize("po", _catalogs(), ids=lambda p: p.parts[-3])
@@ -125,6 +139,67 @@ def test_template_is_up_to_date(tmp_path: Path) -> None:
             return {m.id for m in read_po(fp) if m.id}
 
     assert ids(out) == ids(LOCALES / "notirua.pot"), "run the pybabel extract command in AGENTS.md"
+
+
+# argparse messages that only report programming mistakes, never user input.
+ARGPARSE_DEVELOPER_MESSAGES = {
+    ".__call__() not defined",
+    "%r is not callable",
+    "'required' is an invalid argument for positionals",
+    "cannot have multiple subparser arguments",
+    "cannot merge actions - two groups are named %r",
+    "conflicting subparser alias: %s",
+    "conflicting subparser: %s",
+    "dest= is required for options like %r",
+    "invalid conflict_resolution value: %r",
+    "invalid option string %(option)r: must start with a character %(prefix_chars)r",
+    "mutually exclusive arguments must be optional",
+    ("conflicting option string: %s", "conflicting option strings: %s"),
+}
+
+
+def test_argparse_messages_are_all_listed() -> None:
+    """Every user-facing argparse message of this Python is in the catalog template."""
+    import argparse
+
+    tree = ast.parse(Path(argparse.__file__).read_text(encoding="utf-8"))
+    used: set[object] = set()
+    for node in ast.walk(tree):
+        if isinstance(node, ast.Call) and getattr(node.func, "id", None) in ("_", "ngettext"):
+            args = [a.value for a in node.args if isinstance(a, ast.Constant)]
+            if args:
+                used.add(args[0] if node.func.id == "_" else (args[0], args[1]))  # type: ignore[attr-defined]
+    with (LOCALES / "notirua.pot").open("rb") as fp:
+        template = {m.id for m in read_po(fp) if m.id}
+    missing = used - ARGPARSE_DEVELOPER_MESSAGES - template
+    assert not missing, f"add to src/notirua/i18n/argparse_text.py: {missing}"
+
+
+def test_cli_help_and_errors_follow_language(
+    monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    import argparse
+
+    from notirua import cli
+
+    # cli.main() rebinds these; monkeypatch restores them for the other tests.
+    monkeypatch.setattr(argparse, "_", argparse._)  # type: ignore[attr-defined]
+    monkeypatch.setattr(argparse, "ngettext", argparse.ngettext)  # type: ignore[attr-defined]
+
+    with pytest.raises(SystemExit):
+        cli.main(["--lang", "ko", "--help"])
+    out = capsys.readouterr().out
+    assert out.startswith("사용법: notirua")
+    assert "옵션:" in out and "이 도움말을 보여 주고 끝냅니다" in out
+
+    with pytest.raises(SystemExit) as exc:
+        cli.main(["--lang", "ko", "transcribe"])
+    assert exc.value.code == 2
+    assert "notirua transcribe: 오류: 다음 인수가 필요합니다: file" in capsys.readouterr().err
+
+    with pytest.raises(SystemExit):
+        cli.main(["--lang", "en", "--help"])
+    assert capsys.readouterr().out.startswith("usage: notirua")
 
 
 USER_FACING_CALLS = {"print", "add_argument", "add_parser", "ArgumentParser", "input"}

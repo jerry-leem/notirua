@@ -16,6 +16,7 @@ from notirua.core.model import STEMS
 from notirua.core.progress import CancelToken, ProgressEvent
 from notirua.i18n import _, available_languages, ngettext, resolve_language, set_language
 from notirua.i18n import translate_message as tm
+from notirua.i18n.argparse_text import install as install_argparse_text
 
 EXIT_OK, EXIT_ERROR, EXIT_USAGE, EXIT_CANCELLED, EXIT_SETUP = 0, 1, 2, 130, 3
 
@@ -173,6 +174,7 @@ def main(argv: Sequence[str] | None = None) -> int:
     argv = list(sys.argv[1:] if argv is None else argv)
     user = settings_mod.load()
     set_language(resolve_language(_preparse_lang(argv) or user.language))
+    install_argparse_text()
     parser = build_parser()
     args = parser.parse_args(argv)
     from notirua.core.logging_setup import configure
