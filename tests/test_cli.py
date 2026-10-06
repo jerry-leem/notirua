@@ -89,7 +89,11 @@ def test_version_flag(opened: list[str | None], capsys: pytest.CaptureFixture[st
         cli.main(["--version"])
     assert exc.value.code == 0
     assert capsys.readouterr().out.strip() == f"notirua {notirua.__version__}"
-    assert notirua.__version__ == "0.1.1"
+    import tomllib
+    from pathlib import Path
+
+    pyproject = tomllib.loads((Path(__file__).parents[1] / "pyproject.toml").read_text())
+    assert notirua.__version__ == pyproject["project"]["version"], "run `uv sync` after a bump"
 
 
 @pytest.mark.skipif(sys.platform != "darwin", reason="macOS menu bar name")
