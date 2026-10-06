@@ -58,8 +58,8 @@ Python이나 다른 프로그램을 따로 설치하지 않아도 되며, 한·�
 
 | 컴퓨터 | 내려받기 (0.4.0) | 설치 |
 |---|---|---|
-| Mac (Apple Silicon), macOS 14 이상 | [Notirua-0.4.0-macos-arm64.dmg](https://github.com/jerry-leem/notirua/releases/download/v0.4.0/Notirua-0.4.0-macos-arm64.dmg) (120 MB) | 열어서 Notirua를 Applications 폴더로 끌어다 놓기 |
 | Windows 10/11 (x64) | [Notirua-0.4.0-windows-x64-setup.exe](https://github.com/jerry-leem/notirua/releases/download/v0.4.0/Notirua-0.4.0-windows-x64-setup.exe) (107 MB) | 실행해서 안내에 따라 설치(관리자 권한 필요 없음) |
+| Mac (Apple Silicon), macOS 14 이상 | [Notirua-0.4.0-macos-arm64.dmg](https://github.com/jerry-leem/notirua/releases/download/v0.4.0/Notirua-0.4.0-macos-arm64.dmg) (120 MB) | 열어서 Notirua를 Applications 폴더로 끌어다 놓기 |
 | Linux x86_64 (glibc 2.31 이상) | [Notirua-0.4.0-linux-x86_64.AppImage](https://github.com/jerry-leem/notirua/releases/download/v0.4.0/Notirua-0.4.0-linux-x86_64.AppImage) (176 MB) | `chmod +x`로 실행 권한을 주고 실행 |
 | Intel Mac | 준비 중 | 아래 [소스로 실행하기](#소스로-실행하기) |
 
@@ -282,8 +282,8 @@ limits. Earlier versions are on [all releases](https://github.com/jerry-leem/not
 
 | Computer | Download (0.4.0) | Install |
 |---|---|---|
-| Mac (Apple Silicon), macOS 14 or later | [Notirua-0.4.0-macos-arm64.dmg](https://github.com/jerry-leem/notirua/releases/download/v0.4.0/Notirua-0.4.0-macos-arm64.dmg) (120 MB) | Open it and drag Notirua to Applications |
 | Windows 10/11 (x64) | [Notirua-0.4.0-windows-x64-setup.exe](https://github.com/jerry-leem/notirua/releases/download/v0.4.0/Notirua-0.4.0-windows-x64-setup.exe) (107 MB) | Run it and follow the steps (no administrator rights needed) |
+| Mac (Apple Silicon), macOS 14 or later | [Notirua-0.4.0-macos-arm64.dmg](https://github.com/jerry-leem/notirua/releases/download/v0.4.0/Notirua-0.4.0-macos-arm64.dmg) (120 MB) | Open it and drag Notirua to Applications |
 | Linux x86_64 (glibc 2.31 or later) | [Notirua-0.4.0-linux-x86_64.AppImage](https://github.com/jerry-leem/notirua/releases/download/v0.4.0/Notirua-0.4.0-linux-x86_64.AppImage) (176 MB) | `chmod +x` it and run it |
 | Intel Mac | Coming | [Run from source](#run-from-source) |
 
