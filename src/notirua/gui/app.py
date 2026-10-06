@@ -12,6 +12,7 @@ from PySide6.QtGui import QIcon
 from PySide6.QtWidgets import QApplication
 
 from notirua import settings as settings_mod
+from notirua.gui import macos
 from notirua.i18n import resolve_language, set_language
 
 
@@ -45,14 +46,18 @@ def display_available() -> bool:
 
 def main(argv: Sequence[str] | None = None, language: str | None = None) -> int:
     """Open the window. The first run (no settings file or no consent) starts on setup."""
+    from notirua import APP_NAME, __version__
     from notirua.core.logging_setup import configure
-    from notirua.gui.main_window import APP_NAME, MainWindow
+    from notirua.gui.main_window import MainWindow
 
     configure()
+    if QApplication.instance() is None:
+        macos.set_app_name(APP_NAME)
     app = QApplication.instance() or QApplication(list(argv if argv is not None else sys.argv))
     assert isinstance(app, QApplication)
     app.setApplicationName(APP_NAME)
     app.setApplicationDisplayName(APP_NAME)
+    app.setApplicationVersion(__version__)
     app.setWindowIcon(app_icon())
     if not settings_mod.settings_path().is_file():
         settings_mod.save(settings_mod.Settings())

@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import sys
 
 import pytest
 
@@ -79,3 +80,21 @@ def test_app_icon_has_every_size(qapp: object) -> None:
     icon = gui_app.app_icon()
     sizes = {s.width() for s in icon.availableSizes()}
     assert {16, 32, 64, 128, 256, 512, 1024} <= sizes
+
+
+def test_version_flag(opened: list[str | None], capsys: pytest.CaptureFixture[str]) -> None:
+    import notirua
+
+    with pytest.raises(SystemExit) as exc:
+        cli.main(["--version"])
+    assert exc.value.code == 0
+    assert capsys.readouterr().out.strip() == f"notirua {notirua.__version__}"
+    assert notirua.__version__ == "0.1.1"
+
+
+@pytest.mark.skipif(sys.platform != "darwin", reason="macOS menu bar name")
+def test_macos_menu_bar_uses_the_app_name() -> None:
+    from notirua.gui import macos
+
+    assert macos.set_app_name("Notirua")
+    assert macos.app_name() == "Notirua"

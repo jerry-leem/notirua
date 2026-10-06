@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-10-06 22:26+0900\n"
+"POT-Creation-Date: 2026-10-06 22:40+0900\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -29,6 +29,12 @@ msgstr ""
 msgid "%(prog)s: error: %(message)s\n"
 msgstr ""
 
+msgid "&File"
+msgstr ""
+
+msgid "&Help"
+msgstr ""
+
 msgid "5-string"
 msgstr ""
 
@@ -37,6 +43,10 @@ msgid "A required component is not installed: {name}."
 msgstr ""
 
 msgid "About"
+msgstr ""
+
+#, python-brace-format
+msgid "About {name}"
 msgstr ""
 
 msgid "Agree and install"
@@ -501,6 +511,9 @@ msgstr[1] ""
 msgid "Notirua {version}"
 msgstr ""
 
+msgid "Open a music file…"
+msgstr ""
+
 msgid "Open log folder"
 msgstr ""
 
@@ -546,6 +559,10 @@ msgid "Please review the component licenses"
 msgstr ""
 
 msgid "Previous page"
+msgstr ""
+
+#, python-brace-format
+msgid "Quit {name}"
 msgstr ""
 
 msgid "Reading the audio file"
@@ -647,6 +664,9 @@ msgstr ""
 msgid "Settings"
 msgstr ""
 
+msgid "Settings…"
+msgstr ""
+
 msgid "Sheet music preview"
 msgstr ""
 
@@ -667,6 +687,9 @@ msgstr ""
 
 #, python-brace-format
 msgid "Show the license of {name}"
+msgstr ""
+
+msgid "Show the version."
 msgstr ""
 
 msgid "Size"

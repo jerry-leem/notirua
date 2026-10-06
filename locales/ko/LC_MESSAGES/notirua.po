@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Notirua VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-10-06 22:26+0900\n"
+"POT-Creation-Date: 2026-10-06 22:40+0900\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: ko\n"
@@ -30,6 +30,12 @@ msgstr "%(heading)s:"
 msgid "%(prog)s: error: %(message)s\n"
 msgstr "%(prog)s: 오류: %(message)s\n"
 
+msgid "&File"
+msgstr "파일(&F)"
+
+msgid "&Help"
+msgstr "도움말(&H)"
+
 msgid "5-string"
 msgstr "5현"
 
@@ -39,6 +45,10 @@ msgstr "필요한 구성요소가 설치되지 않았습니다: {name}."
 
 msgid "About"
 msgstr "정보"
+
+#, python-brace-format
+msgid "About {name}"
+msgstr "{name} 정보"
 
 msgid "Agree and install"
 msgstr "동의하고 설치"
@@ -501,6 +511,9 @@ msgstr[0] "Notirua를 쓰려면 구성요소 {count}개를 내려받아야 합�
 msgid "Notirua {version}"
 msgstr "Notirua {version}"
 
+msgid "Open a music file…"
+msgstr "음악 파일 열기…"
+
 msgid "Open log folder"
 msgstr "로그 폴더 열기"
 
@@ -547,6 +560,10 @@ msgstr "구성요소 라이선스를 확인해 주세요"
 
 msgid "Previous page"
 msgstr "이전 쪽"
+
+#, python-brace-format
+msgid "Quit {name}"
+msgstr "{name} 종료"
 
 msgid "Reading the audio file"
 msgstr "음악 파일을 읽는 중"
@@ -646,6 +663,9 @@ msgstr "옮길 반음 수, -12 ~ +12."
 msgid "Settings"
 msgstr "설정"
 
+msgid "Settings…"
+msgstr "설정…"
+
 msgid "Sheet music preview"
 msgstr "악보 미리보기"
 
@@ -667,6 +687,9 @@ msgstr "저장된 중간 결과를 보거나 지웁니다."
 #, python-brace-format
 msgid "Show the license of {name}"
 msgstr "{name} 라이선스 보기"
+
+msgid "Show the version."
+msgstr "버전을 보여 줍니다."
 
 msgid "Size"
 msgstr "크기"

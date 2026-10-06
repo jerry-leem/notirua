@@ -14,7 +14,7 @@ from pathlib import Path
 
 import pytest
 from PySide6.QtCore import QMimeData, QPointF, Qt, QTimer, QUrl
-from PySide6.QtGui import QDropEvent
+from PySide6.QtGui import QAction, QDropEvent
 from PySide6.QtPdf import QPdfDocument
 from PySide6.QtWidgets import QApplication, QFileDialog, QMessageBox
 from pytestqt.qtbot import QtBot
@@ -559,3 +559,47 @@ def test_progress_panel_never_goes_back(qtbot: QtBot) -> None:
     assert panel.bar.value() == 600
     assert panel.stage_list.text("a").startswith(STATE_ICONS["running"])
     assert "In progress" in panel.stage_list._rows["a"].accessibleName()
+
+
+# -- menus and title -------------------------------------------------------------
+def test_title_shows_the_version(
+    qtbot: QtBot, ready_user: settings_mod.Settings, job: FakeJob, song: Path
+) -> None:
+    import notirua
+
+    window = make_window(qtbot, ready_user, no_components, job.pipeline)
+    assert window.windowTitle() == f"Notirua {notirua.__version__}"
+    window.open_file(song)
+    window.options_page.start_button.click()
+    wait_result(qtbot, window)
+    assert window.windowTitle() == f"봄날 song — Notirua {notirua.__version__}"
+
+
+def test_menus_hold_settings_and_quit(
+    qtbot: QtBot,
+    ready_user: settings_mod.Settings,
+    job: FakeJob,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    from notirua.gui.settings_dialog import SettingsDialog
+
+    window = make_window(qtbot, ready_user, no_components, job.pipeline)
+    roles = {a.menuRole() for a in window.file_menu.actions() + window.help_menu.actions()}
+    assert QAction.MenuRole.PreferencesRole in roles  # macOS: application menu
+    assert QAction.MenuRole.QuitRole in roles
+    assert QAction.MenuRole.AboutRole in roles
+    assert window.settings_action.shortcut().toString() == "Ctrl+,"
+    assert window.quit_action.shortcut().toString() == "Ctrl+Q"
+
+    opened: list[str] = []
+    monkeypatch.setattr(
+        SettingsDialog,
+        "exec",
+        lambda self: opened.append(self.tabs.tabText(self.tabs.currentIndex())),
+    )
+    window.settings_action.trigger()
+    window.about_action.trigger()
+    assert opened == ["General", "About"]
+
+    window.quit_action.trigger()
+    assert not window.isVisible()

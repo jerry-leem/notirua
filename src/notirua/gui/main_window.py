@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import logging
 import shutil
+import sys
 import tempfile
 from collections.abc import Callable
 from dataclasses import replace
@@ -15,7 +16,7 @@ from pathlib import Path
 from typing import Any
 
 from PySide6.QtCore import QByteArray, QTimer
-from PySide6.QtGui import QCloseEvent, QDragEnterEvent, QDropEvent, QKeySequence, QShortcut
+from PySide6.QtGui import QAction, QCloseEvent, QDragEnterEvent, QDropEvent, QKeySequence
 from PySide6.QtWidgets import (
     QApplication,
     QFileDialog,
@@ -23,6 +24,7 @@ from PySide6.QtWidgets import (
     QHBoxLayout,
     QLabel,
     QMainWindow,
+    QMenu,
     QMessageBox,
     QPushButton,
     QStackedWidget,
@@ -31,6 +33,7 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
+from notirua import APP_NAME, APP_TITLE
 from notirua import settings as settings_mod
 from notirua.core.errors import NotiruaError
 from notirua.core.pipeline import (
@@ -56,7 +59,6 @@ from notirua.i18n import _, ngettext
 
 log = logging.getLogger(__name__)
 
-APP_NAME = "Notirua"
 TRANSPOSE_DEBOUNCE_MS = 250
 
 
@@ -79,7 +81,7 @@ class MainWindow(QMainWindow):
         self.user = user
         self._pipeline = pipeline
         self.manager_factory = manager_factory
-        self.setWindowTitle(APP_NAME)
+        self.setWindowTitle(APP_TITLE)
         self.setAcceptDrops(True)
         self.job_task: Task | None = None
         self.render_task: Task | None = None
@@ -149,9 +151,7 @@ class MainWindow(QMainWindow):
         self._transpose_timer.setSingleShot(True)
         self._transpose_timer.timeout.connect(self._rerender)
 
-        QShortcut(QKeySequence.StandardKey.Open, self, self._shortcut_open)
-        QShortcut(QKeySequence.StandardKey.Preferences, self, self.open_settings)
-        QShortcut(QKeySequence.StandardKey.Save, self, self._shortcut_save)
+        self._build_menus()
 
         self.tray: QSystemTrayIcon | None = None
         if QSystemTrayIcon.isSystemTrayAvailable():
@@ -296,25 +296,25 @@ class MainWindow(QMainWindow):
 
     def _job_progress(self, event: ProgressEvent) -> None:
         self.progress_page.apply(event)
-        self.setWindowTitle(f"{int(self.progress_page.panel.fraction * 100)}% — {APP_NAME}")
+        self.setWindowTitle(f"{int(self.progress_page.panel.fraction * 100)}% — {APP_TITLE}")
 
     def _job_done(self, result: JobResult) -> None:
         self.progress_page.panel.finish()
         self.progress_page.running = False
-        self.setWindowTitle(f"{result.title} — {APP_NAME}")
+        self.setWindowTitle(f"{result.title} — {APP_TITLE}")
         self.result = result
         self.result_page.show_result(result, original_key=result.score.key)
         self.stack.setCurrentWidget(self.result_page)
         self._notify(_("The sheet music is ready."), result.title)
 
     def _job_failed(self, error: BaseException) -> None:
-        self.setWindowTitle(APP_NAME)
+        self.setWindowTitle(APP_TITLE)
         self.progress_page.show_error(error)
         message = error.user_message() if isinstance(error, NotiruaError) else str(error)
         self._notify(_("Making sheet music failed."), message)
 
     def _job_cancelled(self) -> None:
-        self.setWindowTitle(APP_NAME)
+        self.setWindowTitle(APP_TITLE)
         self.progress_page.running = False
         self.stack.setCurrentWidget(self.options_page)
         self.options_page.start_button.setFocus()
@@ -450,11 +450,58 @@ class MainWindow(QMainWindow):
             self.side_tasks.remove(task)
 
     # -- settings ----------------------------------------------------------
-    def open_settings(self) -> None:
+    def open_settings(self, about: bool = False) -> None:
         dialog = SettingsDialog(self.user, self.manager_factory(self.user), self)
         dialog.setup_requested.connect(self.show_setup)
         dialog.components_changed.connect(self._components_changed)
+        if about:
+            dialog.tabs.setCurrentIndex(dialog.tabs.count() - 1)
         dialog.exec()
+
+    # -- menus -------------------------------------------------------------
+    def _build_menus(self) -> None:
+        """File and Help menus. On macOS Qt moves Settings, Quit, and About into the
+        application menu (by their roles); Windows and Linux show them in the window."""
+        self.open_action = QAction(_("Open a music file…"), self)
+        self.open_action.setShortcut(QKeySequence.StandardKey.Open)
+        self.open_action.triggered.connect(self._shortcut_open)
+        self.save_action = QAction(_("Save all"), self)
+        self.save_action.setShortcut(QKeySequence.StandardKey.Save)
+        self.save_action.triggered.connect(self._shortcut_save)
+        for action in (self.open_action, self.save_action):
+            action.setMenuRole(QAction.MenuRole.NoRole)
+        self.settings_action = QAction(_("Settings…"), self)
+        self.settings_action.setMenuRole(QAction.MenuRole.PreferencesRole)
+        self.settings_action.setShortcut(QKeySequence("Ctrl+,"))  # ⌘, on macOS
+        self.settings_action.triggered.connect(lambda: self.open_settings())
+        self.quit_action = QAction(_("Quit {name}").format(name=APP_NAME), self)
+        self.quit_action.setMenuRole(QAction.MenuRole.QuitRole)
+        self.quit_action.setShortcut(QKeySequence("Ctrl+Q"))  # ⌘Q on macOS
+        self.quit_action.triggered.connect(self.close)
+        self.about_action = QAction(_("About {name}").format(name=APP_NAME), self)
+        self.about_action.setMenuRole(QAction.MenuRole.AboutRole)
+        self.about_action.triggered.connect(lambda: self.open_settings(about=True))
+
+        bar = self.menuBar()
+        # Kept as attributes: PySide may otherwise drop the wrappers of native menus.
+        self.file_menu = QMenu(_("&File"), self)
+        self.file_menu.addAction(self.open_action)
+        self.file_menu.addAction(self.save_action)
+        self.file_menu.addSeparator()
+        self.file_menu.addAction(self.settings_action)
+        self.file_menu.addSeparator()
+        self.file_menu.addAction(self.quit_action)
+        self.help_menu = QMenu(_("&Help"), self)
+        self.help_menu.addAction(self.about_action)
+        bar.addMenu(self.file_menu)
+        bar.addMenu(self.help_menu)
+
+        if sys.platform == "darwin":
+            # Right-click on the Dock icon; macOS adds Quit there by itself.
+            self.dock_menu = QMenu(self)
+            self.dock_menu.addAction(self.open_action)
+            self.dock_menu.addAction(self.settings_action)
+            self.dock_menu.setAsDockMenu()
 
     def _components_changed(self) -> None:
         self._pipeline = None

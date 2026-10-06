@@ -11,6 +11,7 @@ from collections.abc import Sequence
 from pathlib import Path
 from typing import TextIO
 
+from notirua import __version__
 from notirua import settings as settings_mod
 from notirua.core.errors import Cancelled, NotiruaError
 from notirua.core.model import STEMS
@@ -112,6 +113,9 @@ def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         prog="notirua",
         description=_("Turn a song into sheet music and tablature PDFs."),
+    )
+    parser.add_argument(
+        "--version", action="version", version=f"notirua {__version__}", help=_("Show the version.")
     )
     parser.add_argument("--lang", help=_("Interface language, for example en or ko."))
     parser.add_argument("-v", "--verbose", action="store_true", help=_("Show detailed log output."))
