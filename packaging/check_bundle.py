@@ -4,8 +4,8 @@ Usage: python packaging/check_bundle.py dist/app/Notirua [--version X.Y.Z]
 
 Fails (exit 1) when the bundle carries something it must not (ML frameworks,
 GPL FFmpeg, unused Qt add-ons) or misses something it needs (catalogs, license
-notices, the transcription model, version metadata, Linux fonts), and when the
-bundled command line does not start.
+notices, the transcription model, version metadata, Linux fonts, the MP3
+encoder), and when the bundled command line does not start.
 """
 
 from __future__ import annotations
@@ -22,6 +22,8 @@ FORBIDDEN_PARTS = ("torch", "tensorflow", "tflite_runtime", "coremltools", "matp
 # QtQuick (macOS), libQt6Quick.so.6 (Linux), Qt6Quick.dll (Windows).
 FORBIDDEN_QT = re.compile(r"Qt6?(WebEngine|3D|Quick|Qml|Multimedia|Charts|VirtualKeyboard)")
 GPL_FFMPEG = re.compile(rb"--enable-gpl|--enable-nonfree|libx264|libx265|(?<![L])GPL version \d")
+# "Make audio file" saves MP3 through LAME inside libavcodec (0.4.0).
+MP3_ENCODER = b"libmp3lame"
 FFMPEG_LIB = re.compile(r"(avcodec|avformat|avutil|swresample|avfilter|swscale)", re.IGNORECASE)
 
 
@@ -61,6 +63,9 @@ def problems(bundle: Path, expected_version: str | None) -> list[str]:
             found.append(f"FFmpeg library is not LGPL-only: {rel}")
     if not any(is_ffmpeg(p) for p in files):
         found.append("no FFmpeg libraries found (is av bundled?)")
+    codecs = [p for p in files if is_ffmpeg(p) and "avcodec" in p.name.lower()]
+    if codecs and not any(MP3_ENCODER in p.read_bytes() for p in codecs):
+        found.append("FFmpeg cannot save MP3 (built without LAME)")
 
     needed = [
         "notirua/resources/models/basic_pitch_nmp.onnx",
