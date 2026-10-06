@@ -10,6 +10,36 @@ Notirua(노티루아)는 음원 파일을 넣으면 악기별(보컬, 드럼, �
 
 ## 주요 특징
 
+### 음원을 악보 PDF로 만들기
+
+Notirua의 핵심 기능입니다. 노래 파일(MP3, M4A, WAV, FLAC 등 오디오와 MP4 같은
+동영상)을 넣으면 곡명과 페이지 번호가 들어간 악보 PDF를 만들어 줍니다.
+
+1. **악기별로 나누기**: 보컬, 드럼, 베이스, 기타, 피아노, 다른 악기로 나눕니다.
+2. **악보로 옮기기**: 악기마다 오선보를 그리고, 기타와 베이스는 TAB 악보도 함께
+   그립니다. 맨 위에는 코드(예: C, Am, G7)가 코드가 바뀌는 곳에만 표시됩니다.
+3. **PDF로 저장**: 곡명과 페이지 번호가 들어간 PDF로 저장합니다. 결과 화면에서 조를
+   바꾸거나 곡명을 고친 뒤 다시 저장할 수 있고, MusicXML과 MIDI도 함께 저장할 수
+   있습니다.
+
+모든 처리는 내 컴퓨터에서 이루어지며, 처음 한 번 구성요소를 설치한 뒤에는 인터넷을
+쓰지 않습니다. 사용 방법은 [앱 사용법](#앱-사용법)을 보세요.
+
+### 트랙을 골라 새 음원 만들기
+
+악기별로 나눈 트랙(보컬, 드럼, 베이스, 기타, 피아노, 다른 악기) 가운데 원하는 것만
+골라 새 음원 파일(MP3, M4A, WAV)로 만들 수 있습니다. 보컬만 뺀 MR, 내 악기만 뺀
+합주·연습용 반주, 공연용 음원을 만들 때 씁니다. 결과 화면의 **음원 만들기** 버튼이나
+명령줄 `notirua mix`로 만듭니다.
+
+- **보컬 빼기(MR)**, **모두 선택**, **모두 해제** 버튼으로 빠르게 고르고, **미리 듣기**로
+  먼저 들어 볼 수 있습니다.
+- MP3는 320 kbps, M4A는 AAC 256 kbps, WAV는 16비트로 저장합니다(44.1 kHz 스테레오).
+- 악보를 만든 구간과 같은 구간을 쓰고, 악보의 조를 바꿔도 음원은 원래 음높이
+  그대로입니다. 이미 악기를 나눈 곡은 다시 나누지 않아 몇 초면 끝납니다.
+- 파일 이름이 담긴 악기를 알려 줍니다(예: `곡 - MR.mp3`, `곡 - 기타 제외.mp3`,
+  `곡 - 드럼, 베이스.mp3`).
+
 ### 여러 운영체제 지원
 
 | 운영체제 | 지원 범위 | 설치 파일 |
@@ -33,21 +63,6 @@ Python이나 다른 프로그램을 따로 설치하지 않아도 되며, 한·�
 - 곡명은 어떤 언어로 써도 PDF에 그대로 들어갑니다.
 - 새 언어는 프로그램을 고치지 않고 `locales/<언어>/LC_MESSAGES/notirua.po` 번역
   파일 하나만 추가하면 됩니다(템플릿 `locales/notirua.pot`). 번역 기여를 환영합니다.
-
-### 트랙을 골라 새 음원 만들기
-
-악기별로 나눈 트랙(보컬, 드럼, 베이스, 기타, 피아노, 다른 악기) 가운데 원하는 것만
-골라 새 음원 파일(MP3, M4A, WAV)로 만들 수 있습니다. 보컬만 뺀 MR, 내 악기만 뺀
-합주·연습용 반주, 공연용 음원을 만들 때 씁니다. 결과 화면의 **음원 만들기** 버튼이나
-명령줄 `notirua mix`로 만듭니다.
-
-- **보컬 빼기(MR)**, **모두 선택**, **모두 해제** 버튼으로 빠르게 고르고, **미리 듣기**로
-  먼저 들어 볼 수 있습니다.
-- MP3는 320 kbps, M4A는 AAC 256 kbps, WAV는 16비트로 저장합니다(44.1 kHz 스테레오).
-- 악보를 만든 구간과 같은 구간을 쓰고, 악보의 조를 바꿔도 음원은 원래 음높이
-  그대로입니다. 이미 악기를 나눈 곡은 다시 나누지 않아 몇 초면 끝납니다.
-- 파일 이름이 담긴 악기를 알려 줍니다(예: `곡 - MR.mp3`, `곡 - 기타 제외.mp3`,
-  `곡 - 드럼, 베이스.mp3`).
 
 ## 내려받기와 설치
 
@@ -228,6 +243,41 @@ vocals. Everything runs on your computer.
 
 ### Features
 
+#### Turn a song into sheet music (PDF)
+
+This is Notirua's main feature. Add a song (audio such as MP3, M4A, WAV, or
+FLAC, or a video such as MP4) and get sheet music as a PDF with the song title
+and page numbers.
+
+1. **Split into instruments**: vocals, drums, bass, guitar, piano, and other.
+2. **Write it down**: each instrument gets a staff score, and guitar and bass
+   also get tablature. Chord symbols (such as C, Am, G7) appear above the
+   score wherever the chord changes.
+3. **Save as PDF**: the PDF carries the song title and page numbers. On the
+   result screen you can change the key or fix the title and save again, and
+   you can also save MusicXML and MIDI.
+
+Everything runs on your computer, and after the one-time component setup it
+does not use the internet. See [Use the app](#use-the-app).
+
+#### Make a new audio file from chosen tracks
+
+Pick any of the separated tracks (vocals, drums, bass, guitar, piano, other)
+and save just those as a new audio file (MP3, M4A, or WAV) — a backing track
+without vocals, a practice mix without your own instrument, or a mix for a
+live show. Use **Make audio file** on the result screen or `notirua mix` on
+the command line.
+
+- Choose quickly with **Remove vocals (MR)**, **Select all**, and **Clear
+  all**, and use **Listen first** before saving.
+- MP3 is 320 kbps, M4A is AAC at 256 kbps, and WAV is 16-bit (44.1 kHz
+  stereo).
+- The audio uses the same time range as the sheet music and keeps its
+  original key, even after you transpose. A song that is already split takes
+  only seconds.
+- File names say what the mix holds, for example `Song - backing track.mp3`,
+  `Song - without Guitar.mp3`, or `Song - Drums, Bass.mp3`.
+
 #### Runs on macOS, Windows, and Linux
 
 | System | Supported | Installer |
@@ -254,24 +304,6 @@ titles (macOS and Windows use their system fonts).
 - Adding a language needs no code changes: add one translation file,
   `locales/<language>/LC_MESSAGES/notirua.po` (template:
   `locales/notirua.pot`). Translations are welcome.
-
-#### Make a new audio file from chosen tracks
-
-Pick any of the separated tracks (vocals, drums, bass, guitar, piano, other)
-and save just those as a new audio file (MP3, M4A, or WAV) — a backing track
-without vocals, a practice mix without your own instrument, or a mix for a
-live show. Use **Make audio file** on the result screen or `notirua mix` on
-the command line.
-
-- Choose quickly with **Remove vocals (MR)**, **Select all**, and **Clear
-  all**, and use **Listen first** before saving.
-- MP3 is 320 kbps, M4A is AAC at 256 kbps, and WAV is 16-bit (44.1 kHz
-  stereo).
-- The audio uses the same time range as the sheet music and keeps its
-  original key, even after you transpose. A song that is already split takes
-  only seconds.
-- File names say what the mix holds, for example `Song - backing track.mp3`,
-  `Song - without Guitar.mp3`, or `Song - Drums, Bass.mp3`.
 
 ### Download and install
 
