@@ -66,8 +66,25 @@ def arrange_part(stem: str, notes: Sequence[ScoreNote], options: ArrangeOptions)
                 else N_("Moved down one octave to fit the instrument.")
             )
         result = assign_tab(shifted, tuning, max_fret, options.tab_weights)
+        log.info(
+            "%s: %d notes in, %d placed, %d moved by octaves into range, "
+            "%d merged duplicates, %d chords re-voiced, %d left out",
+            stem,
+            len(notes),
+            len(result.notes),
+            result.folded,
+            result.merged,
+            result.revoiced,
+            len(result.dropped),
+        )
+        if result.folded:
+            warnings.append(
+                N_("Some notes outside the instrument's range were moved by an octave.")
+            )
         if result.dropped:
-            log.warning("%s: dropped %d unplayable notes", stem, len(result.dropped))
+            log.warning(
+                "%s: left out %d notes that cannot be played together", stem, len(result.dropped)
+            )
             warnings.append(N_("Some notes that cannot be played together were left out."))
         return [
             Part(stem, result.notes, tuning=tuning, staff=STAFF_FOR_STEM[stem], warnings=warnings)

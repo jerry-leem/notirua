@@ -50,7 +50,10 @@ class TabWeights:
 @dataclass(frozen=True)
 class TabResult:
     notes: list[ScoreNote]
-    dropped: list[ScoreNote]
+    dropped: list[ScoreNote]  # could not be fingered at all
+    folded: int = 0  # out-of-range notes moved by octaves into range
+    merged: int = 0  # notes that became a duplicate of another note in the chord
+    revoiced: int = 0  # chords made playable by moving one note an octave
 
 
 Position = tuple[int, int]  # (string index from lowest = 0, fret)
@@ -94,6 +97,7 @@ def _hand(assign: Sequence[Position]) -> float | None:
 def _candidates(
     pitches: Sequence[int], tuning: Sequence[int], max_fret: int, w: TabWeights, limit: int
 ) -> list[tuple[tuple[Position, ...], float]]:
+    """Every way to put the pitches on different strings, cheapest first."""
     options = [positions_for(p, tuning, max_fret) for p in pitches]
     if any(not o for o in options):
         return []
@@ -107,22 +111,103 @@ def _candidates(
     return found[:limit]
 
 
+def fold_into_range(pitch: int, low: int, high: int) -> int:
+    """Move a pitch by whole octaves until it lies in ``[low, high]`` (keeps the note name)."""
+    while pitch < low:
+        pitch += 12
+    while pitch > high:
+        pitch -= 12
+    return pitch if pitch >= low else pitch + 12  # range narrower than an octave
+
+
+def _shed_one(keep: list[ScoreNote]) -> ScoreNote:
+    """The note a guitarist would leave out first.
+
+    Octave doublings go first (often overtones the transcriber heard), then the
+    quietest inner voice; the lowest (bass) and highest (melody) notes go last.
+    """
+    by_class: dict[int, list[ScoreNote]] = {}
+    for note in keep:
+        by_class.setdefault(note.pitch % 12, []).append(note)
+    doubled = [
+        note
+        for group in by_class.values()
+        if len(group) > 1
+        for note in sorted(group, key=lambda n: n.pitch)[1:]  # keep the lowest of each name
+    ]
+    if doubled:
+        return min(doubled, key=lambda n: (n.velocity, -n.pitch))
+    ordered = sorted(keep, key=lambda n: n.pitch)
+    inner = ordered[1:-1]
+    return min(inner or ordered, key=lambda n: (n.velocity, -n.pitch))
+
+
+Candidates = list[tuple[tuple[Position, ...], float]]
+
+
+def _reachable(
+    pitches: Sequence[int], tuning: Sequence[int], max_fret: int, w: TabWeights, limit: int
+) -> Candidates:
+    """Fingerings over every string choice, or [] if none is within a hand's reach."""
+    cands = _candidates(pitches, tuning, max_fret, w, limit)
+    # A fingering that needs a huge stretch is "unplayable" too.
+    return cands if cands and cands[0][1] < w.span_penalty + w.span_step * 4 else []
+
+
+def _revoice(
+    keep: list[ScoreNote], tuning: Sequence[int], max_fret: int, w: TabWeights, limit: int
+) -> tuple[list[ScoreNote], Candidates] | None:
+    """Move one note by an octave (same note name) so the chord fits under one hand.
+
+    Tried before leaving a note out: the harmony stays, only the voicing changes.
+    The bass and melody notes are moved last.
+    """
+    low, high = min(tuning), max(tuning) + max_fret
+    ordered = sorted(keep, key=lambda n: n.pitch)
+    priority = ordered[1:-1] + ordered[-1:] + ordered[:1] if len(ordered) > 1 else ordered
+    pitches = {n.pitch for n in keep}
+    best: tuple[float, list[ScoreNote], Candidates] | None = None
+    for note in priority:
+        for shift in (-12, 12):
+            pitch = note.pitch + shift
+            if not low <= pitch <= high or pitch in pitches:
+                continue
+            trial = sorted(
+                (replace(n, pitch=pitch) if n is note else n for n in keep), key=lambda n: n.pitch
+            )
+            cands = _reachable([n.pitch for n in trial], tuning, max_fret, w, limit)
+            if cands and (best is None or cands[0][1] < best[0]):
+                best = (cands[0][1], trial, cands)
+        if best is not None:
+            return best[1], best[2]
+    return None
+
+
 def _playable_subset(
     notes: list[ScoreNote], tuning: Sequence[int], max_fret: int, w: TabWeights, limit: int
-) -> tuple[list[ScoreNote], list[ScoreNote], list[tuple[tuple[Position, ...], float]]]:
-    """Drop the quietest notes until the chord has at least one valid fingering."""
+) -> tuple[list[ScoreNote], list[ScoreNote], Candidates, int]:
+    """Make the chord playable: other strings first, then another octave, then shed notes.
+
+    Returns (kept notes, left-out notes, fingerings, number of notes re-voiced).
+    """
     keep = [n for n in notes if positions_for(n.pitch, tuning, max_fret)]
     dropped = [n for n in notes if n not in keep]
-    keep = keep[: len(tuning)] if len(keep) > len(tuning) else keep
+    revoiced = 0
+    while len(keep) > len(tuning):  # more notes than strings
+        victim = _shed_one(keep)
+        keep.remove(victim)
+        dropped.append(victim)
     while keep:
-        cands = _candidates([n.pitch for n in keep], tuning, max_fret, w, limit)
-        # A fingering that needs a huge stretch is "unplayable" too.
-        if cands and cands[0][1] < w.span_penalty + w.span_step * 4:
-            return keep, dropped, cands
-        quietest = min(keep, key=lambda n: (n.velocity, -n.pitch))
-        keep.remove(quietest)
-        dropped.append(quietest)
-    return [], dropped, []
+        cands = _reachable([n.pitch for n in keep], tuning, max_fret, w, limit)
+        if cands:
+            return keep, dropped, cands, revoiced
+        moved = _revoice(keep, tuning, max_fret, w, limit)
+        if moved is not None:
+            return moved[0], dropped, moved[1], revoiced + 1
+        victim = _shed_one(keep)
+        keep.remove(victim)
+        dropped.append(victim)
+    return [], dropped, [], revoiced
 
 
 def assign_tab(
@@ -135,28 +220,45 @@ def assign_tab(
     """Assign every note a (string, fret) minimising total fingering cost."""
     if not notes:
         return TabResult([], [])
+    # Notes the instrument cannot reach (stray bleed or overtones from the
+    # separated track) keep their note name and move by octaves into range.
+    low, high = min(tuning), max(tuning) + max_fret
+    folded = 0
     by_onset: dict[Fraction, list[ScoreNote]] = {}
     for n in sorted(notes, key=lambda n: (n.onset, n.pitch)):
+        pitch = fold_into_range(n.pitch, low, high)
+        if pitch != n.pitch:
+            folded += 1
+            n = replace(n, pitch=pitch)
         by_onset.setdefault(n.onset, []).append(n)
 
     chords: list[list[ScoreNote]] = []
     chord_cands: list[list[tuple[tuple[Position, ...], float]]] = []
     dropped: list[ScoreNote] = []
+    merged = 0
+    revoiced = 0
     for onset in sorted(by_onset):
-        # Distinct pitches only; duplicates cannot share a string anyway.
+        # Distinct pitches only: a duplicate sounds the same note, so it merges
+        # into the louder copy and keeps the longer duration.
         seen: dict[int, ScoreNote] = {}
         for n in by_onset[onset]:
-            if n.pitch not in seen or n.velocity > seen[n.pitch].velocity:
+            other = seen.get(n.pitch)
+            if other is None:
                 seen[n.pitch] = n
+                continue
+            merged += 1
+            louder = n if n.velocity > other.velocity else other
+            seen[n.pitch] = replace(louder, duration=max(n.duration, other.duration))
         group = sorted(seen.values(), key=lambda n: n.pitch)
-        keep, lost, cands = _playable_subset(group, tuning, max_fret, weights, beam)
+        keep, lost, cands, moved = _playable_subset(group, tuning, max_fret, weights, beam)
         dropped.extend(lost)
+        revoiced += moved
         if keep:
             chords.append(keep)
             chord_cands.append(cands)
 
     if not chords:
-        return TabResult([], dropped)
+        return TabResult([], dropped, folded, merged, revoiced)
 
     # Viterbi over chord fingerings.
     n_strings = len(tuning)
@@ -192,7 +294,9 @@ def assign_tab(
         assign, _cost = chord_cands[t][choice[t]]
         for note, (s, f) in zip(group, assign, strict=True):
             out.append(replace(note, string=n_strings - s, fret=f))
-    return TabResult(sorted(out, key=lambda n: (n.onset, n.pitch)), dropped)
+    return TabResult(
+        sorted(out, key=lambda n: (n.onset, n.pitch)), dropped, folded, merged, revoiced
+    )
 
 
 def fit_range(

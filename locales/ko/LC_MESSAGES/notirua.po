@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Notirua VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-10-06 22:47+0900\n"
+"POT-Creation-Date: 2026-10-06 22:55+0900\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: ko\n"
@@ -541,7 +541,7 @@ msgid "Open the log folder for details and report the problem."
 msgstr "로그 폴더에서 자세한 내용을 확인하고 문제를 알려 주세요."
 
 msgid "Other"
-msgstr "기타 소리"
+msgstr "다른 악기"
 
 msgid "Overall progress"
 msgstr "전체 진행률"
@@ -720,6 +720,9 @@ msgstr "건너뜀: {list}"
 msgid "Some components are not installed yet: {names}"
 msgstr "아직 설치되지 않은 구성요소가 있습니다: {names}"
 
+msgid "Some notes outside the instrument's range were moved by an octave."
+msgstr "악기 음역을 벗어난 일부 음은 한 옥타브 옮겼습니다."
+
 msgid "Some notes that cannot be played together were left out."
 msgstr "함께 연주할 수 없는 음 일부를 뺐습니다."
 
@@ -737,7 +740,7 @@ msgid "Source: {domain}"
 msgstr "출처: {domain}"
 
 msgid "Splits a song into vocals, drums, bass, guitar, piano, and other sounds."
-msgstr "곡을 보컬, 드럼, 베이스, 기타, 피아노, 기타 소리로 나눕니다."
+msgstr "곡을 보컬, 드럼, 베이스, 기타, 피아노, 다른 악기로 나눕니다."
 
 msgid "Splitting the song into instruments"
 msgstr "악기별로 나누는 중"
