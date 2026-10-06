@@ -66,16 +66,17 @@ Python이나 다른 프로그램을 따로 설치하지 않아도 되며, 한·�
 
 ## 내려받기와 설치
 
-최신 배포판은 [**Notirua 0.4.0 릴리스 페이지**](https://github.com/jerry-leem/notirua/releases/tag/v0.4.0)에
+최신 배포판은 [**Notirua 0.4.1 릴리스 페이지**](https://github.com/jerry-leem/notirua/releases/tag/v0.4.1)에
 있습니다. 릴리스 페이지에 한국어 설치 방법, 사용법, 바뀐 점, 알려진 제한이 함께 적혀
 있습니다. 지난 버전은 [모든 릴리스](https://github.com/jerry-leem/notirua/releases)에서
-볼 수 있습니다.
+볼 수 있습니다. 0.4.1은 Windows 설치 파일만 새로 나왔고, Mac과 Linux는 0.4.0
+파일을 그대로 쓰면 됩니다.
 
-| 컴퓨터 | 내려받기 (0.4.0) | 설치 |
+| 컴퓨터 | 내려받기 | 설치 |
 |---|---|---|
-| Windows 10/11 (x64) | [Notirua-0.4.0-windows-x64-setup.exe](https://github.com/jerry-leem/notirua/releases/download/v0.4.0/Notirua-0.4.0-windows-x64-setup.exe) (107 MB) | 실행해서 안내에 따라 설치(관리자 권한 필요 없음) |
-| Mac (Apple Silicon), macOS 14 이상 | [Notirua-0.4.0-macos-arm64.dmg](https://github.com/jerry-leem/notirua/releases/download/v0.4.0/Notirua-0.4.0-macos-arm64.dmg) (120 MB) | 열어서 Notirua를 Applications 폴더로 끌어다 놓기 |
-| Linux x86_64 (glibc 2.31 이상) | [Notirua-0.4.0-linux-x86_64.AppImage](https://github.com/jerry-leem/notirua/releases/download/v0.4.0/Notirua-0.4.0-linux-x86_64.AppImage) (176 MB) | `chmod +x`로 실행 권한을 주고 실행 |
+| Windows 10/11 (x64) | [Notirua-0.4.1-windows-x64-setup.exe](https://github.com/jerry-leem/notirua/releases/download/v0.4.1/Notirua-0.4.1-windows-x64-setup.exe) (0.4.1) | 실행해서 안내에 따라 설치(관리자 권한 필요 없음) |
+| Mac (Apple Silicon), macOS 14 이상 | [Notirua-0.4.0-macos-arm64.dmg](https://github.com/jerry-leem/notirua/releases/download/v0.4.0/Notirua-0.4.0-macos-arm64.dmg) (120 MB, 0.4.0) | 열어서 Notirua를 Applications 폴더로 끌어다 놓기 |
+| Linux x86_64 (glibc 2.31 이상) | [Notirua-0.4.0-linux-x86_64.AppImage](https://github.com/jerry-leem/notirua/releases/download/v0.4.0/Notirua-0.4.0-linux-x86_64.AppImage) (176 MB, 0.4.0) | `chmod +x`로 실행 권한을 주고 실행 |
 | Intel Mac | 준비 중 | 아래 [소스로 실행하기](#소스로-실행하기) |
 
 - 필요 사양: RAM 8GB, 빈 디스크 약 1GB(앱, 구성요소, 중간 결과)
@@ -160,7 +161,7 @@ uv sync
 | 파일 열기 / 모두 저장 | **파일** 메뉴 (⌘O / ⌘S) | **파일** 메뉴 (Ctrl+O / Ctrl+S) |
 
 macOS에서는 Dock 아이콘을 오른쪽 클릭해도 **음악 파일 열기…** 메뉴와 **설정…** 메뉴가 나옵니다.
-창 제목에 버전이 표시됩니다(예: `Notirua 0.4.0`).
+창 제목에 버전이 표시됩니다(예: `Notirua 0.4.1`).
 
 ## 명령줄 사용법
 
@@ -190,7 +191,7 @@ uv run notirua cache                   # 저장된 중간 결과 크기
 uv run notirua cache --clear
 uv run notirua --lang ko               # 한국어로 창 열기
 uv run notirua --lang ko transcribe --help     # 모든 옵션 (한국어)
-uv run notirua --version               # notirua 0.4.0
+uv run notirua --version               # notirua 0.4.1
 ```
 
 ## 파일이 저장되는 곳
@@ -205,7 +206,7 @@ Notirua를 지우려면 앱(또는 소스로 내려받은 폴더)과 위 폴더�
 
 ## 버전
 
-시맨틱 버전(`MAJOR.MINOR.PATCH`)을 따릅니다. 현재 버전은 **0.4.0**이며, 1.0 전까지는
+시맨틱 버전(`MAJOR.MINOR.PATCH`)을 따릅니다. 현재 버전은 **0.4.1**이며, 1.0 전까지는
 MINOR 버전에서도 동작이 바뀔 수 있습니다. `notirua --version`이나 창 제목으로 확인하고,
 버전마다 바뀐 내용은 [릴리스 페이지](https://github.com/jerry-leem/notirua/releases)에
 있습니다.
@@ -308,15 +309,16 @@ titles (macOS and Windows use their system fonts).
 ### Download and install
 
 The latest release is
-[**Notirua 0.4.0**](https://github.com/jerry-leem/notirua/releases/tag/v0.4.0);
+[**Notirua 0.4.1**](https://github.com/jerry-leem/notirua/releases/tag/v0.4.1);
 its page has installation and usage notes (in Korean), changes, and known
-limits. Earlier versions are on [all releases](https://github.com/jerry-leem/notirua/releases).
+limits. Earlier versions are on [all releases](https://github.com/jerry-leem/notirua/releases). Version 0.4.1 has
+a new Windows installer only; on Mac and Linux, keep using the 0.4.0 files.
 
-| Computer | Download (0.4.0) | Install |
+| Computer | Download | Install |
 |---|---|---|
-| Windows 10/11 (x64) | [Notirua-0.4.0-windows-x64-setup.exe](https://github.com/jerry-leem/notirua/releases/download/v0.4.0/Notirua-0.4.0-windows-x64-setup.exe) (107 MB) | Run it and follow the steps (no administrator rights needed) |
-| Mac (Apple Silicon), macOS 14 or later | [Notirua-0.4.0-macos-arm64.dmg](https://github.com/jerry-leem/notirua/releases/download/v0.4.0/Notirua-0.4.0-macos-arm64.dmg) (120 MB) | Open it and drag Notirua to Applications |
-| Linux x86_64 (glibc 2.31 or later) | [Notirua-0.4.0-linux-x86_64.AppImage](https://github.com/jerry-leem/notirua/releases/download/v0.4.0/Notirua-0.4.0-linux-x86_64.AppImage) (176 MB) | `chmod +x` it and run it |
+| Windows 10/11 (x64) | [Notirua-0.4.1-windows-x64-setup.exe](https://github.com/jerry-leem/notirua/releases/download/v0.4.1/Notirua-0.4.1-windows-x64-setup.exe) (0.4.1) | Run it and follow the steps (no administrator rights needed) |
+| Mac (Apple Silicon), macOS 14 or later | [Notirua-0.4.0-macos-arm64.dmg](https://github.com/jerry-leem/notirua/releases/download/v0.4.0/Notirua-0.4.0-macos-arm64.dmg) (120 MB, 0.4.0) | Open it and drag Notirua to Applications |
+| Linux x86_64 (glibc 2.31 or later) | [Notirua-0.4.0-linux-x86_64.AppImage](https://github.com/jerry-leem/notirua/releases/download/v0.4.0/Notirua-0.4.0-linux-x86_64.AppImage) (176 MB, 0.4.0) | `chmod +x` it and run it |
 | Intel Mac | Coming | [Run from source](#run-from-source) |
 
 - Requirements: 8 GB RAM; about 1 GB of free disk space
@@ -414,7 +416,7 @@ right or from the menu:
 
 On macOS, right-clicking the Dock icon also offers **Open a music file…** and
 **Settings…**. The window title shows the version, for example
-`Notirua 0.4.0`.
+`Notirua 0.4.1`.
 
 ### Use the command line
 
@@ -444,7 +446,7 @@ uv run notirua cache                   # size of saved intermediate results
 uv run notirua cache --clear
 uv run notirua --lang en               # open the window in English
 uv run notirua transcribe --help       # every option
-uv run notirua --version               # notirua 0.4.0
+uv run notirua --version               # notirua 0.4.1
 ```
 
 More `transcribe` options: `--to-key "G major"`, `--guitar-tuning drop_d`,
@@ -468,7 +470,7 @@ To remove Notirua, delete the app (or the cloned folder) and these folders.
 ### Version
 
 Notirua uses [Semantic Versioning](https://semver.org): `MAJOR.MINOR.PATCH`.
-The current version is **0.4.0**. While the major version is 0, a minor
+The current version is **0.4.1**. While the major version is 0, a minor
 release may still change behavior. `notirua --version` and the window title
 show it, and the [releases page](https://github.com/jerry-leem/notirua/releases)
 lists what changed in each release.

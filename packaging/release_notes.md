@@ -12,9 +12,9 @@
 
 | 컴퓨터 | 받을 파일 |
 |---|---|
-| Mac (Apple Silicon: M1 이후), macOS 14 Sonoma 이상 | `Notirua-{{version}}-macos-arm64.dmg` |
+| Mac (Apple Silicon: M1 이후), macOS 14 Sonoma 이상 | `Notirua-0.4.0-macos-arm64.dmg` (0.4.0 릴리스) |
 | Windows 10/11 (x64) | `Notirua-{{version}}-windows-x64-setup.exe` |
-| Linux x86_64 (Ubuntu 20.04 이상 등 glibc 2.31 이상) | `Notirua-{{version}}-linux-x86_64.AppImage` |
+| Linux x86_64 (Ubuntu 20.04 이상 등 glibc 2.31 이상) | `Notirua-0.4.0-linux-x86_64.AppImage` (0.4.0 릴리스) |
 | Intel Mac | 준비 중입니다. 지금은 [소스로 실행](https://github.com/jerry-leem/notirua#소스로-실행하기)할 수 있습니다. |
 
 필요 사양: RAM 8GB, 빈 디스크 약 1GB(앱, 구성요소, 중간 결과).
@@ -46,8 +46,8 @@
 ### Linux
 
 ```bash
-chmod +x Notirua-{{version}}-linux-x86_64.AppImage
-./Notirua-{{version}}-linux-x86_64.AppImage
+chmod +x Notirua-0.4.0-linux-x86_64.AppImage
+./Notirua-0.4.0-linux-x86_64.AppImage
 ```
 
 파일 관리자에서 파일 속성의 "프로그램으로 실행 허용"을 켠 뒤 두 번 클릭해도 됩니다.
@@ -94,7 +94,7 @@ FUSE가 없어 실행되지 않으면 `--appimage-extract-and-run`을 붙여 실
 & "$env:LOCALAPPDATA\Programs\Notirua\notirua-cli.exe" transcribe "곡.m4a" --out "$HOME\Desktop\악보"
 
 # Linux
-./Notirua-{{version}}-linux-x86_64.AppImage transcribe "곡.m4a" --out ./악보
+./Notirua-0.4.0-linux-x86_64.AppImage transcribe "곡.m4a" --out ./악보
 ```
 
 `--transpose +2`(조 바꾸기), `--stems guitar,bass`(악기 고르기),
@@ -111,15 +111,23 @@ notirua-cli mix "곡.m4a" --out ./음원 --stems drums,bass --format wav
 
 ## 이번 버전에서 바뀐 점
 
-- **트랙을 골라 새 음원 만들기.** 악기별로 나눈 트랙(보컬, 드럼, 베이스, 기타, 피아노,
-  다른 악기) 가운데 원하는 것만 골라 MP3(320 kbps), M4A(AAC 256 kbps), WAV(16비트)
-  파일 하나로 저장합니다. 보컬만 뺀 MR, 내 악기만 뺀 합주·연습용 반주, 공연용 음원을
-  만들 때 씁니다. 결과 화면의 **음원 만들기** 버튼이나 명령줄 `mix`로 만듭니다.
-- 파일 이름이 담긴 악기를 알려 줍니다(예: `곡 - MR.mp3`, `곡 - 기타 제외.mp3`,
-  `곡 - 드럼, 베이스.mp3`).
-- 합친 소리가 너무 커서 깨질 때만 전체 음량을 조금 낮춥니다(−1 dBFS). 악기별 음량
-  조절은 아직 없습니다.
-- 이미 악보를 만든 곡은 악기를 다시 나누지 않아 몇 초 만에 저장됩니다.
+Windows 버그 수정판입니다.
+
+- **한국어 Windows에서 화면이 영어로 나오던 문제를 고쳤습니다.** Windows의 표시 언어를
+  제대로 읽어 한국어로 시작합니다.
+- **악보 만들기가 조 분석 단계에서 멈추던 문제를 고쳤습니다.** 창 모드 앱에서
+  `'NoneType' object has no attribute 'write'` 오류가 나던 것입니다.
+- 그래픽 가속(DirectML)이 실패해 CPU로 넘어갈 때 로그에 한글 오류 메시지가 깨지지 않고
+  남도록 했습니다.
+
+이번 버전은 **Windows 설치 파일만** 새로 나왔습니다. Mac과 Linux는 0.4.0 파일에
+위 수정이 들어 있지 않습니다.
+
+0.4.0에서 추가된 기능: **트랙을 골라 새 음원 만들기.** 악기별로 나눈 트랙(보컬, 드럼,
+베이스, 기타, 피아노, 다른 악기) 가운데 원하는 것만 골라 MP3(320 kbps), M4A(AAC
+256 kbps), WAV(16비트) 파일 하나로 저장합니다. 보컬만 뺀 MR, 내 악기만 뺀 합주·연습용
+반주, 공연용 음원을 만들 때 씁니다. 결과 화면의 **음원 만들기** 버튼이나 명령줄
+`mix`로 만듭니다. 이미 악보를 만든 곡은 악기를 다시 나누지 않아 몇 초 만에 저장됩니다.
 
 그동안 쌓인 기능: 세 운영체제 설치 파일(0.3.0), 모든 악보 위 코드 표시(0.2.3), 저장된
 중간 결과를 지우고 처음부터 다시 만들기(0.2.2), 기타·베이스 TAB에서 음을 훨씬 덜
