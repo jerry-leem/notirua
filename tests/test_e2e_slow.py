@@ -44,6 +44,27 @@ def _pdf_text(path: Path) -> tuple[int, list[str]]:
     return len(texts), texts
 
 
+# Fonts LilyPond brings itself; anything else in a PDF is a system fallback font.
+LILYPOND_FONTS = re.compile(r"Emmentaler|C059|DejaVu|Nimbus|TeXGyre|URW")
+
+
+def _fallback_fonts(pdf: Path) -> set[str]:
+    found = re.findall(rb"/BaseFont\s*/(?:[A-Z]{6}\+)?([\w-]+)", pdf.read_bytes())
+    return {n.decode() for n in found if not LILYPOND_FONTS.search(n.decode())}
+
+
+def _assert_drawn(pdf: Path, extracted_ok: bool, text: str) -> None:
+    """Non-Latin title text was drawn, not dropped.
+
+    Some fallback fonts (Noto CJK on Linux) are embedded without a usable
+    character map, so extraction returns other characters although the page
+    renders correctly. When no font has the glyphs, LilyPond drops the text
+    silently and embeds no fallback font, so require one in that case.
+    """
+    if not extracted_ok:
+        assert _fallback_fonts(pdf), f"title glyphs missing: {text!r}"
+
+
 def _matches(score: Score, expected: list[tuple[Fraction, int]]) -> tuple[float, float]:
     """Return (pitch accuracy, worst onset error in beats) across pitched parts."""
     notes = [n for p in score.parts if p.stem != "drums" for n in p.notes]
@@ -88,7 +109,8 @@ def test_c_major_scale_e2e(pipeline: Pipeline, tmp_path: Path) -> None:
         n_pages, texts = _pdf_text(pdf)
         assert n_pages >= 1
         # Text extraction may reorder runs of different scripts, so check word by word.
-        assert all(word in texts[0] for word in ["다장조", "음계", "Scale"])
+        assert "Scale" in texts[0]
+        _assert_drawn(pdf, all(w in texts[0] for w in ["다장조", "음계"]), texts[0][:40])
         for i, text in enumerate(texts, start=1):
             assert re.search(rf"{i}\s*/\s*{n_pages}", text), text[-80:]
 
@@ -104,7 +126,7 @@ def test_titles_in_many_scripts_render(pipeline: Pipeline, tmp_path: Path, title
     wanted = title.replace(" ", "")
     first_line = texts[0].splitlines()[0].replace(" ", "")
     # Runs of different scripts may come back reordered; every glyph must be there.
-    assert sorted(first_line) == sorted(wanted), first_line
+    _assert_drawn(pdf, sorted(first_line) == sorted(wanted), first_line)
 
 
 @needs_components
