@@ -42,7 +42,10 @@ def test_heartbeat_repeats_last_event() -> None:
     events: list[ProgressEvent] = []
     with ProgressReporter("t", stages(), events.append, heartbeat_s=0.05) as rep:
         rep.start("a")
-        time.sleep(0.3)
+        # Shared CI runners can stall threads; wait for the beats instead of a fixed sleep.
+        deadline = time.monotonic() + 5.0
+        while len(events) < 4 and time.monotonic() < deadline:
+            time.sleep(0.05)
     assert len(events) >= 4
     assert all(e.stage == "a" for e in events)
 
