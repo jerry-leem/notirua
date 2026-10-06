@@ -160,7 +160,7 @@ def test_font_folders_are_added_before_the_score(tmp_path: Path) -> None:
 
     if sys.platform == "win32":
         # Quotes are not allowed in Windows names; backslashes become "/".
-        odd, tail = tmp_path / "fonts x", "/fonts x\")"
+        odd, tail = tmp_path / "fonts x", '/fonts x")'
     else:
         odd, tail = tmp_path / 'fonts "x" \\ y', '\\"x\\" \\\\ y")'
     source = with_font_dirs('\\version "2.26.0"', [odd])
