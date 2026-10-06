@@ -37,10 +37,15 @@ def peak_rss_mb() -> float:
 
         counters = Counters()
         counters.cb = ctypes.sizeof(Counters)
-        handle = ctypes.windll.kernel32.GetCurrentProcess()  # type: ignore[attr-defined]
-        ctypes.windll.psapi.GetProcessMemoryInfo(  # type: ignore[attr-defined]
-            handle, ctypes.byref(counters), counters.cb
-        )
+        # Without explicit types ctypes truncates the 64-bit pseudo-handle to a C int
+        # and the call fails silently, reporting 0 MB.
+        get_process = ctypes.windll.kernel32.GetCurrentProcess  # type: ignore[attr-defined]
+        get_process.restype = wintypes.HANDLE
+        get_info = ctypes.windll.psapi.GetProcessMemoryInfo  # type: ignore[attr-defined]
+        get_info.argtypes = [wintypes.HANDLE, ctypes.POINTER(Counters), wintypes.DWORD]
+        get_info.restype = wintypes.BOOL
+        if not get_info(get_process(), ctypes.byref(counters), counters.cb):
+            raise ctypes.WinError()  # type: ignore[attr-defined]
         return counters.PeakWorkingSetSize / (1024 * 1024)
     import resource
 
