@@ -42,6 +42,7 @@ dev = [
     "mypy>=1.13",
     "scipy-stubs; python_version >= '3.11'",
     "pypdf>=5.0",
+    "markdown-it-py>=3.0",
 ]
 
 [build-system]

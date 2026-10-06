@@ -36,7 +36,7 @@ unlicensed components are never included (SPEC 7.4).
 
 ## Build and test only (not distributed)
 
-pytest, pytest-qt, pypdf, ruff, mypy, PyInstaller (GPL-2.0 with bootloader exception).
+pytest, pytest-qt, pypdf, markdown-it-py, ruff, mypy, PyInstaller (GPL-2.0 with bootloader exception).
 
 ## Explicitly excluded
 
