@@ -35,3 +35,10 @@ installed.json
 # Sheet music and audio made while testing (`notirua transcribe ... --out out`)
 /out/
 /output/
+
+# Working documents stay local. README, the license notices (read by the About
+# tab and bundled), and the banned-word list (read by tests) stay tracked.
+*.md
+!/README.md
+!/docs/LICENSES.md
+!/docs/ui/wording.md
