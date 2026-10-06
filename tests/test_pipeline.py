@@ -165,6 +165,20 @@ def test_transpose_reuses_separation_and_transcription(tmp_path: Path, song: Pat
     assert "\\key d \\major" in engraver2.sources[0]
 
 
+def test_fresh_deletes_saved_results_and_starts_over(tmp_path: Path, song: Path) -> None:
+    pipeline, counter, _engraver = make_pipeline(tmp_path)
+    pipeline.run(song, tmp_path / "a", JobOptions(stems=["piano"]))
+    other = tmp_path / "cache" / "other-song"
+    other.mkdir()
+    stale = next((tmp_path / "cache").glob("*/transcribe-*.json"))
+    stale.write_text("{}", encoding="utf-8")  # a broken saved result
+
+    result = pipeline.run(song, tmp_path / "b", JobOptions(stems=["piano"], fresh=True))
+    assert (counter.separate, counter.transcribe) == (2, 2)
+    assert any(p.notes for p in result.score.parts)
+    assert other.is_dir()  # other files keep their saved results
+
+
 def test_target_key_selection(tmp_path: Path, song: Path) -> None:
     pipeline, _c, _e = make_pipeline(tmp_path)
     result = pipeline.run(song, tmp_path / "o", JobOptions(stems=["piano"], target_key="F major"))

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Notirua VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-10-06 22:55+0900\n"
+"POT-Creation-Date: 2026-10-06 23:05+0900\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: ko\n"
@@ -200,6 +200,12 @@ msgid ""
 "Delete all saved intermediate results? Your sheet music files are not "
 "touched."
 msgstr "저장된 중간 결과를 모두 지울까요? 만들어 둔 악보 파일은 지워지지 않습니다."
+
+msgid "Delete saved intermediate results and start over"
+msgstr "저장된 중간 결과를 지우고 처음부터 다시 만들기"
+
+msgid "Delete this file's saved intermediate results and start over."
+msgstr "이 파일의 저장된 중간 결과를 지우고 처음부터 다시 만듭니다."
 
 msgid "Details"
 msgstr "자세히"
@@ -881,6 +887,9 @@ msgstr "반음 올리기"
 
 msgid "Use a file without copy protection."
 msgstr "복제 방지가 없는 파일을 사용하세요."
+
+msgid "Use this when earlier results for this file look wrong. It takes longer."
+msgstr "이 파일의 이전 결과가 이상할 때 쓰세요. 시간이 더 걸립니다."
 
 msgid "Version"
 msgstr "버전"

@@ -129,6 +129,11 @@ class OptionsPage(QWidget):
         for lang in available_languages():
             self.pdf_language.addItem(language_name(lang), lang)
         more.addRow(_("Language inside the PDF"), self.pdf_language)
+        self.fresh = QCheckBox(_("Delete saved intermediate results and start over"))
+        self.fresh.setToolTip(
+            _("Use this when earlier results for this file look wrong. It takes longer.")
+        )
+        more.addRow(self.fresh)
         self.more.setVisible(False)
         layout.addWidget(self.more)
         layout.addStretch(1)
@@ -175,6 +180,7 @@ class OptionsPage(QWidget):
         self.paper.setCurrentIndex(max(0, self.paper.findData(paper)))
         pdf_lang = self.pdf_language.findData(self.user.pdf_language)
         self.pdf_language.setCurrentIndex(max(0, pdf_lang))
+        self.fresh.setChecked(False)
         self.start_button.setFocus()
 
     def options(self) -> JobOptions:
@@ -193,6 +199,7 @@ class OptionsPage(QWidget):
             pdf_language=self.pdf_language.currentData(),
             stream_index=self.track.currentData() if self.track.count() > 1 else None,
             tab_weights=dict(self.user.tab_weights),
+            fresh=self.fresh.isChecked(),
         )
 
     def _start(self) -> None:

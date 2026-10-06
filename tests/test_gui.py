@@ -324,6 +324,34 @@ def test_transpose_only_redraws(
     assert window.result_page.key_combo.currentData() == window.result.score.key
 
 
+def test_start_over_runs_everything_once_then_redraws_from_saved_results(
+    qtbot: QtBot, ready_user: settings_mod.Settings, job: FakeJob, song: Path
+) -> None:
+    window = make_window(qtbot, ready_user, no_components, job.pipeline)
+    window.open_file(song)
+    window.options_page.start_button.click()
+    wait_result(qtbot, window)
+    assert job.counter.separate == 1
+
+    window.open_file(song)
+    assert not window.options_page.fresh.isChecked()
+    window.options_page.fresh.setChecked(True)
+    window.options_page.start_button.click()
+    wait_result(qtbot, window)
+    assert job.counter.separate == 2
+    engraved = job.counter.engrave
+    qtbot.mouseClick(window.result_page.up, Qt.MouseButton.LeftButton)
+    qtbot.waitUntil(
+        lambda: (
+            job.counter.engrave > engraved
+            and window.render_task is not None
+            and not window.render_task.running
+        ),
+        timeout=WAIT_MS,
+    )
+    assert job.counter.separate == 2
+
+
 def test_choosing_a_key_sets_semitones(
     qtbot: QtBot, ready_user: settings_mod.Settings, job: FakeJob, song: Path
 ) -> None:

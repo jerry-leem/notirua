@@ -45,6 +45,8 @@ uv run notirua
    누르세요(MP3, M4A, WAV, FLAC, OGG, AIFF, MP4 동영상 등, 15분 이하).
 3. **옵션.** 곡명과 악기를 확인하고 **악보 만들기**를 누르세요. 줄 맞춤, 박자,
    빠르기, 조성, 용지, PDF 언어는 **세부 설정** 안에 있고 기본값은 자동입니다.
+   같은 파일의 이전 결과가 이상하면 **세부 설정**에서 **저장된 중간 결과를 지우고
+   처음부터 다시 만들기**를 체크하세요.
 4. **기다리기.** 단계별 상태와 남은 시간이 보입니다. 4분 곡은 빠른 Mac에서 1분
    이내, 보통 노트북에서 몇 분 걸립니다. **취소**는 3초 안에 멈추고, 끝난 단계는
    남겨 두어 다시 시도할 때 빨라집니다.
@@ -66,7 +68,7 @@ uv run notirua
 | 파일 열기 / 모두 저장 | **파일** 메뉴 (⌘O / ⌘S) | **파일** 메뉴 (Ctrl+O / Ctrl+S) |
 
 macOS에서는 Dock 아이콘을 오른쪽 클릭해도 **음악 파일 열기…** 메뉴와 **설정…** 메뉴가 나옵니다.
-창 제목에 버전이 표시됩니다(예: `Notirua 0.2.1`).
+창 제목에 버전이 표시됩니다(예: `Notirua 0.2.2`).
 
 ## 명령줄 사용법
 
@@ -79,13 +81,14 @@ uv run notirua transcribe "곡.m4a" --out ./out
 uv run notirua transcribe "곡.m4a" --out ./out --title "봄날" \
     --stems guitar,bass --transpose +2 --paper a4 --musicxml --midi
 uv run notirua transcribe "공연.mp4" --start 30 --end 210 --out ./out
+uv run notirua transcribe "곡.m4a" --out ./out --fresh   # 중간 결과를 지우고 처음부터
 
 uv run notirua components              # 설치된 구성요소
 uv run notirua cache                   # 저장된 중간 결과 크기
 uv run notirua cache --clear
 uv run notirua --lang ko               # 한국어로 창 열기
 uv run notirua --lang ko transcribe --help     # 모든 옵션 (한국어)
-uv run notirua --version               # notirua 0.2.1
+uv run notirua --version               # notirua 0.2.2
 ```
 
 ## 파일이 저장되는 곳
@@ -100,7 +103,7 @@ Notirua를 지우려면 내려받은(clone) 폴더와 위 폴더들을 지우면
 
 ## 버전
 
-시맨틱 버전(`MAJOR.MINOR.PATCH`)을 따릅니다. 현재 버전은 **0.2.1**이며, 1.0 전까지는
+시맨틱 버전(`MAJOR.MINOR.PATCH`)을 따릅니다. 현재 버전은 **0.2.2**이며, 1.0 전까지는
 MINOR 버전에서도 동작이 바뀔 수 있습니다. `uv run notirua --version`으로 확인하고, 바뀐
 내용은 `CHANGELOG.md`에 적습니다.
 
@@ -178,7 +181,9 @@ uv run notirua
    more, up to 15 minutes).
 3. **Options.** Check the title and instruments, then choose **Make sheet
    music**. Tuning, time signature, tempo, key, paper, and the language inside
-   the PDF are under **More settings**; the defaults are automatic.
+   the PDF are under **More settings**; the defaults are automatic. If earlier
+   results for the same file look wrong, check **Delete saved intermediate
+   results and start over** there.
 4. **Wait.** The progress screen shows each step and the time left. A
    4-minute song takes under a minute on a fast Mac and a few minutes on an
    ordinary laptop. **Cancel** stops within 3 seconds; finished steps are kept,
@@ -204,7 +209,7 @@ right or from the menu:
 
 On macOS, right-clicking the Dock icon also offers **Open a music file…** and
 **Settings…**. The window title shows the version, for example
-`Notirua 0.2.1`.
+`Notirua 0.2.2`.
 
 ### Use the command line
 
@@ -217,13 +222,14 @@ uv run notirua transcribe "song.m4a" --out ./out
 uv run notirua transcribe "song.m4a" --out ./out --title "Spring" \
     --stems guitar,bass --transpose +2 --paper letter --musicxml --midi
 uv run notirua transcribe "live.mp4" --start 30 --end 210 --out ./out
+uv run notirua transcribe "song.m4a" --out ./out --fresh  # start over without saved results
 
 uv run notirua components              # installed components
 uv run notirua cache                   # size of saved intermediate results
 uv run notirua cache --clear
 uv run notirua --lang en               # open the window in English
 uv run notirua transcribe --help       # every option
-uv run notirua --version               # notirua 0.2.1
+uv run notirua --version               # notirua 0.2.2
 ```
 
 More `transcribe` options: `--to-key "G major"`, `--guitar-tuning drop_d`,
@@ -244,7 +250,7 @@ To remove Notirua, delete the cloned folder and these folders.
 ### Version
 
 Notirua uses [Semantic Versioning](https://semver.org): `MAJOR.MINOR.PATCH`.
-The current version is **0.2.1**. While the major version is 0, a minor
+The current version is **0.2.2**. While the major version is 0, a minor
 release may still change behavior. `uv run notirua --version` prints it, and
 `CHANGELOG.md` lists what changed in each release.
 

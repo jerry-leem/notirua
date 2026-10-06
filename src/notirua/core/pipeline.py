@@ -120,6 +120,7 @@ class JobOptions:
     start_s: float | None = None
     end_s: float | None = None
     tab_weights: dict[str, float] = field(default_factory=dict)
+    fresh: bool = False  # delete this file's saved intermediate results first
 
 
 @dataclass
@@ -303,6 +304,8 @@ class Pipeline:
         cache = cache_mod.StageCache(
             self.cache_root, cache_mod.file_hash(input_path), self.cache_limit_bytes
         )
+        if opts.fresh:
+            cache.clear()
         warnings: list[str] = []
 
         # 1. decode -------------------------------------------------------

@@ -170,6 +170,11 @@ def build_parser() -> argparse.ArgumentParser:
     )
     t.add_argument("--start", type=_number, help=_("Start time in seconds."))
     t.add_argument("--end", type=_number, help=_("End time in seconds."))
+    t.add_argument(
+        "--fresh",
+        action="store_true",
+        help=_("Delete this file's saved intermediate results and start over."),
+    )
 
     s = sub.add_parser("setup", help=_("Install the components Notirua needs."))
     s.add_argument(
@@ -295,6 +300,7 @@ def cmd_transcribe(args: argparse.Namespace, user: settings_mod.Settings) -> int
         start_s=args.start,
         end_s=args.end,
         tab_weights=user.tab_weights,
+        fresh=args.fresh,
     )
     cancel = CancelToken()
     pipeline = Pipeline(

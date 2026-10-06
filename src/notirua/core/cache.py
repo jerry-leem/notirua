@@ -118,6 +118,10 @@ class StageCache:
         )
 
     # -- housekeeping ------------------------------------------------------
+    def clear(self) -> int:
+        """Delete every saved result for this input. Returns bytes freed."""
+        return clear(self.dir)
+
     def enforce_limit(self) -> None:
         enforce_limit(self.root, self.limit_bytes, keep=self.dir)
 

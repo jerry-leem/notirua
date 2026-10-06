@@ -276,6 +276,8 @@ class MainWindow(QMainWindow):
         def work(progress: ProgressCallback, cancel: CancelToken) -> JobResult:
             return self.pipeline.run(path, out_dir, options, progress=progress, cancel=cancel)
 
+        # Clear the saved results only once; redraws and retries reuse the new ones.
+        self.options = replace(options, fresh=False)
         self.progress_page.begin(title)
         self.stack.setCurrentWidget(self.progress_page)
         self.progress_page.cancel_button.setFocus()

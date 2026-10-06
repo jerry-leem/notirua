@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-10-06 22:55+0900\n"
+"POT-Creation-Date: 2026-10-06 23:05+0900\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -198,6 +198,12 @@ msgstr ""
 msgid ""
 "Delete all saved intermediate results? Your sheet music files are not "
 "touched."
+msgstr ""
+
+msgid "Delete saved intermediate results and start over"
+msgstr ""
+
+msgid "Delete this file's saved intermediate results and start over."
 msgstr ""
 
 msgid "Details"
@@ -881,6 +887,9 @@ msgid "Up a semitone"
 msgstr ""
 
 msgid "Use a file without copy protection."
+msgstr ""
+
+msgid "Use this when earlier results for this file look wrong. It takes longer."
 msgstr ""
 
 msgid "Version"
