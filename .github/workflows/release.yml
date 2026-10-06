@@ -54,16 +54,31 @@ jobs:
           echo "$FF_SHA  ffmpeg.tar.xz" | sha256sum -c -
           tar xf ffmpeg.tar.xz
           cd "ffmpeg-$FF_VERSION"
-          ./configure $FLAGS
+          # Link GCC's runtime (libgcc, winpthreads) into the DLLs: otherwise
+          # delvewheel may bundle Git for Windows' msvcrt copies found on PATH,
+          # and importing av fails with "The specified procedure could not be found".
+          ./configure $FLAGS --extra-ldflags=-static
           make -j"$(nproc)"
           make install
           # The import libraries are installed next to the DLLs.
           cp -n "$PREFIX"/bin/*.lib "$PREFIX/lib/" || true
           ls "$PREFIX/bin" "$PREFIX/lib"
+          # Each DLL may only need Windows' own DLLs and the other FFmpeg DLLs.
+          for dll in "$PREFIX"/bin/*.dll; do
+            echo "$(basename "$dll"): $(objdump -p "$dll" | sed -n 's/.*DLL Name: //p' | tr '\n' ' ')"
+          done
       - name: Install
         run: uv sync --locked
       - name: LGPL PyAV wheel
         run: uv run python packaging/build_lgpl_av.py --ffmpeg-prefix build/lgpl-av/ffmpeg
+      - name: Show the wheel's DLL dependencies (on failure)
+        if: failure()
+        shell: pwsh
+        run: |
+          $libs = "build\lgpl-av\test-venv\Lib\site-packages\av.libs"
+          Get-ChildItem $libs
+          Get-ChildItem $libs\*.dll, build\lgpl-av\test-venv\Lib\site-packages\av\_core*.pyd |
+            ForEach-Object { dumpbin /nologo /dependents $_.FullName }
       - name: Bundle and check
         run: uv run python packaging/build_app.py
       - name: Installer

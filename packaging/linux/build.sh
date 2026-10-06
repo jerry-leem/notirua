@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Build the Linux x86_64 bundle in Docker (M6), from macOS or Linux.
 #   packaging/linux/build.sh            LGPL PyAV wheel (once), bundle, check, AppImage
-# Outputs: dist/lgpl-av/av-*linux_x86_64.whl, dist/linux/app/Notirua,
+# Outputs: dist/lgpl-av/av-*manylinux*_x86_64.whl, dist/linux/app/Notirua,
 #          dist/Notirua-<version>-linux-x86_64.AppImage
 # The FFmpeg build and the uv cache live in Docker volumes, so reruns are fast.
 set -euo pipefail
@@ -21,7 +21,7 @@ docker run --rm --platform linux/amd64 \
     -w /src \
     "$IMAGE" bash -euo pipefail -c '
         uv sync --locked
-        if ! ls dist/lgpl-av/av-*linux_x86_64.whl >/dev/null 2>&1; then
+        if ! ls dist/lgpl-av/av-*linux*_x86_64.whl >/dev/null 2>&1; then
             uv run python packaging/build_lgpl_av.py --work /work/lgpl-av
         fi
         uv run python packaging/build_app.py --venv /work/app-venv --dist dist/linux/app
