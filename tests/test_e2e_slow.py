@@ -28,10 +28,20 @@ def pipeline(tmp_path_factory: pytest.TempPathFactory) -> Pipeline:
 
 
 def _pdf_text(path: Path) -> tuple[int, list[str]]:
-    from pypdf import PdfReader
+    """Page count and text per page, extracted with PDFium (QtPdf).
 
-    reader = PdfReader(str(path))
-    return len(reader.pages), [p.extract_text() or "" for p in reader.pages]
+    pypdf mis-maps glyphs of some system fallback fonts (seen with macOS kana)
+    although the page renders correctly; PDFium reads them as Qt displays them.
+    """
+    from PySide6.QtPdf import QPdfDocument
+    from PySide6.QtWidgets import QApplication
+
+    _app = QApplication.instance() or QApplication([])
+    doc = QPdfDocument()
+    assert doc.load(str(path)) == QPdfDocument.Error.None_
+    texts = [doc.getAllText(i).text() for i in range(doc.pageCount())]
+    doc.close()
+    return len(texts), texts
 
 
 def _matches(score: Score, expected: list[tuple[Fraction, int]]) -> tuple[float, float]:
@@ -77,7 +87,7 @@ def test_c_major_scale_e2e(pipeline: Pipeline, tmp_path: Path) -> None:
         assert pdf.is_file()
         n_pages, texts = _pdf_text(pdf)
         assert n_pages >= 1
-        # pypdf may reorder runs of different scripts, so check word by word.
+        # Text extraction may reorder runs of different scripts, so check word by word.
         assert all(word in texts[0] for word in ["다장조", "음계", "Scale"])
         for i, text in enumerate(texts, start=1):
             assert re.search(rf"{i}\s*/\s*{n_pages}", text), text[-80:]
@@ -93,14 +103,8 @@ def test_titles_in_many_scripts_render(pipeline: Pipeline, tmp_path: Path, title
     _n, texts = _pdf_text(pdf)
     wanted = title.replace(" ", "")
     first_line = texts[0].splitlines()[0].replace(" ", "")
-    if wanted in first_line:
-        return
-    # pypdf mis-maps some system fallback fonts (seen with macOS kana) even though
-    # the page renders correctly. A missing glyph would shorten the line, so
-    # require every glyph to be present and the unambiguous Han characters intact.
-    han = [ch for ch in wanted if "\u4e00" <= ch <= "\u9fff"]
-    assert len(first_line) == len(wanted), first_line
-    assert all(ch in first_line for ch in han), first_line
+    # Runs of different scripts may come back reordered; every glyph must be there.
+    assert sorted(first_line) == sorted(wanted), first_line
 
 
 @needs_components

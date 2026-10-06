@@ -15,6 +15,10 @@ import numpy as np
 def smoke() -> int:
     import av
 
+    # CI pipes stdout with the ANSI code page on Windows; the Korean line below needs UTF-8.
+    if hasattr(sys.stdout, "reconfigure"):
+        sys.stdout.reconfigure(encoding="utf-8")
+
     from notirua import i18n
     from notirua.core.runtime import make_session
     from notirua.core.transcribe.pitched import default_model_path
