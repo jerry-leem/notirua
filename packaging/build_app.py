@@ -94,12 +94,12 @@ def main() -> int:
     python = prepare_venv(args.venv, args.av_wheel or find_av_wheel())
     run([python, "-m", "babel.messages.frontend", "compile", "-d", "locales", "-D", "notirua"],
         cwd=ROOT)  # fmt: skip
-    icon_dir = ROOT / "build" / "icons"
+    icon_dir = ROOT / "build" / f"icons-{sys.platform}"
     icons.write(icon_dir)
     env = {**os.environ, "NOTIRUA_ICON_DIR": str(icon_dir)}
     run(
         [python, "-m", "PyInstaller", "--noconfirm", "--clean",
-         "--distpath", args.dist, "--workpath", ROOT / "build" / "pyinstaller",
+         "--distpath", args.dist, "--workpath", ROOT / "build" / f"pyinstaller-{sys.platform}",
          ROOT / "packaging" / "notirua.spec"],
         cwd=ROOT,
         env=env,

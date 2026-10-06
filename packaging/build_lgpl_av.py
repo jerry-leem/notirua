@@ -15,8 +15,10 @@ put a bundled app under GPL terms. This script:
 4. installs the wheel into a scratch venv and runs :func:`check_lgpl` plus a
    decode round trip.
 
-macOS and Linux build FFmpeg from source here. Windows is handled in M6 (MSYS2
-or a pinned LGPL shared build); ``check_lgpl`` is the same everywhere.
+macOS and Linux build FFmpeg from source here. On Windows, FFmpeg is built
+with MSVC inside MSYS2 (``.github/workflows/release.yml``) using the flags from
+``--print-configure-flags``, and this script then runs with ``--ffmpeg-prefix``.
+``check_lgpl`` is the same everywhere.
 """
 
 from __future__ import annotations
@@ -29,7 +31,7 @@ import subprocess
 import sys
 import tarfile
 import textwrap
-from pathlib import Path
+from pathlib import Path, PurePath, PurePosixPath
 
 # Oldest macOS Notirua supports, Intel and Apple Silicon alike (DECISIONS D13).
 MACOS_MIN = "14.0"
@@ -87,7 +89,7 @@ def _download(url: str, target: Path, size: int, sha256: str) -> Path:
     return download(url, target, expected_size=size, sha256=sha256)
 
 
-def configure_flags(prefix: Path) -> list[str]:
+def configure_flags(prefix: PurePath) -> list[str]:
     flags = [
         f"--prefix={prefix}",
         "--enable-shared",
@@ -133,28 +135,34 @@ def build_wheel(work: Path, prefix: Path, out: Path) -> Path:
     raw = work / "raw-wheel"
     shutil.rmtree(raw, ignore_errors=True)
     env = dict(os.environ)
-    env["PKG_CONFIG_PATH"] = str(prefix / "lib" / "pkgconfig")
-    env["LDFLAGS"] = f"-Wl,-rpath,{prefix / 'lib'} " + env.get("LDFLAGS", "")
+    if sys.platform == "win32":
+        # PyAV finds FFmpeg through MSVC's INCLUDE and LIB on Windows.
+        for var, sub in (("INCLUDE", "include"), ("LIB", "lib")):
+            env[var] = str(prefix / sub) + os.pathsep + env.get(var, "")
+    else:
+        env["PKG_CONFIG_PATH"] = str(prefix / "lib" / "pkgconfig")
+        env["LDFLAGS"] = f"-Wl,-rpath,{prefix / 'lib'} " + env.get("LDFLAGS", "")
     _run(["uv", "build", "--wheel", "--out-dir", str(raw), str(sdist)], env=env)
     wheel = next(raw.glob("av-*.whl"))
-    out.mkdir(parents=True, exist_ok=True)
-    for old in out.glob("av-*.whl"):
-        old.unlink()
-    lib_env = dict(env)
+    # Repair into a scratch folder first: ``out`` may hold wheels for other
+    # platforms (one checkout serves the macOS and the Docker Linux builds).
+    repaired = work / "repaired-wheel"
+    shutil.rmtree(repaired, ignore_errors=True)
+    repaired.mkdir(parents=True)
     if sys.platform == "darwin":
-        lib_env["DYLD_LIBRARY_PATH"] = str(prefix / "lib")
-        _run(
-            ["uvx", "--from", "delocate", "delocate-wheel", "-w", str(out), str(wheel)], env=lib_env
-        )
-    elif sys.platform.startswith("linux"):
-        lib_env["LD_LIBRARY_PATH"] = str(prefix / "lib")
-        _run(
-            ["uvx", "auditwheel", "repair", "--plat", "linux_x86_64", "-w", str(out), str(wheel)],
-            env=lib_env,
-        )
+        env["DYLD_LIBRARY_PATH"] = str(prefix / "lib")
+        repair = ["uvx", "--from", "delocate", "delocate-wheel", "-w", str(repaired)]
+    elif sys.platform == "win32":
+        repair = ["uvx", "delvewheel", "repair", "--add-path", str(prefix / "bin"),
+                  "-w", str(repaired)]  # fmt: skip
     else:
-        shutil.copy2(wheel, out / wheel.name)
-    return next(out.glob("av-*.whl"))
+        env["LD_LIBRARY_PATH"] = str(prefix / "lib")
+        repair = ["uvx", "auditwheel", "repair", "--plat", "manylinux_2_31_x86_64",
+                  "-w", str(repaired)]  # fmt: skip
+    _run([*repair, str(wheel)], env=env)
+    built = next(repaired.glob("av-*.whl"))
+    out.mkdir(parents=True, exist_ok=True)
+    return Path(shutil.copy2(built, out / built.name))
 
 
 def check_lgpl() -> list[str]:
@@ -231,10 +239,22 @@ def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument("--work", type=Path, default=root / "build" / "lgpl-av")
     parser.add_argument("--out", type=Path, default=root / "dist" / "lgpl-av")
+    parser.add_argument(
+        "--ffmpeg-prefix", type=Path, help="use an FFmpeg already built with these flags"
+    )
+    parser.add_argument(
+        "--print-configure-flags",
+        metavar="PREFIX",
+        help="print FFmpeg's configure flags for PREFIX and exit (Windows CI)",
+    )
     args = parser.parse_args()
+    if args.print_configure_flags:
+        # An MSYS2 path such as /d/a/notirua/ffmpeg: keep its forward slashes.
+        print(" ".join(configure_flags(PurePosixPath(args.print_configure_flags))))
+        return
     work = args.work.resolve()
     work.mkdir(parents=True, exist_ok=True)
-    prefix = build_ffmpeg(work)
+    prefix = args.ffmpeg_prefix.resolve() if args.ffmpeg_prefix else build_ffmpeg(work)
     wheel = build_wheel(work, prefix, args.out.resolve())
     self_test(wheel, work)
     print(wheel)

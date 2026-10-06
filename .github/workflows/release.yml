@@ -1,0 +1,83 @@
+name: Release build
+
+# Windows installer (M6). macOS and Linux are built locally for now
+# (packaging/build_app.py, packaging/linux/build.sh); README "릴리스를 만드는 방법".
+on:
+  workflow_dispatch:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: read
+
+jobs:
+  windows:
+    runs-on: windows-2022
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+      - uses: ilammy/msvc-dev-cmd@v1
+        with:
+          arch: x64
+      - uses: msys2/setup-msys2@v2
+        with:
+          msystem: MSYS
+          path-type: inherit
+          update: false
+          install: make diffutils nasm tar xz
+      - name: FFmpeg cache
+        id: ffmpeg-cache
+        uses: actions/cache@v4
+        with:
+          path: build/lgpl-av/ffmpeg
+          key: lgpl-ffmpeg-win64-${{ hashFiles('packaging/build_lgpl_av.py') }}
+      - name: Build LGPL-only FFmpeg with MSVC
+        if: steps.ffmpeg-cache.outputs.cache-hit != 'true'
+        shell: msys2 {0}
+        run: |
+          set -euo pipefail
+          # MSYS's own link.exe would shadow MSVC's linker.
+          rm -f /usr/bin/link.exe
+          ROOT="$(pwd)"
+          PREFIX="$ROOT/build/lgpl-av/ffmpeg"
+          VERSION=$(uv run --no-project --python 3.11 python -c "import sys; sys.path.insert(0, 'packaging'); import build_lgpl_av as b; print(b.FFMPEG_VERSION, b.FFMPEG_SHA256, b.FFMPEG_URL)")
+          read -r FF_VERSION FF_SHA FF_URL <<< "$VERSION"
+          FLAGS=$(uv run --no-project --python 3.11 python packaging/build_lgpl_av.py --print-configure-flags "$PREFIX")
+          mkdir -p build/lgpl-av && cd build/lgpl-av
+          curl -fsSLo ffmpeg.tar.xz "$FF_URL"
+          echo "$FF_SHA  ffmpeg.tar.xz" | sha256sum -c -
+          tar xf ffmpeg.tar.xz
+          cd "ffmpeg-$FF_VERSION"
+          ./configure --toolchain=msvc $FLAGS
+          make -j"$(nproc)"
+          make install
+          # MSVC builds install the import libraries next to the DLLs.
+          cp -n "$PREFIX"/bin/*.lib "$PREFIX/lib/" || true
+          ls "$PREFIX/bin" "$PREFIX/lib"
+      - name: Install
+        run: uv sync --locked
+      - name: LGPL PyAV wheel
+        run: uv run python packaging/build_lgpl_av.py --ffmpeg-prefix build/lgpl-av/ffmpeg
+      - name: Bundle and check
+        run: uv run python packaging/build_app.py
+      - name: Installer
+        shell: pwsh
+        run: |
+          $version = (uv run python -c "from importlib.metadata import version; print(version('notirua'))").Trim()
+          & "${env:ProgramFiles(x86)}\Inno Setup 6\ISCC.exe" `
+            "/DAppVersion=$version" `
+            "/DSourceDir=$pwd\dist\app\Notirua" `
+            "/DOutputDir=$pwd\dist" `
+            "/DIconFile=$pwd\build\icons-win32\notirua.ico" `
+            packaging\windows\notirua.iss
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          Get-ChildItem dist\*.exe
+      - uses: actions/upload-artifact@v4
+        with:
+          name: notirua-windows
+          path: |
+            dist/*.exe
+            dist/lgpl-av/*.whl
