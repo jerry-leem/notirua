@@ -56,7 +56,8 @@ uv run notirua
    ordinary laptop. **Cancel** stops within 3 seconds; finished steps are kept,
    so trying again is faster.
 5. **Result.** Switch instruments with the tabs, page through the preview, and
-   transpose with **−/+** or the key list. The **Song title** at the top can
+   transpose with **−/+** (one semitone per press; two presses make a whole
+   step) or the key list. The **Song title** at the top can
    still be changed; press Enter and every page and file name follows (only
    the drawing is redone, which takes a few seconds).
    **Save all** copies the PDFs to a folder without overwriting existing
@@ -176,8 +177,8 @@ uv run notirua
 4. **기다리기.** 단계별 상태와 남은 시간이 보입니다. 4분 곡은 빠른 Mac에서 1분
    이내, 보통 노트북에서 몇 분 걸립니다. **취소**는 3초 안에 멈추고, 끝난 단계는
    남겨 두어 다시 시도할 때 빨라집니다.
-5. **결과.** 탭으로 악기를 바꾸고, 미리보기 쪽을 넘기고, **−/+** 또는 조 목록으로
-   전조합니다. 맨 위의 **곡명**도 여기서 바꿀 수 있습니다. Enter를 누르면 모든 쪽과
+5. **결과.** 탭으로 악기를 바꾸고, 미리보기 쪽을 넘기고, **조 바꾸기**의 **−/+**(한 번에
+   반음, 두 번 누르면 온음) 또는 조 목록으로 조를 바꿉니다. 맨 위의 **곡명**도 여기서 바꿀 수 있습니다. Enter를 누르면 모든 쪽과
    파일 이름에 반영됩니다(악보만 다시 그리므로 몇 초면 됩니다). **모두 저장**은 기존 파일을 덮어쓰지 않고
    PDF를 폴더에 복사합니다. 아래쪽에 **MusicXML**, **MIDI**, **WAV로 저장**,
    **악기별 소리 듣기**가 있습니다.
