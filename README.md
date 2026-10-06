@@ -58,9 +58,20 @@ uv run notirua
    files. **MusicXML**, **MIDI**, **Save as WAV**, and **Hear each
    instrument** are at the bottom.
 
-**Settings** (top right) changes the language, paper, and save folder, manages
-components, and clears saved intermediate results. Shortcuts: Ctrl+O (⌘O)
-opens a file, Ctrl+S (⌘S) saves all, ⌘, opens Settings on macOS.
+**Settings** changes the language, paper, and save folder, manages components,
+and clears saved intermediate results. Open it with the button at the top
+right or from the menu:
+
+| | macOS | Windows / Linux |
+|---|---|---|
+| Settings | **Notirua → Settings…** (⌘,) | **File → Settings…** (Ctrl+,) |
+| Quit | **Notirua → Quit Notirua** (⌘Q) | **File → Quit Notirua** (Ctrl+Q) |
+| About and licenses | **Notirua → About Notirua** | **Help → About Notirua** |
+| Open a file / Save all | **File** menu (⌘O / ⌘S) | **File** menu (Ctrl+O / Ctrl+S) |
+
+On macOS, right-clicking the Dock icon also offers **Open a music file…** and
+**Settings…**. The window title shows the version, for example
+`Notirua 0.1.1`.
 
 ## Use the command line
 
@@ -79,6 +90,7 @@ uv run notirua cache                   # size of saved intermediate results
 uv run notirua cache --clear
 uv run notirua --lang ko               # open the window in Korean
 uv run notirua transcribe --help       # every option
+uv run notirua --version               # notirua 0.1.1
 ```
 
 More `transcribe` options: `--to-key "G major"`, `--guitar-tuning drop_d`,
@@ -95,6 +107,13 @@ More `transcribe` options: `--to-key "G major"`, `--guitar-tuning drop_d`,
 | Logs (for bug reports) | `~/Library/Logs/notirua` | `%LOCALAPPDATA%\notirua\Logs` | `~/.local/state/notirua/log` |
 
 To remove Notirua, delete the cloned folder and these folders.
+
+## Version
+
+Notirua uses [Semantic Versioning](https://semver.org): `MAJOR.MINOR.PATCH`.
+The current version is **0.1.1**. While the major version is 0, a minor
+release may still change behavior. `uv run notirua --version` prints it, and
+`CHANGELOG.md` lists what changed in each release.
 
 ## Develop
 
@@ -156,9 +175,24 @@ uv run notirua
    PDF를 폴더에 복사합니다. 아래쪽에 **MusicXML**, **MIDI**, **WAV로 저장**,
    **악기별 소리 듣기**가 있습니다.
 
-**설정**(오른쪽 위)에서 언어, 용지, 저장 폴더를 바꾸고 구성요소를 관리하며 중간
-결과를 비울 수 있습니다. 단축키: Ctrl+O(⌘O) 파일 열기, Ctrl+S(⌘S) 모두 저장,
-macOS에서 ⌘, 설정.
+**설정**에서 언어, 용지, 저장 폴더를 바꾸고 구성요소를 관리하며 중간 결과를 비울
+수 있습니다. 오른쪽 위 버튼이나 메뉴로 엽니다.
+
+| | macOS | Windows / Linux |
+|---|---|---|
+| 설정 | **Notirua → 설정…** (⌘,) | **파일 → 설정…** (Ctrl+,) |
+| 종료 | **Notirua → Notirua 종료** (⌘Q) | **파일 → Notirua 종료** (Ctrl+Q) |
+| 정보와 라이선스 | **Notirua → Notirua 정보** | **도움말 → Notirua 정보** |
+| 파일 열기 / 모두 저장 | **파일** 메뉴 (⌘O / ⌘S) | **파일** 메뉴 (Ctrl+O / Ctrl+S) |
+
+macOS에서는 Dock 아이콘을 오른쪽 클릭해도 **음악 파일 열기…**와 **설정…**이 나옵니다.
+창 제목에 버전이 표시됩니다(예: `Notirua 0.1.1`).
+
+### 버전
+
+시맨틱 버전(`MAJOR.MINOR.PATCH`)을 따릅니다. 현재 버전은 **0.1.1**이며, 1.0 전까지는
+MINOR 버전에서도 동작이 바뀔 수 있습니다. `uv run notirua --version`으로 확인하고, 바뀐
+내용은 `CHANGELOG.md`에 적습니다.
 
 ### 명령줄 사용법
 
