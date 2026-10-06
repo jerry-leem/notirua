@@ -66,6 +66,9 @@ def check_window(gui: Path) -> None:
 
 
 def main() -> None:
+    # The CI console uses cp1252; never stop on a Korean message.
+    for stream in (sys.stdout, sys.stderr):
+        stream.reconfigure(errors="backslashreplace")  # type: ignore[union-attr]
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument("--cli", type=Path, required=True)
     parser.add_argument("--gui", type=Path)
