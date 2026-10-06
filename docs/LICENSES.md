@@ -22,9 +22,9 @@ unlicensed components are never included (SPEC 7.4).
 | platformdirs | 4.x | MIT | https://github.com/tox-dev/platformdirs |
 | Babel | 2.18 | BSD-3-Clause | https://babel.pocoo.org |
 | music21 | 10.x | BSD-3-Clause | https://github.com/cuthbertLab/music21 |
-| PySide6 / Qt 6 (Essentials + QtPdf from Addons) | 6.11 | LGPL-3.0 (dynamically linked) | https://www.qt.io/qt-for-python |
+| PySide6 / Qt 6 (Essentials + QtPdf from Addons) | 6.9 | LGPL-3.0 (dynamically linked) | https://www.qt.io/qt-for-python |
 | Noto Sans CJK KR (Linux build only) | Sans2.004 | OFL-1.1 (`licenses/noto-cjk/`) | https://github.com/notofonts/noto-cjk |
-| PDFium (inside QtPdf) | Qt 6.11 | BSD-3-Clause | https://pdfium.googlesource.com/pdfium |
+| PDFium (inside QtPdf) | Qt 6.9 | BSD-3-Clause | https://pdfium.googlesource.com/pdfium |
 
 ## Downloaded on first run (with consent)
 
@@ -36,7 +36,7 @@ unlicensed components are never included (SPEC 7.4).
 
 ## Build and test only (not distributed)
 
-pytest, pytest-qt, ruff, mypy, PyInstaller (GPL-2.0 with bootloader exception).
+pytest, pytest-qt, pypdf, ruff, mypy, PyInstaller (GPL-2.0 with bootloader exception).
 
 ## Explicitly excluded
 
