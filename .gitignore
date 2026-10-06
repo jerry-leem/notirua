@@ -20,3 +20,18 @@ spikes/s3_lilypond/*.pdf
 .vscode/
 locales/en_XA/
 packaging/fonts/
+
+# First-run components, if installed inside the checkout while testing
+# (`notirua setup --dir components`). By default they go to the user data
+# folder outside the repository (README: "Where Notirua keeps its files").
+/components/
+htdemucs_6s.onnx
+lilypond-*.tar.gz
+lilypond-*.zip
+lilypond-*/
+installed.json
+*.part
+
+# Sheet music and audio made while testing (`notirua transcribe ... --out out`)
+/out/
+/output/
