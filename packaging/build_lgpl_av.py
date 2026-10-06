@@ -1,0 +1,244 @@
+"""Build a PyAV wheel on an LGPL-only, decode-focused FFmpeg (DECISIONS D13).
+
+Usage: uv run python packaging/build_lgpl_av.py [--work build/lgpl-av] [--out dist/lgpl-av]
+
+The PyPI ``av`` wheels link FFmpeg against libx264/libx265 (GPL), which would
+put a bundled app under GPL terms. This script:
+
+1. downloads pinned FFmpeg and PyAV sources (SHA-256 checked),
+2. configures FFmpeg with ``--disable-everything`` plus only the demuxers,
+   decoders, parsers, and filters Notirua needs (and a few LGPL encoders so the
+   result can be self-tested); no ``--enable-gpl``, ``--enable-nonfree``, or
+   external codec libraries,
+3. builds the PyAV wheel against it and vendors the libraries into the wheel
+   (delocate on macOS, auditwheel on Linux),
+4. installs the wheel into a scratch venv and runs :func:`check_lgpl` plus a
+   decode round trip.
+
+macOS and Linux build FFmpeg from source here. Windows is handled in M6 (MSYS2
+or a pinned LGPL shared build); ``check_lgpl`` is the same everywhere.
+"""
+
+from __future__ import annotations
+
+import argparse
+import os
+import platform
+import shutil
+import subprocess
+import sys
+import tarfile
+import textwrap
+from pathlib import Path
+
+# Oldest macOS Notirua supports, Intel and Apple Silicon alike (DECISIONS D13).
+MACOS_MIN = "14.0"
+
+FFMPEG_VERSION = "8.1.2"
+FFMPEG_URL = f"https://ffmpeg.org/releases/ffmpeg-{FFMPEG_VERSION}.tar.xz"
+FFMPEG_SIZE = 11_710_924
+FFMPEG_SHA256 = "464beb5e7bf0c311e68b45ae2f04e9cc2af88851abb4082231742a74d97b524c"
+
+PYAV_VERSION = "18.1.0"
+PYAV_URL = (
+    "https://files.pythonhosted.org/packages/8d/f4/"
+    "f22114d30d3435e38c6af2b4870f37b864403dca6ae7af747a289ce0a18e/av-18.1.0.tar.gz"
+)
+PYAV_SIZE = 4_451_061
+PYAV_SHA256 = "47bfc286e1bc9de7ab4681fc2b575cd2460a66919d31ffe1bd5aa54fae531a28"
+
+# What FR-1 needs to read: audio files and the audio track of common videos.
+DEMUXERS = [
+    "aac", "ac3", "aiff", "asf", "caf", "eac3", "flac", "matroska", "mov",
+    "mp3", "ogg", "w64", "wav",
+]  # fmt: skip
+PCM = [
+    "pcm_alaw", "pcm_f32be", "pcm_f32le", "pcm_f64be", "pcm_f64le", "pcm_mulaw",
+    "pcm_s16be", "pcm_s16le", "pcm_s24be", "pcm_s24le", "pcm_s32be", "pcm_s32le",
+    "pcm_s8", "pcm_u8",
+]  # fmt: skip
+DECODERS = [
+    "aac", "aac_fixed", "ac3", "alac", "eac3", "flac", "mp1", "mp1float", "mp2",
+    "mp2float", "mp3", "mp3float", "opus", "vorbis", "wmapro", "wmav1", "wmav2",
+    *PCM,
+]  # fmt: skip
+PARSERS = ["aac", "ac3", "flac", "mpegaudio", "opus", "vorbis"]
+# PyAV's AudioResampler builds an abuffer -> aformat -> abuffersink graph.
+FILTERS = ["abuffer", "abuffersink", "aformat", "anull", "aresample", "buffer", "buffersink"]
+# Native LGPL encoders and muxers, only so the built wheel can test itself.
+ENCODERS = ["aac", "alac", "flac", "pcm_s16be", "pcm_s16le"]
+MUXERS = ["aiff", "flac", "ipod", "mov", "mp4", "wav"]
+
+# Anything here in the FFmpeg configuration means the build is not LGPL-only.
+FORBIDDEN = ("--enable-gpl", "--enable-nonfree", "libx264", "libx265", "libxvid", "libfdk")
+
+
+def _run(cmd: list[str], cwd: Path | None = None, env: dict[str, str] | None = None) -> None:
+    print("+", " ".join(cmd), flush=True)
+    full_env = dict(env or os.environ)
+    if sys.platform == "darwin":
+        full_env.setdefault("MACOSX_DEPLOYMENT_TARGET", MACOS_MIN)
+    subprocess.run(cmd, cwd=cwd, env=full_env, check=True)
+
+
+def _download(url: str, target: Path, size: int, sha256: str) -> Path:
+    from notirua.components.download import download
+
+    return download(url, target, expected_size=size, sha256=sha256)
+
+
+def configure_flags(prefix: Path) -> list[str]:
+    flags = [
+        f"--prefix={prefix}",
+        "--enable-shared",
+        "--disable-static",
+        "--disable-programs",
+        "--disable-doc",
+        "--disable-network",
+        "--disable-autodetect",
+        "--disable-everything",
+        "--enable-protocol=file,pipe",
+        "--enable-swresample",
+        *(f"--enable-demuxer={x}" for x in DEMUXERS),
+        *(f"--enable-decoder={x}" for x in DECODERS),
+        *(f"--enable-parser={x}" for x in PARSERS),
+        *(f"--enable-filter={x}" for x in FILTERS),
+        *(f"--enable-encoder={x}" for x in ENCODERS),
+        *(f"--enable-muxer={x}" for x in MUXERS),
+    ]
+    if platform.machine().lower() in ("x86_64", "amd64") and shutil.which("nasm") is None:
+        flags.append("--disable-x86asm")
+    return flags
+
+
+def build_ffmpeg(work: Path) -> Path:
+    prefix = work / "ffmpeg"
+    if (prefix / "lib" / "pkgconfig" / "libavcodec.pc").is_file():
+        return prefix
+    archive = _download(
+        FFMPEG_URL, work / f"ffmpeg-{FFMPEG_VERSION}.tar.xz", FFMPEG_SIZE, FFMPEG_SHA256
+    )
+    src = work / f"ffmpeg-{FFMPEG_VERSION}"
+    if not src.is_dir():
+        with tarfile.open(archive) as tar:
+            tar.extractall(work, filter="data")
+    _run(["./configure", *configure_flags(prefix)], cwd=src)
+    _run(["make", f"-j{os.cpu_count() or 2}"], cwd=src)
+    _run(["make", "install"], cwd=src)
+    return prefix
+
+
+def build_wheel(work: Path, prefix: Path, out: Path) -> Path:
+    sdist = _download(PYAV_URL, work / f"av-{PYAV_VERSION}.tar.gz", PYAV_SIZE, PYAV_SHA256)
+    raw = work / "raw-wheel"
+    shutil.rmtree(raw, ignore_errors=True)
+    env = dict(os.environ)
+    env["PKG_CONFIG_PATH"] = str(prefix / "lib" / "pkgconfig")
+    env["LDFLAGS"] = f"-Wl,-rpath,{prefix / 'lib'} " + env.get("LDFLAGS", "")
+    _run(["uv", "build", "--wheel", "--out-dir", str(raw), str(sdist)], env=env)
+    wheel = next(raw.glob("av-*.whl"))
+    out.mkdir(parents=True, exist_ok=True)
+    for old in out.glob("av-*.whl"):
+        old.unlink()
+    lib_env = dict(env)
+    if sys.platform == "darwin":
+        lib_env["DYLD_LIBRARY_PATH"] = str(prefix / "lib")
+        _run(
+            ["uvx", "--from", "delocate", "delocate-wheel", "-w", str(out), str(wheel)], env=lib_env
+        )
+    elif sys.platform.startswith("linux"):
+        lib_env["LD_LIBRARY_PATH"] = str(prefix / "lib")
+        _run(
+            ["uvx", "auditwheel", "repair", "--plat", "linux_x86_64", "-w", str(out), str(wheel)],
+            env=lib_env,
+        )
+    else:
+        shutil.copy2(wheel, out / wheel.name)
+    return next(out.glob("av-*.whl"))
+
+
+def check_lgpl() -> list[str]:
+    """Problems with the FFmpeg inside the active ``av`` (empty = LGPL-only)."""
+    import av
+
+    problems = []
+    meta = av._core.library_meta  # type: ignore[attr-defined]
+    for name, info in meta.items():
+        if "LGPL" not in info["license"]:
+            problems.append(f"{name}: license {info['license']}")
+        for word in FORBIDDEN:
+            if word in info["configuration"]:
+                problems.append(f"{name}: configured with {word}")
+    folder = Path(av.__file__).parent
+    for lib in [*folder.parent.glob("av*.libs/*"), *folder.glob(".dylibs/*"), *folder.glob("*")]:
+        if any(bad in lib.name for bad in ("x264", "x265", "xvid", "fdk")):
+            problems.append(f"GPL/nonfree library bundled: {lib.name}")
+    return sorted(set(problems))
+
+
+SELF_TEST = textwrap.dedent(
+    """
+    import sys, tempfile
+    from pathlib import Path
+    import numpy as np, av
+    sys.path.insert(0, sys.argv[1])
+    from build_lgpl_av import check_lgpl
+    problems = check_lgpl()
+    assert not problems, problems
+    tmp = Path(tempfile.mkdtemp())
+    for name, fmt, codec, sample in (("a.m4a", "ipod", "aac", "fltp"),
+                                     ("a.flac", "flac", "flac", "s16"),
+                                     ("a.wav", "wav", "pcm_s16le", "s16")):
+        path = tmp / name
+        with av.open(str(path), "w", format=fmt) as out:
+            stream = out.add_stream(codec, rate=44100)
+            stream.layout = "stereo"
+            t = np.arange(44100) / 44100
+            tone = (0.3 * np.sin(2 * np.pi * 440 * t)).astype(np.float32)
+            data = np.stack([tone, tone])
+            if sample == "s16":
+                data = (data * 32767).astype(np.int16).T.reshape(1, -1)
+            frame = av.AudioFrame.from_ndarray(data, format=sample, layout="stereo")
+            frame.sample_rate = 44100
+            for p in stream.encode(frame):
+                out.mux(p)
+            for p in stream.encode(None):
+                out.mux(p)
+        with av.open(str(path)) as inp:
+            resampler = av.AudioResampler(format="fltp", layout="stereo", rate=22050)
+            n = sum(f.samples for fr in inp.decode(audio=0) for f in resampler.resample(fr))
+        assert n > 20000, (name, n)
+        print("decoded", name, n)
+    print("LGPL-only:", av.__version__, av.ffmpeg_version_info)
+    """
+)
+
+
+def self_test(wheel: Path, work: Path) -> None:
+    venv = work / "test-venv"
+    shutil.rmtree(venv, ignore_errors=True)
+    _run(["uv", "venv", "--python", "3.11", str(venv)])
+    python = venv / ("Scripts/python.exe" if sys.platform == "win32" else "bin/python")
+    _run(["uv", "pip", "install", "--python", str(python), str(wheel), "numpy"])
+    script = work / "self_test.py"
+    script.write_text(SELF_TEST, encoding="utf-8")
+    # Run outside the build folders so the freshly built libraries are not picked up by path.
+    _run([str(python), "-I", str(script), str(Path(__file__).resolve().parent)], cwd=venv)
+
+
+def main() -> None:
+    root = Path(__file__).resolve().parents[1]
+    parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
+    parser.add_argument("--work", type=Path, default=root / "build" / "lgpl-av")
+    parser.add_argument("--out", type=Path, default=root / "dist" / "lgpl-av")
+    args = parser.parse_args()
+    work = args.work.resolve()
+    work.mkdir(parents=True, exist_ok=True)
+    prefix = build_ffmpeg(work)
+    wheel = build_wheel(work, prefix, args.out.resolve())
+    self_test(wheel, work)
+    print(wheel)
+
+
+if __name__ == "__main__":
+    main()

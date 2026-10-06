@@ -17,7 +17,7 @@ unlicensed components are never included (SPEC 7.4).
 | scipy | 1.x | BSD-3-Clause | https://scipy.org |
 | ONNX Runtime | 1.30 | MIT | https://onnxruntime.ai |
 | PyAV | 18.1 | BSD-3-Clause | https://github.com/PyAV-Org/PyAV |
-| FFmpeg (inside PyAV wheels) | 8.x | LGPL-3.0+, **plus GPL libx264/libx265 in current wheels** — see DECISIONS "Needs maintainer decision" #1 | https://ffmpeg.org |
+| FFmpeg (built by `packaging/build_lgpl_av.py`, decoders only) | 8.1.2 | LGPL-2.1-or-later (no GPL or nonfree parts; D13) | https://ffmpeg.org |
 | python-soxr / libsoxr | 1.1 | LGPL-2.1+ | https://github.com/dofuuz/python-soxr |
 | platformdirs | 4.x | MIT | https://github.com/tox-dev/platformdirs |
 | Babel | 2.18 | BSD-3-Clause | https://babel.pocoo.org |
