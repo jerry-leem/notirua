@@ -183,7 +183,7 @@ def build_parser() -> argparse.ArgumentParser:
     c = sub.add_parser("cache", help=_("Show or clear saved intermediate results."))
     c.add_argument("--clear", action="store_true", help=_("Delete all saved intermediate results."))
     sub.add_parser("languages", help=_("List available languages."))
-    sub.add_parser("gui", help=_("Open the Notirua window."))
+    sub.add_parser("gui", help=_("Open the Notirua window (the default with no command)."))
     return parser
 
 
@@ -206,13 +206,17 @@ def main(argv: Sequence[str] | None = None) -> int:
     from notirua.core.logging_setup import configure
 
     configure(verbose=args.verbose)
-    if args.command == "gui":
+    if args.command in ("gui", None):
+        # Plain `notirua` opens the window; it starts on setup until that is done.
+        from notirua.gui.app import display_available
         from notirua.gui.app import main as gui_main
 
-        return gui_main([sys.argv[0]])
-    if args.command is None:
-        parser.print_help()
-        return EXIT_USAGE
+        if not display_available():
+            if args.command is None:
+                parser.print_help()
+            print(_("No screen found, so the window cannot open."), file=sys.stderr)
+            return EXIT_USAGE
+        return gui_main([sys.argv[0]], language=args.lang)
     try:
         if args.command == "transcribe":
             return cmd_transcribe(args, user)

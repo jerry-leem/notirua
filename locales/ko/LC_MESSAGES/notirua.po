@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Notirua VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-10-06 21:39+0900\n"
+"POT-Creation-Date: 2026-10-06 22:10+0900\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: ko\n"
@@ -186,7 +186,9 @@ msgstr "구성요소를 {seconds}초 만에 설치했습니다."
 msgid "Delete all saved intermediate results."
 msgstr "저장된 중간 결과를 모두 지웁니다."
 
-msgid "Delete all saved intermediate results? Your sheet music files are not touched."
+msgid ""
+"Delete all saved intermediate results? Your sheet music files are not "
+"touched."
 msgstr "저장된 중간 결과를 모두 지울까요? 만들어 둔 악보 파일은 지워지지 않습니다."
 
 msgid "Details"
@@ -452,6 +454,9 @@ msgstr "새 파일…"
 msgid "Next page"
 msgstr "다음 쪽"
 
+msgid "No screen found, so the window cannot open."
+msgstr "화면을 찾을 수 없어 창을 열 수 없습니다."
+
 msgid "No sound"
 msgstr "소리 없음"
 
@@ -506,8 +511,8 @@ msgstr "설정을 열고 필요한 구성요소를 설치하세요."
 msgid "Open setup…"
 msgstr "설정 화면 열기…"
 
-msgid "Open the Notirua window."
-msgstr "Notirua 창을 엽니다."
+msgid "Open the Notirua window (the default with no command)."
+msgstr "Notirua 창을 엽니다 (명령 없이 실행할 때의 기본값)."
 
 msgid "Open the log folder for details and report the problem."
 msgstr "로그 폴더에서 자세한 내용을 확인하고 문제를 알려 주세요."
@@ -616,7 +621,9 @@ msgstr "저장된 중간 결과"
 msgid "Saved intermediate results: {size} in {path}"
 msgstr "저장된 중간 결과: {size} ({path})"
 
-msgid "Saved results make transposing and trying again fast. Older ones are removed first."
+msgid ""
+"Saved results make transposing and trying again fast. Older ones are "
+"removed first."
 msgstr "중간 결과를 저장해 두면 전조와 다시 시도가 빨라집니다. 오래된 것부터 지웁니다."
 
 #, python-brace-format
@@ -755,7 +762,9 @@ msgstr "파일에 오디오 트랙이 {count}개 있습니다."
 msgid "The file is copy-protected (DRM) and cannot be opened."
 msgstr "복제 방지(DRM)가 걸린 파일이라 열 수 없습니다."
 
-msgid "The internet is used only for this download. Notirua works offline afterwards."
+msgid ""
+"The internet is used only for this download. Notirua works offline "
+"afterwards."
 msgstr "인터넷 연결은 이 다운로드에만 사용되며, 이후에는 오프라인으로 동작합니다."
 
 msgid "The license list could not be found."
@@ -783,7 +792,9 @@ msgid "Time signature"
 msgstr "박자"
 
 #, python-brace-format
-msgid "Total download {download} · Space needed after install {install} · Free space {free}"
+msgid ""
+"Total download {download} · Space needed after install {install} · Free "
+"space {free}"
 msgstr "전체 다운로드 {download} · 설치 후 필요 공간 {install} · 남은 공간 {free}"
 
 #, python-brace-format

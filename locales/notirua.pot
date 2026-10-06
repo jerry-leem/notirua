@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-10-06 21:39+0900\n"
+"POT-Creation-Date: 2026-10-06 22:10+0900\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -453,6 +453,9 @@ msgstr ""
 msgid "Next page"
 msgstr ""
 
+msgid "No screen found, so the window cannot open."
+msgstr ""
+
 msgid "No sound"
 msgstr ""
 
@@ -508,7 +511,7 @@ msgstr ""
 msgid "Open setup…"
 msgstr ""
 
-msgid "Open the Notirua window."
+msgid "Open the Notirua window (the default with no command)."
 msgstr ""
 
 msgid "Open the log folder for details and report the problem."
