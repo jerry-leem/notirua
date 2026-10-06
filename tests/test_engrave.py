@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import sys
 from fractions import Fraction as F
 from pathlib import Path
 
@@ -157,11 +158,16 @@ def test_combined_book_has_one_last_page_label() -> None:
 def test_font_folders_are_added_before_the_score(tmp_path: Path) -> None:
     from notirua.core.engrave.render import with_font_dirs
 
-    odd = tmp_path / 'fonts "x" \\ y'
+    if sys.platform == "win32":
+        # Quotes are not allowed in Windows names; backslashes become "/".
+        odd, tail = tmp_path / "fonts x", "/fonts x\")"
+    else:
+        odd, tail = tmp_path / 'fonts "x" \\ y', '\\"x\\" \\\\ y")'
     source = with_font_dirs('\\version "2.26.0"', [odd])
     first, rest = source.split("\n", 1)
     assert first.startswith("#(ly:font-config-add-directory ")
-    assert first.endswith('\\"x\\" \\\\ y")')
+    assert "\\" not in first.replace("\\\\", "").replace('\\"', "")
+    assert first.endswith(tail)
     assert rest == '\\version "2.26.0"'
     assert with_font_dirs("x", []) == "x"
 
