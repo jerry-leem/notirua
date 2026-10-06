@@ -23,8 +23,8 @@ from notirua import paths
 from notirua.core import cache as cache_mod
 from notirua.core.analyze import Analysis, analyze
 from notirua.core.arrange.staff import ArrangeOptions, arrange_part
-from notirua.core.arrange.tab import TabWeights
-from notirua.core.decode import SAMPLE_RATE, AudioArray, decode, probe
+from notirua.core.arrange.tab import TUNINGS, TabWeights
+from notirua.core.decode import SAMPLE_RATE, AudioArray, AudioInfo, decode, probe
 from notirua.core.engrave.lilypond import EngraveOptions, render_ly
 from notirua.core.engrave.render import Engraver
 from notirua.core.errors import Cancelled, NotiruaError
@@ -39,7 +39,14 @@ from notirua.core.quantize import common_start, quantize, shift
 from notirua.core.separate import Separator, is_silent, noise_gate
 from notirua.core.transcribe.drums import DrumSettings, DrumTranscriber
 from notirua.core.transcribe.pitched import PitchedTranscriber, PostprocessSettings
-from notirua.core.transpose import interval_to, parse_key, transpose_key, transpose_notes
+from notirua.core.transpose import (
+    MAJOR_TONICS,
+    MINOR_TONICS,
+    interval_to,
+    parse_key,
+    transpose_key,
+    transpose_notes,
+)
 from notirua.i18n import N_, translator
 from notirua.settings import DEFAULT_STAGE_WEIGHTS
 
@@ -72,6 +79,15 @@ TRANSCRIBE_STEM = N_("Listening for {instrument} notes ({index}/{count})")
 ENGRAVE_STEM = N_("Drawing {instrument} sheet music ({index}/{count})")
 SKIP_SILENT = N_("No sound")
 SKIP_NOT_SELECTED = N_("Not selected")
+
+TUNING_LABELS = {
+    "standard": N_("Standard"),
+    "drop_d": N_("Drop D"),
+    "half_down": N_("Half step down"),
+    "five_string": N_("5-string"),
+}
+TUNING_CHOICES: dict[str, list[str]] = {inst: list(t) for inst, t in TUNINGS.items()}
+KEY_CHOICES: list[str] = [f"{t} major" for t in MAJOR_TONICS] + [f"{t} minor" for t in MINOR_TONICS]
 
 _FORBIDDEN = re.compile(r'[<>:"/\\|?*\x00-\x1f]')
 
@@ -170,6 +186,36 @@ def safe_filename(name: str, max_len: int = 120) -> str:
 def key_label(key: str, gettext_fn: Callable[[str], str]) -> str:
     k = parse_key(key)
     return gettext_fn(MAJOR_KEY if k.mode == "major" else MINOR_KEY).format(tonic=k.tonic)
+
+
+def transposed_key(key: str, semitones: int) -> str:
+    return str(transpose_key(parse_key(key), semitones))
+
+
+def semitones_between(key: str, target: str) -> int:
+    """Smallest move from ``key`` to ``target``, in [-6, +5] semitones."""
+    return interval_to(parse_key(key), parse_key(target))
+
+
+def keys_like(key: str) -> list[str]:
+    """The 12 keys with the same mode as ``key``, starting from C."""
+    mode = parse_key(key).mode
+    return [k for k in KEY_CHOICES if k.endswith(mode)]
+
+
+def inspect(path: Path) -> AudioInfo:
+    """Duration, audio tracks, and embedded title of a file, without decoding it."""
+    return probe(path)
+
+
+def export_score(score: Score, fmt: str, target: Path, pdf_language: str | None = None) -> Path:
+    """Write ``score`` as ``"midi"`` or ``"musicxml"`` outside a pipeline run."""
+    from notirua.core import export
+
+    if fmt == "midi":
+        return export.write_midi(score, target)
+    tr = translator(pdf_language)
+    return export.write_musicxml(score, target, {s: tr.gettext(INSTRUMENT_NAMES[s]) for s in STEMS})
 
 
 class Pipeline:

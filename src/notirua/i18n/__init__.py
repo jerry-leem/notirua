@@ -171,3 +171,10 @@ def translate_message(message_id: str, args: dict[str, object] | None = None) ->
         except (KeyError, IndexError, ValueError):
             return message_id.format(**args)
     return text
+
+
+def translate_progress(message_id: str, args: dict[str, object] | None = None) -> str:
+    """Like :func:`translate_message`, but string arguments (instrument and component
+    names inside progress events) are message ids too."""
+    translated = {k: (_(v) if isinstance(v, str) else v) for k, v in (args or {}).items()}
+    return translate_message(message_id, translated)

@@ -15,8 +15,14 @@ from notirua import settings as settings_mod
 from notirua.core.errors import Cancelled, NotiruaError
 from notirua.core.model import STEMS
 from notirua.core.progress import CancelToken, ProgressEvent
-from notirua.i18n import _, available_languages, ngettext, resolve_language, set_language
-from notirua.i18n import translate_message as tm
+from notirua.i18n import (
+    _,
+    available_languages,
+    ngettext,
+    resolve_language,
+    set_language,
+    translate_progress,
+)
 from notirua.i18n.argparse_text import install as install_argparse_text
 
 EXIT_OK, EXIT_ERROR, EXIT_USAGE, EXIT_CANCELLED, EXIT_SETUP = 0, 1, 2, 130, 3
@@ -48,7 +54,7 @@ class ProgressPrinter:
         self._last_logged = -1.0
 
     def __call__(self, event: ProgressEvent) -> None:
-        message = tm(event.message_id, _translated_args(event.message_args))
+        message = translate_progress(event.message_id, event.message_args)
         pct = int(event.overall_fraction * 100)
         if self.tty:
             width = max(10, min(30, shutil.get_terminal_size((80, 20)).columns - 50))
@@ -75,11 +81,6 @@ class ProgressPrinter:
             self.stream.flush()
             self._last_stage_state = key
             self._last_logged = pct
-
-
-def _translated_args(args: dict[str, object]) -> dict[str, object]:
-    # Instrument and component names inside events are message ids too.
-    return {k: (_(v) if isinstance(v, str) else v) for k, v in args.items()}
 
 
 def _print_error(exc: NotiruaError) -> None:
@@ -182,6 +183,7 @@ def build_parser() -> argparse.ArgumentParser:
     c = sub.add_parser("cache", help=_("Show or clear saved intermediate results."))
     c.add_argument("--clear", action="store_true", help=_("Delete all saved intermediate results."))
     sub.add_parser("languages", help=_("List available languages."))
+    sub.add_parser("gui", help=_("Open the Notirua window."))
     return parser
 
 
@@ -204,6 +206,10 @@ def main(argv: Sequence[str] | None = None) -> int:
     from notirua.core.logging_setup import configure
 
     configure(verbose=args.verbose)
+    if args.command == "gui":
+        from notirua.gui.app import main as gui_main
+
+        return gui_main([sys.argv[0]])
     if args.command is None:
         parser.print_help()
         return EXIT_USAGE
@@ -228,16 +234,6 @@ def main(argv: Sequence[str] | None = None) -> int:
         _print_error(exc)
         return EXIT_ERROR
     return EXIT_USAGE
-
-
-def _default_paper() -> str:
-    import locale
-
-    try:
-        region = (locale.getlocale()[0] or "").split("_")[-1].upper()
-    except ValueError:
-        region = ""
-    return "letter" if region in {"US", "CA", "MX", "PH"} else "a4"
 
 
 def cmd_transcribe(args: argparse.Namespace, user: settings_mod.Settings) -> int:
@@ -274,7 +270,7 @@ def cmd_transcribe(args: argparse.Namespace, user: settings_mod.Settings) -> int
         stems=stems,
         transpose=args.transpose,
         target_key=args.to_key,
-        paper=args.paper or user.paper or _default_paper(),
+        paper=args.paper or user.paper or settings_mod.default_paper(),
         guitar_tuning=args.guitar_tuning or user.guitar_tuning,
         bass_tuning=args.bass_tuning or user.bass_tuning,
         time_signature=ts,

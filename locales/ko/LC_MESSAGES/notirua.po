@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Notirua VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-10-06 21:21+0900\n"
+"POT-Creation-Date: 2026-10-06 21:39+0900\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: ko\n"
@@ -30,9 +30,18 @@ msgstr "%(heading)s:"
 msgid "%(prog)s: error: %(message)s\n"
 msgstr "%(prog)s: 오류: %(message)s\n"
 
+msgid "5-string"
+msgstr "5현"
+
 #, python-brace-format
 msgid "A required component is not installed: {name}."
 msgstr "필요한 구성요소가 설치되지 않았습니다: {name}."
+
+msgid "About"
+msgstr "정보"
+
+msgid "Agree and install"
+msgstr "동의하고 설치"
 
 msgid "Agree to the component licenses without asking."
 msgstr "묻지 않고 구성요소 라이선스에 동의합니다."
@@ -40,8 +49,14 @@ msgstr "묻지 않고 구성요소 라이선스에 동의합니다."
 msgid "Agree to the licenses and install? [y/N] "
 msgstr "라이선스에 동의하고 설치할까요? [y/N] "
 
+msgid "All"
+msgstr "전체"
+
 msgid "All components are installed."
 msgstr "모든 구성요소가 설치되어 있습니다."
+
+msgid "All files (*)"
+msgstr "모든 파일 (*)"
 
 msgid "Also save MIDI."
 msgstr "MIDI 파일도 저장합니다."
@@ -52,17 +67,41 @@ msgstr "MusicXML 파일도 저장합니다."
 msgid "Arranging staves and tablature"
 msgstr "오선보와 TAB 악보를 배치하는 중"
 
+msgid "Ask every time"
+msgstr "매번 묻기"
+
 msgid "Audio or video file to read."
 msgstr "읽을 음악 또는 동영상 파일."
+
+msgid "Audio track"
+msgstr "오디오 트랙"
 
 msgid "Audio track number when the file has several."
 msgstr "오디오 트랙이 여러 개일 때 사용할 트랙 번호."
 
+msgid "Automatic"
+msgstr "자동"
+
+msgid "BPM"
+msgstr "BPM"
+
+msgid "Back"
+msgstr "뒤로"
+
+msgid "Back to file selection"
+msgstr "파일 선택으로 돌아가기"
+
 msgid "Bass"
 msgstr "베이스"
 
+msgid "Bass tuning"
+msgstr "베이스 줄 맞춤"
+
 msgid "Beats per minute, if detection is wrong."
 msgstr "빠르기(BPM). 자동으로 찾은 값이 틀렸을 때 지정합니다."
+
+msgid "Cancel"
+msgstr "취소"
 
 msgid "Cancelled."
 msgstr "취소했습니다."
@@ -70,24 +109,75 @@ msgstr "취소했습니다."
 msgid "Cannot write to the install location."
 msgstr "설치 위치에 쓸 수 없습니다."
 
+msgid "Change install location"
+msgstr "설치 위치 변경"
+
+msgid "Change save folder"
+msgstr "저장 폴더 변경"
+
+msgid "Change…"
+msgstr "변경…"
+
+msgid "Check each component to agree to its license."
+msgstr "구성요소마다 체크해서 라이선스에 동의해 주세요."
+
 msgid "Check that the file plays in another app, or convert it to WAV or MP3."
 msgstr "다른 앱에서 재생되는지 확인하거나 WAV 또는 MP3로 변환해 보세요."
 
 msgid "Check your internet connection and try again."
 msgstr "인터넷 연결을 확인한 뒤 다시 시도하세요."
 
+msgid "Choose a component bundle file"
+msgstr "구성요소 묶음 파일 고르기"
+
 msgid "Choose a file that contains sound."
 msgstr "소리가 들어 있는 파일을 선택하세요."
 
+msgid "Choose a file…"
+msgstr "파일 고르기…"
+
 msgid "Choose a folder you can write to."
 msgstr "쓰기 권한이 있는 폴더를 선택하세요."
+
+msgid "Choose a music file"
+msgstr "음악 파일 고르기"
+
+msgid "Choose a save folder"
+msgstr "저장 폴더 고르기"
 
 #, python-brace-format
 msgid "Choose a section of {limit} minutes or less."
 msgstr "{limit}분 이하의 구간을 선택하세요."
 
+msgid "Choose another file"
+msgstr "다른 파일 고르기"
+
+msgid "Choose where to install components"
+msgstr "구성요소를 설치할 위치 고르기"
+
+msgid "Choose where to save"
+msgstr "저장할 위치 고르기"
+
 msgid "Choose which audio track to use."
 msgstr "사용할 오디오 트랙을 선택하세요."
+
+msgid "Clear"
+msgstr "비우기"
+
+msgid "Clear saved intermediate results"
+msgstr "저장된 중간 결과 비우기"
+
+msgid "Clear…"
+msgstr "비우기…"
+
+msgid "Component bundle (*.zip)"
+msgstr "구성요소 묶음 (*.zip)"
+
+msgid "Components"
+msgstr "구성요소"
+
+msgid "Components are needed to make sheet music."
+msgstr "악보를 만들려면 구성요소가 필요합니다."
 
 #, python-brace-format
 msgid "Components installed in {seconds} s."
@@ -95,6 +185,12 @@ msgstr "구성요소를 {seconds}초 만에 설치했습니다."
 
 msgid "Delete all saved intermediate results."
 msgstr "저장된 중간 결과를 모두 지웁니다."
+
+msgid "Delete all saved intermediate results? Your sheet music files are not touched."
+msgstr "저장된 중간 결과를 모두 지울까요? 만들어 둔 악보 파일은 지워지지 않습니다."
+
+msgid "Details"
+msgstr "자세히"
 
 #, python-brace-format
 msgid "Disk space needed: {size}"
@@ -106,9 +202,15 @@ msgstr "악기별 PDF를 만들지 않습니다."
 msgid "Do not make the all-instruments PDF."
 msgstr "전체 악기 합본 PDF를 만들지 않습니다."
 
+msgid "Done"
+msgstr "완료"
+
 #, python-brace-format
 msgid "Done in {seconds} s: {count}."
 msgstr "{seconds}초 만에 완료: {count}."
+
+msgid "Down a semitone"
+msgstr "반음 내리기"
 
 msgid "Downloading components needs your permission first."
 msgstr "구성요소를 내려받으려면 먼저 동의가 필요합니다."
@@ -134,6 +236,12 @@ msgstr "{instrument} 악보를 그리는 중 ({index}/{count})"
 msgid "Draws the finished sheet music and saves it as PDF."
 msgstr "완성된 악보를 그려 PDF로 저장합니다."
 
+msgid "Drop D"
+msgstr "드롭 D"
+
+msgid "Drop a music file here"
+msgstr "음악 파일을 여기에 끌어다 놓으세요"
+
 msgid "Drum sheet music is for reference only."
 msgstr "드럼 악보는 참고용입니다."
 
@@ -150,6 +258,9 @@ msgstr "오류 코드: {code}"
 #, python-brace-format
 msgid "Error: {message}"
 msgstr "오류: {message}"
+
+msgid "Failed"
+msgstr "실패"
 
 #, python-brace-format
 msgid "File not found: {path}"
@@ -178,8 +289,35 @@ msgstr "디스크 공간을 확보하거나 다른 설치 위치를 선택하세
 msgid "Freed {size}."
 msgstr "{size}를 비웠습니다."
 
+msgid "General"
+msgstr "일반"
+
 msgid "Guitar"
 msgstr "기타"
+
+msgid "Guitar tuning"
+msgstr "기타 줄 맞춤"
+
+msgid "Half step down"
+msgstr "반음 내림"
+
+msgid "Hear each instrument"
+msgstr "악기별 소리 듣기"
+
+msgid "In progress"
+msgstr "진행 중"
+
+msgid "Install"
+msgstr "설치하기"
+
+msgid "Install again"
+msgstr "다시 설치"
+
+msgid "Install again…"
+msgstr "다시 설치…"
+
+msgid "Install from a bundle file…"
+msgstr "묶음 파일로 설치…"
 
 msgid "Install from a component bundle file (no internet)."
 msgstr "구성요소 묶음 파일로 설치합니다(인터넷 불필요)."
@@ -194,8 +332,14 @@ msgstr "설치 위치: {path}"
 msgid "Install the components Notirua needs."
 msgstr "Notirua에 필요한 구성요소를 설치합니다."
 
+msgid "Installed"
+msgstr "설치됨"
+
 msgid "Installed from the bundle file."
 msgstr "묶음 파일로 설치했습니다."
+
+msgid "Installing components"
+msgstr "구성요소를 설치하는 중"
 
 #, python-brace-format
 msgid "Installing {name}"
@@ -204,6 +348,12 @@ msgstr "{name} 설치하는 중"
 msgid "Instrument separation model"
 msgstr "악기 분리 모델"
 
+msgid "Instruments"
+msgstr "악기"
+
+msgid "Instruments are found automatically; ones without sound are skipped."
+msgstr "악기는 자동으로 찾으며, 소리가 없으면 건너뜁니다."
+
 #, python-brace-format
 msgid "Instruments to include, comma separated: {choices}."
 msgstr "포함할 악기(쉼표로 구분): {choices}."
@@ -211,15 +361,33 @@ msgstr "포함할 악기(쉼표로 구분): {choices}."
 msgid "Interface language, for example en or ko."
 msgstr "화면 언어. 예: en, ko."
 
+msgid "Keep at most"
+msgstr "최대 보관 크기"
+
+msgid "Key"
+msgstr "조"
+
 msgid "Key, if detection is wrong, for example \"D minor\"."
 msgstr "조성. 자동으로 찾은 값이 틀렸을 때 지정합니다. 예: \"D minor\"."
+
+msgid "Language"
+msgstr "언어"
 
 msgid "Language for labels inside the PDF."
 msgstr "PDF 안 라벨의 언어."
 
+msgid "Language inside the PDF"
+msgstr "PDF 언어"
+
+msgid "Letter"
+msgstr "레터"
+
 #, python-brace-format
 msgid "License: {license} ({url})"
 msgstr "라이선스: {license} ({url})"
+
+msgid "Licenses"
+msgstr "라이선스"
 
 msgid "List available languages."
 msgstr "사용할 수 있는 언어를 보여 줍니다."
@@ -231,8 +399,30 @@ msgstr "음을 듣고 받아 적는 중"
 msgid "Listening for {instrument} notes ({index}/{count})"
 msgstr "{instrument} 음을 받아 적는 중 ({index}/{count})"
 
+msgid "MIDI file (*.mid)"
+msgstr "MIDI 파일 (*.mid)"
+
+msgid "MP3, M4A, WAV, FLAC, OGG, MP4 video, and more"
+msgstr "MP3, M4A, WAV, FLAC, OGG, MP4 동영상 등"
+
+msgid "Make sheet music"
+msgstr "악보 만들기"
+
 msgid "Make sheet music from an audio file."
 msgstr "음악 파일로 악보를 만듭니다."
+
+msgid "Making sheet music failed."
+msgstr "악보를 만들지 못했습니다."
+
+#, python-brace-format
+msgid "Making sheet music for {title}"
+msgstr "{title} 악보를 만드는 중"
+
+msgid "More settings"
+msgstr "세부 설정"
+
+msgid "Move the first beat by (beats)"
+msgstr "첫 박 밀기 (박)"
 
 msgid "Move the first beat by N beats."
 msgstr "첫 박을 N박 밉니다."
@@ -243,6 +433,25 @@ msgstr "악기 음역에 맞추려고 한 옥타브 내렸습니다."
 msgid "Moved up one octave to fit the instrument."
 msgstr "악기 음역에 맞추려고 한 옥타브 올렸습니다."
 
+msgid "Music"
+msgstr "음악"
+
+#, python-brace-format
+msgid "Music and video files ({patterns})"
+msgstr "음악·동영상 파일 ({patterns})"
+
+msgid "MusicXML file (*.musicxml)"
+msgstr "MusicXML 파일 (*.musicxml)"
+
+msgid "Name"
+msgstr "이름"
+
+msgid "New file…"
+msgstr "새 파일…"
+
+msgid "Next page"
+msgstr "다음 쪽"
+
 msgid "No sound"
 msgstr "소리 없음"
 
@@ -250,8 +459,20 @@ msgstr "소리 없음"
 msgid "Not enough disk space: {needed} needed, {available} available."
 msgstr "디스크 공간이 부족합니다: {needed} 필요, {available} 남음."
 
+msgid "Not installed"
+msgstr "설치 안 됨"
+
+msgid "Not now"
+msgstr "나중에"
+
 msgid "Not selected"
 msgstr "선택하지 않음"
+
+msgid "Notation + TAB"
+msgstr "오선보 + TAB"
+
+msgid "Notation only"
+msgstr "오선보만"
 
 #, python-brace-format
 msgid "Note: {message}"
@@ -263,8 +484,30 @@ msgstr "아무것도 내려받지 않았습니다. 언제든 “notirua setup”
 msgid "Notirua needs to download these components:"
 msgstr "Notirua가 다음 구성요소를 내려받아야 합니다:"
 
+#, python-brace-format
+msgid "Notirua needs to download {count} component"
+msgid_plural "Notirua needs to download {count} components"
+msgstr[0] "Notirua를 쓰려면 구성요소 {count}개를 내려받아야 합니다"
+
+#, python-brace-format
+msgid "Notirua {version}"
+msgstr "Notirua {version}"
+
+msgid "Open log folder"
+msgstr "로그 폴더 열기"
+
+#, python-brace-format
+msgid "Open recent file {name}"
+msgstr "최근 파일 {name} 열기"
+
 msgid "Open setup and install the required components."
 msgstr "설정을 열고 필요한 구성요소를 설치하세요."
+
+msgid "Open setup…"
+msgstr "설정 화면 열기…"
+
+msgid "Open the Notirua window."
+msgstr "Notirua 창을 엽니다."
 
 msgid "Open the log folder for details and report the problem."
 msgstr "로그 폴더에서 자세한 내용을 확인하고 문제를 알려 주세요."
@@ -272,21 +515,63 @@ msgstr "로그 폴더에서 자세한 내용을 확인하고 문제를 알려 �
 msgid "Other"
 msgstr "기타 소리"
 
+msgid "Overall progress"
+msgstr "전체 진행률"
+
+#, python-brace-format
+msgid "Page {page} of {count}"
+msgstr "{count}쪽 중 {page}쪽"
+
+msgid "Paper"
+msgstr "용지"
+
 msgid "Paper size."
 msgstr "용지 크기."
+
+msgid "Pause"
+msgstr "일시정지"
 
 msgid "Piano"
 msgstr "피아노"
 
+msgid "Please review the component licenses"
+msgstr "구성요소 라이선스를 확인해 주세요"
+
+msgid "Previous page"
+msgstr "이전 쪽"
+
 msgid "Reading the audio file"
 msgstr "음악 파일을 읽는 중"
+
+msgid "Recent:"
+msgstr "최근:"
+
+msgid "Redrawing the sheet music"
+msgstr "악보를 다시 그리는 중"
+
+msgid "Remove"
+msgstr "삭제"
 
 msgid "Remove an installed component."
 msgstr "설치된 구성요소를 삭제합니다."
 
 #, python-brace-format
+msgid "Remove {name} and download it again?"
+msgstr "{name}을(를) 삭제하고 다시 내려받을까요?"
+
+#, python-brace-format
+msgid "Remove {name}? You need it to make sheet music and can install it again."
+msgstr "{name}을(를) 삭제할까요? 악보를 만들 때 필요하며, 언제든 다시 설치할 수 있습니다."
+
+#, python-brace-format
 msgid "Removed {name}."
 msgstr "{name}을(를) 삭제했습니다."
+
+msgid "Remove…"
+msgstr "삭제…"
+
+msgid "Resume"
+msgstr "이어받기"
 
 msgid "Reusing earlier results"
 msgstr "이전 결과를 다시 사용하는 중"
@@ -300,9 +585,44 @@ msgstr "묻지 않고 동의하려면 --accept-licenses를 붙여 다시 실행�
 msgid "Run “notirua setup” first."
 msgstr "먼저 “notirua setup”을 실행하세요."
 
+msgid "Same as the app"
+msgstr "화면과 같음"
+
+msgid "Same as the system"
+msgstr "시스템과 같음"
+
+msgid "Save"
+msgstr "저장"
+
+msgid "Save all"
+msgstr "모두 저장"
+
+msgid "Save as MIDI"
+msgstr "MIDI로 저장"
+
+msgid "Save as MusicXML"
+msgstr "MusicXML로 저장"
+
+msgid "Save as WAV"
+msgstr "WAV로 저장"
+
+msgid "Save folder"
+msgstr "저장 폴더"
+
+msgid "Saved intermediate results"
+msgstr "저장된 중간 결과"
+
 #, python-brace-format
 msgid "Saved intermediate results: {size} in {path}"
 msgstr "저장된 중간 결과: {size} ({path})"
+
+msgid "Saved results make transposing and trying again fast. Older ones are removed first."
+msgstr "중간 결과를 저장해 두면 전조와 다시 시도가 빨라집니다. 오래된 것부터 지웁니다."
+
+#, python-brace-format
+msgid "Saved {n} file."
+msgid_plural "Saved {n} files."
+msgstr[0] "파일 {n}개를 저장했습니다."
 
 msgid "Saving files"
 msgstr "파일을 저장하는 중"
@@ -312,6 +632,15 @@ msgstr "악보 조판기 (LilyPond)"
 
 msgid "Semitones to move, -12 to +12."
 msgstr "옮길 반음 수, -12 ~ +12."
+
+msgid "Settings"
+msgstr "설정"
+
+msgid "Sheet music preview"
+msgstr "악보 미리보기"
+
+msgid "Show"
+msgstr "표시"
 
 msgid "Show detailed log output."
 msgstr "자세한 로그를 표시합니다."
@@ -326,12 +655,26 @@ msgid "Show or clear saved intermediate results."
 msgstr "저장된 중간 결과를 보거나 지웁니다."
 
 #, python-brace-format
+msgid "Show the license of {name}"
+msgstr "{name} 라이선스 보기"
+
+msgid "Size"
+msgstr "크기"
+
+#, python-brace-format
 msgid "Size: {size}"
 msgstr "크기: {size}"
+
+msgid "Skipped"
+msgstr "건너뜀"
 
 #, python-brace-format
 msgid "Skipped {instrument}: {reason}"
 msgstr "{instrument} 건너뜀: {reason}"
+
+#, python-brace-format
+msgid "Skipped: {list}"
+msgstr "건너뜀: {list}"
 
 #, python-brace-format
 msgid "Some components are not installed yet: {names}"
@@ -342,6 +685,9 @@ msgstr "함께 연주할 수 없는 음 일부를 뺐습니다."
 
 msgid "Something went wrong."
 msgstr "문제가 생겼습니다."
+
+msgid "Song title"
+msgstr "곡명"
 
 msgid "Song title printed on every page."
 msgstr "모든 페이지에 들어갈 곡명."
@@ -356,11 +702,32 @@ msgstr "곡을 보컬, 드럼, 베이스, 기타, 피아노, 기타 소리로 �
 msgid "Splitting the song into instruments"
 msgstr "악기별로 나누는 중"
 
+msgid "Standard"
+msgstr "표준"
+
 msgid "Start it again whenever you are ready."
 msgstr "준비되면 언제든 다시 시작하세요."
 
 msgid "Start time in seconds."
 msgstr "시작 시각(초)."
+
+msgid "Status"
+msgstr "상태"
+
+msgid "Stop installing? Parts already downloaded are kept for next time."
+msgstr "설치를 멈출까요? 이미 받은 부분은 다음을 위해 남겨 둡니다."
+
+msgid "Stop making sheet music? Finished steps are kept for next time."
+msgstr "악보 만들기를 멈출까요? 끝난 단계는 다음을 위해 남겨 둡니다."
+
+msgid "Storage"
+msgstr "저장 공간"
+
+msgid "TAB only"
+msgstr "TAB만"
+
+msgid "Tempo"
+msgstr "빠르기"
 
 #, python-brace-format
 msgid "The audio is longer than {limit} minutes."
@@ -388,13 +755,20 @@ msgstr "파일에 오디오 트랙이 {count}개 있습니다."
 msgid "The file is copy-protected (DRM) and cannot be opened."
 msgstr "복제 방지(DRM)가 걸린 파일이라 열 수 없습니다."
 
-msgid ""
-"The internet is used only for this download. Notirua works offline "
-"afterwards."
+msgid "The internet is used only for this download. Notirua works offline afterwards."
 msgstr "인터넷 연결은 이 다운로드에만 사용되며, 이후에는 오프라인으로 동작합니다."
+
+msgid "The license list could not be found."
+msgstr "라이선스 목록을 찾을 수 없습니다."
+
+msgid "The new language is used after you restart Notirua."
+msgstr "새 언어는 Notirua를 다시 시작하면 적용됩니다."
 
 msgid "The score could not be drawn."
 msgstr "악보를 그리지 못했습니다."
+
+msgid "The sheet music is ready."
+msgstr "악보가 완성되었습니다."
 
 msgid "The task was cancelled."
 msgstr "작업을 취소했습니다."
@@ -402,9 +776,26 @@ msgstr "작업을 취소했습니다."
 msgid "There is not enough disk space."
 msgstr "디스크 공간이 부족합니다."
 
+msgid "There is not enough disk space. Free up space or choose another location."
+msgstr "디스크 공간이 부족합니다. 공간을 비우거나 다른 위치를 고르세요."
+
+msgid "Time signature"
+msgstr "박자"
+
+#, python-brace-format
+msgid "Total download {download} · Space needed after install {install} · Free space {free}"
+msgstr "전체 다운로드 {download} · 설치 후 필요 공간 {install} · 남은 공간 {free}"
+
 #, python-brace-format
 msgid "Total download: {size}"
 msgstr "전체 다운로드 크기: {size}"
+
+#, python-brace-format
+msgid "Track {number}"
+msgstr "트랙 {number}"
+
+msgid "Transpose"
+msgstr "전조"
 
 msgid "Transpose must be between -12 and +12."
 msgstr "전조 값은 -12에서 +12 사이여야 합니다."
@@ -412,8 +803,15 @@ msgstr "전조 값은 -12에서 +12 사이여야 합니다."
 msgid "Transpose to this key, for example \"G major\"."
 msgstr "이 조로 전조합니다. 예: \"G major\"."
 
+#, python-brace-format
+msgid "Transpose: {count} semitones"
+msgstr "전조: 반음 {count}개"
+
 msgid "Try a different copy of the file."
 msgstr "다른 사본 파일로 시도해 보세요."
+
+msgid "Try again"
+msgstr "다시 시도"
 
 msgid "Try again. If the problem continues, open the log folder and report it."
 msgstr "다시 시도하세요. 문제가 계속되면 로그 폴더를 열어 알려 주세요."
@@ -431,15 +829,30 @@ msgstr "음악을 악보와 TAB 악보 PDF로 만듭니다."
 msgid "Unknown instrument: {name}"
 msgstr "알 수 없는 악기: {name}"
 
+msgid "Up a semitone"
+msgstr "반음 올리기"
+
 msgid "Use a file without copy protection."
 msgstr "복제 방지가 없는 파일을 사용하세요."
+
+msgid "Version"
+msgstr "버전"
 
 msgid "Vocals"
 msgstr "보컬"
 
+msgid "WAV file (*.wav)"
+msgstr "WAV 파일 (*.wav)"
+
+msgid "Waiting"
+msgstr "대기"
+
 #, python-brace-format
 msgid "What to do: {hint}"
 msgstr "해결 방법: {hint}"
+
+msgid "Work is still in progress. Stop it and quit?"
+msgstr "아직 작업 중입니다. 멈추고 끝낼까요?"
 
 #, python-brace-format
 msgid "about {time} left"
@@ -548,9 +961,26 @@ msgid "yes"
 msgstr "예"
 
 #, python-brace-format
+msgid "{instrument} ({reason})"
+msgstr "{instrument}({reason})"
+
+#, python-brace-format
+msgid "{message} · {speed}/s"
+msgstr "{message} · 초당 {speed}"
+
+#, python-brace-format
 msgid "{n} file"
 msgid_plural "{n} files"
 msgstr[0] "파일 {n}개"
+
+#, python-brace-format
+msgid "{n} score"
+msgid_plural "{n} scores"
+msgstr[0] "악보 {n}개"
+
+#, python-brace-format
+msgid "{title} — done ({time}) · {count}"
+msgstr "{title} — 완료 ({time}) · {count}"
 
 #, python-brace-format
 msgid "{tonic} major"

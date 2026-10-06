@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-10-06 21:21+0900\n"
+"POT-Creation-Date: 2026-10-06 21:39+0900\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -29,8 +29,17 @@ msgstr ""
 msgid "%(prog)s: error: %(message)s\n"
 msgstr ""
 
+msgid "5-string"
+msgstr ""
+
 #, python-brace-format
 msgid "A required component is not installed: {name}."
+msgstr ""
+
+msgid "About"
+msgstr ""
+
+msgid "Agree and install"
 msgstr ""
 
 msgid "Agree to the component licenses without asking."
@@ -39,7 +48,13 @@ msgstr ""
 msgid "Agree to the licenses and install? [y/N] "
 msgstr ""
 
+msgid "All"
+msgstr ""
+
 msgid "All components are installed."
+msgstr ""
+
+msgid "All files (*)"
 msgstr ""
 
 msgid "Also save MIDI."
@@ -51,16 +66,40 @@ msgstr ""
 msgid "Arranging staves and tablature"
 msgstr ""
 
+msgid "Ask every time"
+msgstr ""
+
 msgid "Audio or video file to read."
+msgstr ""
+
+msgid "Audio track"
 msgstr ""
 
 msgid "Audio track number when the file has several."
 msgstr ""
 
+msgid "Automatic"
+msgstr ""
+
+msgid "BPM"
+msgstr ""
+
+msgid "Back"
+msgstr ""
+
+msgid "Back to file selection"
+msgstr ""
+
 msgid "Bass"
 msgstr ""
 
+msgid "Bass tuning"
+msgstr ""
+
 msgid "Beats per minute, if detection is wrong."
+msgstr ""
+
+msgid "Cancel"
 msgstr ""
 
 msgid "Cancelled."
@@ -69,23 +108,74 @@ msgstr ""
 msgid "Cannot write to the install location."
 msgstr ""
 
+msgid "Change install location"
+msgstr ""
+
+msgid "Change save folder"
+msgstr ""
+
+msgid "Change…"
+msgstr ""
+
+msgid "Check each component to agree to its license."
+msgstr ""
+
 msgid "Check that the file plays in another app, or convert it to WAV or MP3."
 msgstr ""
 
 msgid "Check your internet connection and try again."
 msgstr ""
 
+msgid "Choose a component bundle file"
+msgstr ""
+
 msgid "Choose a file that contains sound."
 msgstr ""
 
+msgid "Choose a file…"
+msgstr ""
+
 msgid "Choose a folder you can write to."
+msgstr ""
+
+msgid "Choose a music file"
+msgstr ""
+
+msgid "Choose a save folder"
 msgstr ""
 
 #, python-brace-format
 msgid "Choose a section of {limit} minutes or less."
 msgstr ""
 
+msgid "Choose another file"
+msgstr ""
+
+msgid "Choose where to install components"
+msgstr ""
+
+msgid "Choose where to save"
+msgstr ""
+
 msgid "Choose which audio track to use."
+msgstr ""
+
+msgid "Clear"
+msgstr ""
+
+msgid "Clear saved intermediate results"
+msgstr ""
+
+msgid "Clear…"
+msgstr ""
+
+msgid "Component bundle (*.zip)"
+msgstr ""
+
+msgid "Components"
+msgstr ""
+
+msgid "Components are needed to make sheet music."
 msgstr ""
 
 #, python-brace-format
@@ -93,6 +183,14 @@ msgid "Components installed in {seconds} s."
 msgstr ""
 
 msgid "Delete all saved intermediate results."
+msgstr ""
+
+msgid ""
+"Delete all saved intermediate results? Your sheet music files are not "
+"touched."
+msgstr ""
+
+msgid "Details"
 msgstr ""
 
 #, python-brace-format
@@ -105,8 +203,14 @@ msgstr ""
 msgid "Do not make the all-instruments PDF."
 msgstr ""
 
+msgid "Done"
+msgstr ""
+
 #, python-brace-format
 msgid "Done in {seconds} s: {count}."
+msgstr ""
+
+msgid "Down a semitone"
 msgstr ""
 
 msgid "Downloading components needs your permission first."
@@ -133,6 +237,12 @@ msgstr ""
 msgid "Draws the finished sheet music and saves it as PDF."
 msgstr ""
 
+msgid "Drop D"
+msgstr ""
+
+msgid "Drop a music file here"
+msgstr ""
+
 msgid "Drum sheet music is for reference only."
 msgstr ""
 
@@ -148,6 +258,9 @@ msgstr ""
 
 #, python-brace-format
 msgid "Error: {message}"
+msgstr ""
+
+msgid "Failed"
 msgstr ""
 
 #, python-brace-format
@@ -177,7 +290,34 @@ msgstr ""
 msgid "Freed {size}."
 msgstr ""
 
+msgid "General"
+msgstr ""
+
 msgid "Guitar"
+msgstr ""
+
+msgid "Guitar tuning"
+msgstr ""
+
+msgid "Half step down"
+msgstr ""
+
+msgid "Hear each instrument"
+msgstr ""
+
+msgid "In progress"
+msgstr ""
+
+msgid "Install"
+msgstr ""
+
+msgid "Install again"
+msgstr ""
+
+msgid "Install again…"
+msgstr ""
+
+msgid "Install from a bundle file…"
 msgstr ""
 
 msgid "Install from a component bundle file (no internet)."
@@ -193,7 +333,13 @@ msgstr ""
 msgid "Install the components Notirua needs."
 msgstr ""
 
+msgid "Installed"
+msgstr ""
+
 msgid "Installed from the bundle file."
+msgstr ""
+
+msgid "Installing components"
 msgstr ""
 
 #, python-brace-format
@@ -203,6 +349,12 @@ msgstr ""
 msgid "Instrument separation model"
 msgstr ""
 
+msgid "Instruments"
+msgstr ""
+
+msgid "Instruments are found automatically; ones without sound are skipped."
+msgstr ""
+
 #, python-brace-format
 msgid "Instruments to include, comma separated: {choices}."
 msgstr ""
@@ -210,14 +362,32 @@ msgstr ""
 msgid "Interface language, for example en or ko."
 msgstr ""
 
+msgid "Keep at most"
+msgstr ""
+
+msgid "Key"
+msgstr ""
+
 msgid "Key, if detection is wrong, for example \"D minor\"."
+msgstr ""
+
+msgid "Language"
 msgstr ""
 
 msgid "Language for labels inside the PDF."
 msgstr ""
 
+msgid "Language inside the PDF"
+msgstr ""
+
+msgid "Letter"
+msgstr ""
+
 #, python-brace-format
 msgid "License: {license} ({url})"
+msgstr ""
+
+msgid "Licenses"
 msgstr ""
 
 msgid "List available languages."
@@ -230,7 +400,29 @@ msgstr ""
 msgid "Listening for {instrument} notes ({index}/{count})"
 msgstr ""
 
+msgid "MIDI file (*.mid)"
+msgstr ""
+
+msgid "MP3, M4A, WAV, FLAC, OGG, MP4 video, and more"
+msgstr ""
+
+msgid "Make sheet music"
+msgstr ""
+
 msgid "Make sheet music from an audio file."
+msgstr ""
+
+msgid "Making sheet music failed."
+msgstr ""
+
+#, python-brace-format
+msgid "Making sheet music for {title}"
+msgstr ""
+
+msgid "More settings"
+msgstr ""
+
+msgid "Move the first beat by (beats)"
 msgstr ""
 
 msgid "Move the first beat by N beats."
@@ -242,6 +434,25 @@ msgstr ""
 msgid "Moved up one octave to fit the instrument."
 msgstr ""
 
+msgid "Music"
+msgstr ""
+
+#, python-brace-format
+msgid "Music and video files ({patterns})"
+msgstr ""
+
+msgid "MusicXML file (*.musicxml)"
+msgstr ""
+
+msgid "Name"
+msgstr ""
+
+msgid "New file…"
+msgstr ""
+
+msgid "Next page"
+msgstr ""
+
 msgid "No sound"
 msgstr ""
 
@@ -249,7 +460,19 @@ msgstr ""
 msgid "Not enough disk space: {needed} needed, {available} available."
 msgstr ""
 
+msgid "Not installed"
+msgstr ""
+
+msgid "Not now"
+msgstr ""
+
 msgid "Not selected"
+msgstr ""
+
+msgid "Notation + TAB"
+msgstr ""
+
+msgid "Notation only"
 msgstr ""
 
 #, python-brace-format
@@ -262,7 +485,30 @@ msgstr ""
 msgid "Notirua needs to download these components:"
 msgstr ""
 
+#, python-brace-format
+msgid "Notirua needs to download {count} component"
+msgid_plural "Notirua needs to download {count} components"
+msgstr[0] ""
+msgstr[1] ""
+
+#, python-brace-format
+msgid "Notirua {version}"
+msgstr ""
+
+msgid "Open log folder"
+msgstr ""
+
+#, python-brace-format
+msgid "Open recent file {name}"
+msgstr ""
+
 msgid "Open setup and install the required components."
+msgstr ""
+
+msgid "Open setup…"
+msgstr ""
+
+msgid "Open the Notirua window."
 msgstr ""
 
 msgid "Open the log folder for details and report the problem."
@@ -271,20 +517,62 @@ msgstr ""
 msgid "Other"
 msgstr ""
 
+msgid "Overall progress"
+msgstr ""
+
+#, python-brace-format
+msgid "Page {page} of {count}"
+msgstr ""
+
+msgid "Paper"
+msgstr ""
+
 msgid "Paper size."
+msgstr ""
+
+msgid "Pause"
 msgstr ""
 
 msgid "Piano"
 msgstr ""
 
+msgid "Please review the component licenses"
+msgstr ""
+
+msgid "Previous page"
+msgstr ""
+
 msgid "Reading the audio file"
+msgstr ""
+
+msgid "Recent:"
+msgstr ""
+
+msgid "Redrawing the sheet music"
+msgstr ""
+
+msgid "Remove"
 msgstr ""
 
 msgid "Remove an installed component."
 msgstr ""
 
 #, python-brace-format
+msgid "Remove {name} and download it again?"
+msgstr ""
+
+#, python-brace-format
+msgid "Remove {name}? You need it to make sheet music and can install it again."
+msgstr ""
+
+#, python-brace-format
 msgid "Removed {name}."
+msgstr ""
+
+msgid "Remove…"
+msgstr ""
+
+msgid "Resume"
 msgstr ""
 
 msgid "Reusing earlier results"
@@ -299,9 +587,47 @@ msgstr ""
 msgid "Run “notirua setup” first."
 msgstr ""
 
+msgid "Same as the app"
+msgstr ""
+
+msgid "Same as the system"
+msgstr ""
+
+msgid "Save"
+msgstr ""
+
+msgid "Save all"
+msgstr ""
+
+msgid "Save as MIDI"
+msgstr ""
+
+msgid "Save as MusicXML"
+msgstr ""
+
+msgid "Save as WAV"
+msgstr ""
+
+msgid "Save folder"
+msgstr ""
+
+msgid "Saved intermediate results"
+msgstr ""
+
 #, python-brace-format
 msgid "Saved intermediate results: {size} in {path}"
 msgstr ""
+
+msgid ""
+"Saved results make transposing and trying again fast. Older ones are "
+"removed first."
+msgstr ""
+
+#, python-brace-format
+msgid "Saved {n} file."
+msgid_plural "Saved {n} files."
+msgstr[0] ""
+msgstr[1] ""
 
 msgid "Saving files"
 msgstr ""
@@ -310,6 +636,15 @@ msgid "Score engraver (LilyPond)"
 msgstr ""
 
 msgid "Semitones to move, -12 to +12."
+msgstr ""
+
+msgid "Settings"
+msgstr ""
+
+msgid "Sheet music preview"
+msgstr ""
+
+msgid "Show"
 msgstr ""
 
 msgid "Show detailed log output."
@@ -325,11 +660,25 @@ msgid "Show or clear saved intermediate results."
 msgstr ""
 
 #, python-brace-format
+msgid "Show the license of {name}"
+msgstr ""
+
+msgid "Size"
+msgstr ""
+
+#, python-brace-format
 msgid "Size: {size}"
+msgstr ""
+
+msgid "Skipped"
 msgstr ""
 
 #, python-brace-format
 msgid "Skipped {instrument}: {reason}"
+msgstr ""
+
+#, python-brace-format
+msgid "Skipped: {list}"
 msgstr ""
 
 #, python-brace-format
@@ -340,6 +689,9 @@ msgid "Some notes that cannot be played together were left out."
 msgstr ""
 
 msgid "Something went wrong."
+msgstr ""
+
+msgid "Song title"
 msgstr ""
 
 msgid "Song title printed on every page."
@@ -355,10 +707,31 @@ msgstr ""
 msgid "Splitting the song into instruments"
 msgstr ""
 
+msgid "Standard"
+msgstr ""
+
 msgid "Start it again whenever you are ready."
 msgstr ""
 
 msgid "Start time in seconds."
+msgstr ""
+
+msgid "Status"
+msgstr ""
+
+msgid "Stop installing? Parts already downloaded are kept for next time."
+msgstr ""
+
+msgid "Stop making sheet music? Finished steps are kept for next time."
+msgstr ""
+
+msgid "Storage"
+msgstr ""
+
+msgid "TAB only"
+msgstr ""
+
+msgid "Tempo"
 msgstr ""
 
 #, python-brace-format
@@ -392,7 +765,16 @@ msgid ""
 "afterwards."
 msgstr ""
 
+msgid "The license list could not be found."
+msgstr ""
+
+msgid "The new language is used after you restart Notirua."
+msgstr ""
+
 msgid "The score could not be drawn."
+msgstr ""
+
+msgid "The sheet music is ready."
 msgstr ""
 
 msgid "The task was cancelled."
@@ -401,8 +783,27 @@ msgstr ""
 msgid "There is not enough disk space."
 msgstr ""
 
+msgid "There is not enough disk space. Free up space or choose another location."
+msgstr ""
+
+msgid "Time signature"
+msgstr ""
+
+#, python-brace-format
+msgid ""
+"Total download {download} · Space needed after install {install} · Free "
+"space {free}"
+msgstr ""
+
 #, python-brace-format
 msgid "Total download: {size}"
+msgstr ""
+
+#, python-brace-format
+msgid "Track {number}"
+msgstr ""
+
+msgid "Transpose"
 msgstr ""
 
 msgid "Transpose must be between -12 and +12."
@@ -411,7 +812,14 @@ msgstr ""
 msgid "Transpose to this key, for example \"G major\"."
 msgstr ""
 
+#, python-brace-format
+msgid "Transpose: {count} semitones"
+msgstr ""
+
 msgid "Try a different copy of the file."
+msgstr ""
+
+msgid "Try again"
 msgstr ""
 
 msgid "Try again. If the problem continues, open the log folder and report it."
@@ -430,14 +838,29 @@ msgstr ""
 msgid "Unknown instrument: {name}"
 msgstr ""
 
+msgid "Up a semitone"
+msgstr ""
+
 msgid "Use a file without copy protection."
+msgstr ""
+
+msgid "Version"
 msgstr ""
 
 msgid "Vocals"
 msgstr ""
 
+msgid "WAV file (*.wav)"
+msgstr ""
+
+msgid "Waiting"
+msgstr ""
+
 #, python-brace-format
 msgid "What to do: {hint}"
+msgstr ""
+
+msgid "Work is still in progress. Stop it and quit?"
 msgstr ""
 
 #, python-brace-format
@@ -548,10 +971,28 @@ msgid "yes"
 msgstr ""
 
 #, python-brace-format
+msgid "{instrument} ({reason})"
+msgstr ""
+
+#, python-brace-format
+msgid "{message} · {speed}/s"
+msgstr ""
+
+#, python-brace-format
 msgid "{n} file"
 msgid_plural "{n} files"
 msgstr[0] ""
 msgstr[1] ""
+
+#, python-brace-format
+msgid "{n} score"
+msgid_plural "{n} scores"
+msgstr[0] ""
+msgstr[1] ""
+
+#, python-brace-format
+msgid "{title} — done ({time}) · {count}"
+msgstr ""
 
 #, python-brace-format
 msgid "{tonic} major"

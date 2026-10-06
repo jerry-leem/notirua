@@ -45,6 +45,7 @@ class Settings:
     bass_tuning: str = "standard"
     output_dir: str | None = None
     window_geometry: str | None = None
+    recent_files: list[str] = field(default_factory=list)
     components_dir: str | None = None
     cache_limit_gb: float = 5.0
     consent: ConsentRecord | None = None
@@ -55,6 +56,17 @@ class Settings:
     @property
     def components_path(self) -> Path:
         return Path(self.components_dir) if self.components_dir else paths.default_components_dir()
+
+
+def default_paper() -> str:
+    """Letter in North America and the Philippines, A4 elsewhere (from the OS locale)."""
+    import locale
+
+    try:
+        region = (locale.getlocale()[0] or "").split("_")[-1].upper()
+    except ValueError:
+        region = ""
+    return "letter" if region in {"US", "CA", "MX", "PH"} else "a4"
 
 
 def settings_path() -> Path:
