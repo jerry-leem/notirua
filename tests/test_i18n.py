@@ -31,6 +31,14 @@ def test_resolve_order_user_then_os_then_english() -> None:
     assert i18n.resolve_language("xx", "yy_ZZ") == "en"
 
 
+def test_windows_locale_name_resolves(monkeypatch: pytest.MonkeyPatch) -> None:
+    for var in ("LANGUAGE", "LC_ALL", "LC_MESSAGES", "LANG"):
+        monkeypatch.delenv(var, raising=False)
+    monkeypatch.setattr(sys, "platform", "win32")
+    monkeypatch.setattr(i18n, "_windows_language", lambda: "ko-KR")
+    assert i18n.resolve_language(None) == "ko"
+
+
 def test_switching_language_changes_strings() -> None:
     assert i18n.set_language("ko_KR") == "ko"
     assert i18n._("Piano") == "피아노"
@@ -266,3 +274,11 @@ def test_ui_wording_avoids_jargon() -> None:
                 if re.search(rf"\b{re.escape(term)}\b", cleaned, flags=re.I):
                     hits.append((term, text))
     assert not hits, hits
+
+
+def test_missing_std_streams_are_replaced(monkeypatch: pytest.MonkeyPatch) -> None:
+    from notirua.core.logging_setup import ensure_std_streams
+
+    monkeypatch.setattr(sys, "stderr", None)
+    ensure_std_streams()
+    print("warning", file=sys.stderr)

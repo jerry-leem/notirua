@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import locale
 import logging
 import sys
 from pathlib import Path
@@ -10,6 +11,26 @@ from typing import Any
 log = logging.getLogger(__name__)
 
 CPU = "CPUExecutionProvider"
+
+
+def describe_error(exc: BaseException) -> str:
+    """Readable text for an onnxruntime failure.
+
+    Driver and DirectML messages come in the OS code page (cp949 on Korean
+    Windows), but onnxruntime hands them to Python as UTF-8, so Python raises
+    UnicodeDecodeError. The error still carries the raw bytes: decode them with
+    the OS encoding instead.
+    """
+    if isinstance(exc, UnicodeDecodeError) and isinstance(exc.object, bytes | bytearray):
+        encodings = ["mbcs"] if sys.platform == "win32" else []
+        encodings.append(locale.getpreferredencoding(False))
+        for encoding in encodings:
+            try:
+                return bytes(exc.object).decode(encoding)
+            except (UnicodeDecodeError, LookupError):
+                continue
+        return bytes(exc.object).decode("utf-8", errors="replace")
+    return str(exc)
 
 
 def preferred_providers() -> list[str]:
@@ -55,7 +76,7 @@ def make_session(
                 "accelerator %s failed for %s, falling back to CPU: %s",
                 providers[0],
                 model_path.name,
-                exc,
+                describe_error(exc),
             )
     session = ort.InferenceSession(str(model_path), sess_options=opts, providers=[CPU])
     log.info("onnx session %s using CPU", model_path.name)
@@ -74,6 +95,8 @@ def run_with_fallback(
     except Exception as exc:
         if session.get_providers()[0] == CPU:
             raise
-        log.warning("accelerated run failed, switching %s to CPU: %s", model_path.name, exc)
+        log.warning(
+            "accelerated run failed, switching %s to CPU: %s", model_path.name, describe_error(exc)
+        )
         cpu = make_session(model_path, accelerate=False, low_memory=True)
         return cpu, cpu.run(outputs, feeds)
