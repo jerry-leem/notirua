@@ -1,27 +1,58 @@
-# Notirua
+# Notirua (노티루아)
 
-Notirua는 음원 파일을 넣으면 악기별(보컬, 드럼, 베이스, 기타, 피아노, 다른 악기)로
+Notirua(노티루아)는 음원 파일을 넣으면 악기별(보컬, 드럼, 베이스, 기타, 피아노, 다른 악기)로
 나누고, 악보와 기타·베이스 TAB 악보를 만들어 곡명과 페이지 번호가 들어간 PDF로
 저장하는 데스크톱 앱입니다. 모든 악보 맨 위에는 코드(예: C, Am, G7)가 코드가 바뀌는
 곳에만 표시됩니다. 모든 처리는 내 컴퓨터에서 이루어집니다.
 
 [English instructions are below.](#english)
 
+## 주요 특징
+
+### 여러 운영체제 지원
+
+| 운영체제 | 지원 범위 | 설치 파일 |
+|---|---|---|
+| macOS | 14 Sonoma 이상, Apple Silicon과 Intel | Apple Silicon용 `.dmg` (Intel용은 준비 중) |
+| Windows | 10, 11 (x64) | 설치 프로그램 `.exe` |
+| Linux | x86_64, glibc 2.31 이상(Ubuntu 20.04 이상 등) | `.AppImage` 하나로 실행 |
+
+세 운영체제 모두 같은 화면과 기능을 씁니다. 메뉴와 단축키는 각 운영체제의 관례를
+따릅니다(macOS는 앱 메뉴와 ⌘, Windows·Linux는 파일 메뉴와 Ctrl). 설치 파일은
+Python이나 다른 프로그램을 따로 설치하지 않아도 되며, 한·중·일 곡명용 글꼴은 Linux
+설치 파일에 들어 있습니다(macOS와 Windows는 시스템 글꼴을 씁니다).
+
+### 다국어 지원
+
+- 화면, 명령줄 도움말, 오류 메시지, Qt 기본 대화상자가 **한국어와 영어**로 나옵니다.
+- 처음에는 운영체제 언어를 따르고, **설정**에서 바꾸거나 `--lang ko`, `--lang en`으로
+  고를 수 있습니다(화면 언어는 다시 시작하면 적용).
+- PDF 안의 글자(악기 이름, 페이지 번호 등) 언어는 화면 언어와 따로 정할 수
+  있습니다(**세부 설정**, 명령줄 `--pdf-lang`).
+- 곡명은 어떤 언어로 써도 PDF에 그대로 들어갑니다.
+- 새 언어는 프로그램을 고치지 않고 `locales/<언어>/LC_MESSAGES/notirua.po` 번역
+  파일 하나만 추가하면 됩니다(템플릿 `locales/notirua.pot`). 번역 기여를 환영합니다.
+
 ## 내려받기와 설치
 
-설치 파일은 [릴리스 페이지](https://github.com/jerry-leem/notirua/releases/latest)에서
-받습니다. 릴리스마다 한국어 설치 방법, 사용법, 바뀐 점이 함께 적혀 있습니다.
+최신 배포판은 [**Notirua 0.3.0 릴리스 페이지**](https://github.com/jerry-leem/notirua/releases/tag/v0.3.0)에
+있습니다. 릴리스 페이지에 한국어 설치 방법, 사용법, 바뀐 점, 알려진 제한이 함께 적혀
+있습니다. 지난 버전은 [모든 릴리스](https://github.com/jerry-leem/notirua/releases)에서
+볼 수 있습니다.
 
-| 컴퓨터 | 받을 파일 | 설치 |
+| 컴퓨터 | 내려받기 (0.3.0) | 설치 |
 |---|---|---|
-| Mac (Apple Silicon), macOS 14 이상 | `Notirua-<버전>-macos-arm64.dmg` | 열어서 Notirua를 Applications 폴더로 끌어다 놓기 |
-| Linux x86_64 (glibc 2.31 이상) | `Notirua-<버전>-linux-x86_64.AppImage` | `chmod +x`로 실행 권한을 주고 실행 |
-| Windows 10/11, Intel Mac | 준비 중 | 아래 [소스로 실행하기](#소스로-실행하기) |
+| Mac (Apple Silicon), macOS 14 이상 | [Notirua-0.3.0-macos-arm64.dmg](https://github.com/jerry-leem/notirua/releases/download/v0.3.0/Notirua-0.3.0-macos-arm64.dmg) (120 MB) | 열어서 Notirua를 Applications 폴더로 끌어다 놓기 |
+| Windows 10/11 (x64) | [Notirua-0.3.0-windows-x64-setup.exe](https://github.com/jerry-leem/notirua/releases/download/v0.3.0/Notirua-0.3.0-windows-x64-setup.exe) (107 MB) | 실행해서 안내에 따라 설치(관리자 권한 필요 없음) |
+| Linux x86_64 (glibc 2.31 이상) | [Notirua-0.3.0-linux-x86_64.AppImage](https://github.com/jerry-leem/notirua/releases/download/v0.3.0/Notirua-0.3.0-linux-x86_64.AppImage) (176 MB) | `chmod +x`로 실행 권한을 주고 실행 |
+| Intel Mac | 준비 중 | 아래 [소스로 실행하기](#소스로-실행하기) |
 
 - 필요 사양: RAM 8GB, 빈 디스크 약 1GB(앱, 구성요소, 중간 결과)
 - macOS 앱은 아직 Apple 서명·공증 전이라 처음 열 때 경고가 나옵니다. macOS 15
   이상은 **시스템 설정 → 개인정보 보호 및 보안**에서 **그래도 열기**를, macOS 14는
   Finder에서 Control-클릭 후 **열기**를 누르세요. 한 번만 하면 됩니다.
+- Windows도 아직 코드 서명 전이라 "Windows의 PC 보호" 창이 나올 수 있습니다.
+  **추가 정보**를 누른 뒤 **실행**을 누르세요.
 - `model-htdemucs_6s-…` 릴리스는 앱이 쓰는 악기 분리 모델의 예비 내려받기
   위치입니다. 직접 받을 필요는 없습니다.
 
@@ -101,6 +132,7 @@ macOS에서는 Dock 아이콘을 오른쪽 클릭해도 **음악 파일 열기�
 설치한 앱에서는 `uv run notirua` 대신 아래처럼 실행합니다.
 
 - macOS: `/Applications/Notirua.app/Contents/MacOS/notirua-cli`
+- Windows: `%LOCALAPPDATA%\Programs\Notirua\notirua-cli.exe` (내 계정에만 설치한 경우)
 - Linux: `./Notirua-<버전>-linux-x86_64.AppImage` (인자 없이 실행하면 창이 열림)
 
 ```bash
@@ -161,29 +193,63 @@ Notirua는 MIT 라이선스로 배포합니다(`LICENSE`). 함께 들어가거�
 
 ## English
 
-Turn a song into sheet music: Notirua splits audio into instruments (vocals,
-drums, bass, guitar, piano, other), writes each one down as notation — with
+Turn a song into sheet music: Notirua (pronounced "no-ti-ru-a", 노티루아)
+splits audio into instruments (vocals, drums, bass, guitar, piano, other),
+writes each one down as notation — with
 tablature for guitar and bass — lets you transpose, and saves PDFs with the
 song title and page numbers. Chord symbols (such as C, Am, G7) appear above
 every score wherever the chord changes. Everything runs on your computer.
 
+### Features
+
+#### Runs on macOS, Windows, and Linux
+
+| System | Supported | Installer |
+|---|---|---|
+| macOS | 14 Sonoma or later, Apple Silicon and Intel | `.dmg` for Apple Silicon (Intel coming) |
+| Windows | 10 and 11 (x64) | `.exe` setup program |
+| Linux | x86_64 with glibc 2.31 or later (Ubuntu 20.04 or later, and others) | a single `.AppImage` |
+
+The screens and features are the same everywhere; menus and shortcuts follow
+each system's conventions (the application menu and ⌘ on macOS, the File menu
+and Ctrl on Windows and Linux). The installers need no Python or other
+programs, and the Linux one includes a font for Korean, Japanese, and Chinese
+titles (macOS and Windows use their system fonts).
+
+#### Languages
+
+- The window, command-line help, error messages, and Qt's own dialogs are in
+  **English and Korean**.
+- Notirua starts in the system language. Change it in **Settings** or with
+  `--lang en` / `--lang ko` (the window language applies after a restart).
+- The text inside the PDF (instrument names, page numbers, and so on) can use
+  a different language from the window (**More settings**, or `--pdf-lang`).
+- Song titles in any language go into the PDF as written.
+- Adding a language needs no code changes: add one translation file,
+  `locales/<language>/LC_MESSAGES/notirua.po` (template:
+  `locales/notirua.pot`). Translations are welcome.
+
 ### Download and install
 
-Installers are on the
-[releases page](https://github.com/jerry-leem/notirua/releases/latest), with
-installation and usage notes (in Korean) for each release.
+The latest release is
+[**Notirua 0.3.0**](https://github.com/jerry-leem/notirua/releases/tag/v0.3.0);
+its page has installation and usage notes (in Korean), changes, and known
+limits. Earlier versions are on [all releases](https://github.com/jerry-leem/notirua/releases).
 
-| Computer | File | Install |
+| Computer | Download (0.3.0) | Install |
 |---|---|---|
-| Mac (Apple Silicon), macOS 14 or later | `Notirua-<version>-macos-arm64.dmg` | Open it and drag Notirua to Applications |
-| Linux x86_64 (glibc 2.31 or later) | `Notirua-<version>-linux-x86_64.AppImage` | `chmod +x` it and run it |
-| Windows 10/11, Intel Mac | Coming | [Run from source](#run-from-source) |
+| Mac (Apple Silicon), macOS 14 or later | [Notirua-0.3.0-macos-arm64.dmg](https://github.com/jerry-leem/notirua/releases/download/v0.3.0/Notirua-0.3.0-macos-arm64.dmg) (120 MB) | Open it and drag Notirua to Applications |
+| Windows 10/11 (x64) | [Notirua-0.3.0-windows-x64-setup.exe](https://github.com/jerry-leem/notirua/releases/download/v0.3.0/Notirua-0.3.0-windows-x64-setup.exe) (107 MB) | Run it and follow the steps (no administrator rights needed) |
+| Linux x86_64 (glibc 2.31 or later) | [Notirua-0.3.0-linux-x86_64.AppImage](https://github.com/jerry-leem/notirua/releases/download/v0.3.0/Notirua-0.3.0-linux-x86_64.AppImage) (176 MB) | `chmod +x` it and run it |
+| Intel Mac | Coming | [Run from source](#run-from-source) |
 
 - Requirements: 8 GB RAM; about 1 GB of free disk space
 - The macOS app is not signed or notarized by Apple yet, so the first launch
   shows a warning. On macOS 15 or later choose **Open Anyway** in **System
   Settings → Privacy & Security**; on macOS 14 Control-click the app in Finder
   and choose **Open**. This is needed once.
+- Windows is not code-signed yet either: if "Windows protected your PC"
+  appears, choose **More info**, then **Run anyway**.
 - The `model-htdemucs_6s-…` release is a backup download location for the
   instrument separation model. There is no need to download it yourself.
 
@@ -273,6 +339,7 @@ On macOS, right-clicking the Dock icon also offers **Open a music file…** and
 The installed app runs the commands below without `uv run`:
 
 - macOS: `/Applications/Notirua.app/Contents/MacOS/notirua-cli`
+- Windows: `%LOCALAPPDATA%\Programs\Notirua\notirua-cli.exe` (when installed for your account only)
 - Linux: `./Notirua-<version>-linux-x86_64.AppImage` (no arguments opens the window)
 
 ```bash

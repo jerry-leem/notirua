@@ -12,8 +12,9 @@
 | 컴퓨터 | 받을 파일 |
 |---|---|
 | Mac (Apple Silicon: M1 이후), macOS 14 Sonoma 이상 | `Notirua-{{version}}-macos-arm64.dmg` |
+| Windows 10/11 (x64) | `Notirua-{{version}}-windows-x64-setup.exe` |
 | Linux x86_64 (Ubuntu 20.04 이상 등 glibc 2.31 이상) | `Notirua-{{version}}-linux-x86_64.AppImage` |
-| Windows 10/11, Intel Mac | 준비 중입니다. 지금은 [소스로 실행](https://github.com/jerry-leem/notirua#소스로-실행하기)할 수 있습니다. |
+| Intel Mac | 준비 중입니다. 지금은 [소스로 실행](https://github.com/jerry-leem/notirua#소스로-실행하기)할 수 있습니다. |
 
 필요 사양: RAM 8GB, 빈 디스크 약 1GB(앱, 구성요소, 중간 결과).
 
@@ -32,6 +33,14 @@
      보호 및 보안**으로 가서 아래쪽의 **그래도 열기**를 누르고 암호를 입력합니다.
    - macOS 14 Sonoma: Finder에서 Notirua를 Control-클릭(오른쪽 클릭)하고 **열기**를
      고른 뒤, 다시 나오는 창에서 **열기**를 누릅니다.
+
+### Windows
+
+1. 받은 `Notirua-{{version}}-windows-x64-setup.exe`를 실행합니다.
+2. 아직 코드 서명 전이라 "Windows의 PC 보호" 창이 나올 수 있습니다. **추가 정보**를
+   누른 뒤 **실행**을 누르세요.
+3. 안내에 따라 설치합니다. 관리자 권한 없이 내 계정에만 설치되며, 시작 메뉴에
+   Notirua가 생깁니다. 지울 때는 **설정 → 앱**에서 Notirua를 제거합니다.
 
 ### Linux
 
@@ -68,13 +77,16 @@ FUSE가 없어 실행되지 않으면 `--appimage-extract-and-run`을 붙여 실
    반음씩 조를 바꿉니다. 곡명도 여기서 고칠 수 있습니다. **모두 저장**을 누르면 PDF가
    폴더에 저장되고, 아래쪽 버튼으로 MusicXML, MIDI, WAV도 저장할 수 있습니다.
 
-언어, 용지, 저장 폴더는 **설정**(macOS ⌘, / Linux Ctrl+,)에서 바꿉니다.
+언어, 용지, 저장 폴더는 **설정**(macOS ⌘, / Windows·Linux Ctrl+,)에서 바꿉니다.
 
 ## 명령줄로 쓰기
 
 ```bash
 # macOS
 /Applications/Notirua.app/Contents/MacOS/notirua-cli transcribe "곡.m4a" --out ~/Desktop/악보
+
+# Windows (PowerShell)
+& "$env:LOCALAPPDATA\Programs\Notirua\notirua-cli.exe" transcribe "곡.m4a" --out "$HOME\Desktop\악보"
 
 # Linux
 ./Notirua-{{version}}-linux-x86_64.AppImage transcribe "곡.m4a" --out ./악보
@@ -86,7 +98,7 @@ FUSE가 없어 실행되지 않으면 `--appimage-extract-and-run`을 붙여 실
 
 ## 이번 버전에서 바뀐 점
 
-- macOS(Apple Silicon)와 Linux 설치 파일을 처음 배포합니다.
+- macOS(Apple Silicon), Windows, Linux 설치 파일을 처음 배포합니다.
 - 악기 분리 모델을 Hugging Face에서 받지 못하면 이 저장소의 릴리스에서 받습니다.
 
 그동안 쌓인 기능: 모든 악보 위 코드 표시(0.2.3), 저장된 중간 결과를 지우고 처음부터
@@ -94,18 +106,21 @@ FUSE가 없어 실행되지 않으면 `--appimage-extract-and-run`을 붙여 실
 
 ## 알려진 제한
 
-- macOS 앱은 아직 서명·공증 전이라 처음 열 때 위의 허용 과정이 필요합니다.
-- Windows와 Intel Mac 설치 파일은 준비 중입니다.
+- macOS와 Windows 앱은 아직 코드 서명 전이라 처음 열 때 위의 허용 과정이 필요합니다.
+- Intel Mac 설치 파일은 준비 중입니다.
 - 드럼 채보는 아직 거칩니다. 박자는 항상 4/4로 추정하므로, 다른 박자의 곡은 **세부
   설정**에서 박자를 직접 고르세요.
 - 15분이 넘는 파일은 명령줄의 `--start`, `--end`로 구간을 나눠 처리하세요.
 
 ## 지우기
 
-앱(macOS는 응용 프로그램 폴더의 Notirua, Linux는 AppImage 파일)을 지우고, 설정과
-구성요소 폴더(macOS `~/Library/Application Support/notirua`, Linux
-`~/.config/notirua`와 `~/.local/share/notirua`)와 중간 결과 폴더(macOS
-`~/Library/Caches/notirua`, Linux `~/.cache/notirua`)를 지우면 됩니다.
+앱(macOS는 응용 프로그램 폴더의 Notirua, Windows는 **설정 → 앱**에서 제거, Linux는
+AppImage 파일)을 지우고, 설정·구성요소·중간 결과 폴더를 지우면 됩니다.
+
+| | macOS | Windows | Linux |
+|---|---|---|---|
+| 설정과 구성요소 | `~/Library/Application Support/notirua` | `%LOCALAPPDATA%\notirua` | `~/.config/notirua`, `~/.local/share/notirua` |
+| 중간 결과 | `~/Library/Caches/notirua` | `%LOCALAPPDATA%\notirua\Cache` | `~/.cache/notirua` |
 
 문제가 있으면 [Issues](https://github.com/jerry-leem/notirua/issues)에 알려 주세요.
 로그 위치는 [README](https://github.com/jerry-leem/notirua#파일이-저장되는-곳)에
