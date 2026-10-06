@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Notirua VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-10-06 22:10+0900\n"
+"POT-Creation-Date: 2026-10-06 22:26+0900\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: ko\n"
@@ -286,6 +286,9 @@ msgstr "남은 공간: {size}"
 
 msgid "Free up disk space or choose another install location."
 msgstr "디스크 공간을 확보하거나 다른 설치 위치를 선택하세요."
+
+msgid "Free up disk space or clear saved intermediate results in Settings."
+msgstr "디스크 공간을 비우거나 설정에서 저장된 중간 결과를 비우세요."
 
 #, python-brace-format
 msgid "Freed {size}."

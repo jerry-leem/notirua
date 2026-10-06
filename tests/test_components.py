@@ -139,6 +139,24 @@ def test_offline_bundle_install(tmp_path: Path, server: str) -> None:
     assert all(s.installed for s in m.status())
 
 
+def test_bundle_install_checks_disk_space_first(
+    tmp_path: Path, server: str, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    model, _tool, files = fake_components(server)
+    src = tmp_path / "model.onnx"
+    src.write_bytes(files["/model.onnx"])
+    bundle = ComponentManager.build_bundle({"model.onnx": src}, tmp_path / "b.zip")
+
+    class Usage:
+        free = 10
+
+    monkeypatch.setattr(manager_mod.shutil, "disk_usage", lambda _p: Usage())
+    m = _manager(tmp_path, [model])
+    with pytest.raises(DiskSpaceError):
+        m.install_from_bundle(bundle)
+    assert not any(s.installed for s in m.status())
+
+
 def test_bundle_with_bad_checksum_is_rejected(tmp_path: Path, server: str) -> None:
     model, _tool, _files = fake_components(server)
     bundle = tmp_path / "bad.zip"

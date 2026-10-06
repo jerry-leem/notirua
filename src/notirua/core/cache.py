@@ -57,6 +57,9 @@ class StageCache:
         os.utime(self.dir)
 
     # -- audio -------------------------------------------------------------
+    def has_audio(self, stage: str, key: str, names: Sequence[str]) -> bool:
+        return all(self._path(stage, f"{key}-{n}", ".npy").is_file() for n in names)
+
     def load_audio(
         self, stage: str, key: str, names: Sequence[str]
     ) -> dict[str, AudioArray] | None:
@@ -146,6 +149,14 @@ def clear(root: Path) -> int:
     size = dir_size(root)
     shutil.rmtree(root, ignore_errors=True)
     return size
+
+
+def free_bytes(path: Path) -> int:
+    """Free space on the disk that holds ``path`` (or its nearest existing parent)."""
+    probe = path
+    while not probe.exists() and probe != probe.parent:
+        probe = probe.parent
+    return shutil.disk_usage(probe).free
 
 
 def cache_size(root: Path) -> int:

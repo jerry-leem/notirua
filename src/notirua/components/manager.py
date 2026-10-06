@@ -299,6 +299,13 @@ class ComponentManager:
             ]
             if not todo:
                 raise DownloadError("bundle does not contain components for this platform")
+            # Each file is copied out of the bundle and then installed, like a download.
+            plan = self.plan(todo)
+            if not plan.enough_space:
+                raise DiskSpaceError(
+                    needed=human_size(plan.download_bytes + plan.install_bytes),
+                    available=human_size(plan.free_bytes),
+                )
             stages = [StageSpec(f"install:{c.id}", 1.0, N_("Installing {name}")) for c in todo]
             with ProgressReporter("setup", stages, progress) as reporter:
                 for c in todo:

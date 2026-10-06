@@ -76,6 +76,12 @@ class ComponentMissingError(NotiruaError):
     hint_id = N_("Open setup and install the required components.")
 
 
+class JobDiskSpaceError(NotiruaError):
+    code = "E-DISK-FULL"
+    message_id = N_("Not enough disk space: {needed} needed, {available} available.")
+    hint_id = N_("Free up disk space or clear saved intermediate results in Settings.")
+
+
 class EngraveError(NotiruaError):
     code = "E-ENGRAVE"
     message_id = N_("The score could not be drawn.")

@@ -222,3 +222,27 @@ def test_pdf_labels_follow_pdf_language(tmp_path: Path, song: Path) -> None:
     pipeline.run(song, tmp_path / "o", JobOptions(stems=["piano"], pdf_language="ko"))
     assert '"피아노"' in engraver.sources[0]
     assert "장조" in engraver.sources[0]
+
+
+def test_job_stops_early_when_the_disk_is_full(
+    tmp_path: Path, song: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    from notirua.core import cache as cache_mod
+    from notirua.core.errors import JobDiskSpaceError
+    from notirua.core.pipeline import OUTPUT_RESERVE_BYTES
+
+    pipeline, counter, _e = make_pipeline(tmp_path)
+    # Enough for the PDFs, not for the separated audio of a first run.
+    monkeypatch.setattr(cache_mod, "free_bytes", lambda _p: OUTPUT_RESERVE_BYTES + 1024)
+    events: list[ProgressEvent] = []
+    with pytest.raises(JobDiskSpaceError):
+        pipeline.run(song, tmp_path / "out", progress=events.append)
+    assert counter.separate == 0
+    assert events[-1].stage == "decode" and events[-1].stage_state == "failed"
+
+    monkeypatch.undo()
+    pipeline.run(song, tmp_path / "out")
+    # With the separation cached, a transposed run needs only room for the output.
+    monkeypatch.setattr(cache_mod, "free_bytes", lambda _p: OUTPUT_RESERVE_BYTES + 1024)
+    pipeline.run(song, tmp_path / "out2", JobOptions(transpose=2))
+    assert counter.separate == 1

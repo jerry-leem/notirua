@@ -27,7 +27,7 @@ from notirua.core.arrange.tab import TUNINGS, TabWeights
 from notirua.core.decode import SAMPLE_RATE, AudioArray, AudioInfo, decode, probe
 from notirua.core.engrave.lilypond import EngraveOptions, render_ly
 from notirua.core.engrave.render import Engraver
-from notirua.core.errors import Cancelled, NotiruaError
+from notirua.core.errors import Cancelled, JobDiskSpaceError, NotiruaError
 from notirua.core.model import PITCHED_STEMS, STEMS, Part, Score, ScoreNote
 from notirua.core.progress import (
     CancelToken,
@@ -88,6 +88,11 @@ TUNING_LABELS = {
 }
 TUNING_CHOICES: dict[str, list[str]] = {inst: list(t) for inst, t in TUNINGS.items()}
 KEY_CHOICES: list[str] = [f"{t} major" for t in MAJOR_TONICS] + [f"{t} minor" for t in MINOR_TONICS]
+
+# Separated audio is cached as float16 stereo: the mix plus one track per instrument.
+CACHE_BYTES_PER_SECOND = SAMPLE_RATE * 2 * 2 * (1 + len(STEMS))
+# PDFs, MusicXML/MIDI, and LilyPond's temporary files.
+OUTPUT_RESERVE_BYTES = 64 * 1024**2
 
 _FORBIDDEN = re.compile(r'[<>:"/\\|?*\x00-\x1f]')
 
@@ -305,6 +310,8 @@ class Pipeline:
         info = probe(input_path)
         title = (opts.title or info.title or input_path.stem).strip() or input_path.stem
         decode_key = cache_mod.options_hash("decode", opts.stream_index, opts.start_s, opts.end_s)
+        sep_key = cache_mod.options_hash("separate", decode_key, "htdemucs_6s")
+        self._check_space(info, opts, out_dir, cache.has_audio("separate", sep_key, STEMS))
         cached_mix = cache.load_audio("decode", decode_key, ["mix"])
         if cached_mix is not None:
             mix = cached_mix["mix"]
@@ -324,7 +331,6 @@ class Pipeline:
 
         # 2. separate -----------------------------------------------------
         rep.start("separate")
-        sep_key = cache_mod.options_hash("separate", decode_key, "htdemucs_6s")
         stems_audio = cache.load_audio("separate", sep_key, list(STEMS))
         if stems_audio is not None:
             rep.done("separate", STAGE_CACHED)
@@ -518,6 +524,33 @@ class Pipeline:
             warnings=sorted(set(warnings)),
             elapsed_s=time.monotonic() - started,
         )
+
+    def _check_space(
+        self, info: AudioInfo, opts: JobOptions, out_dir: Path, separated: bool
+    ) -> None:
+        """Stop before writing anything when the disk cannot hold the job's files."""
+        from notirua.components.manager import human_size
+
+        start = opts.start_s or 0.0
+        end = opts.end_s if opts.end_s is not None else info.duration_s
+        seconds = max(0.0, end - start)
+        needs: dict[Path, int] = {out_dir: OUTPUT_RESERVE_BYTES}
+        if not separated:
+            needs[self.cache_root] = int(seconds * CACHE_BYTES_PER_SECOND)
+        by_disk: dict[int, tuple[Path, int]] = {}
+        for path, size in needs.items():
+            probe_path = path
+            while not probe_path.exists() and probe_path != probe_path.parent:
+                probe_path = probe_path.parent
+            device = probe_path.stat().st_dev
+            known = by_disk.get(device, (path, 0))
+            by_disk[device] = (known[0], known[1] + size)
+        for path, size in by_disk.values():
+            free = cache_mod.free_bytes(path)
+            if free < size:
+                raise JobDiskSpaceError(
+                    f"{path}", needed=human_size(size), available=human_size(free)
+                )
 
     def export_stem_audio(self, input_path: Path, stem: str, target: Path) -> Path:
         """Write one separated stem as WAV from the cache (FR-2)."""
