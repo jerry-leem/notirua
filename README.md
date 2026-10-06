@@ -3,7 +3,8 @@
 Notirua(노티루아)는 음원 파일을 넣으면 악기별(보컬, 드럼, 베이스, 기타, 피아노, 다른 악기)로
 나누고, 악보와 기타·베이스 TAB 악보를 만들어 곡명과 페이지 번호가 들어간 PDF로
 저장하는 데스크톱 앱입니다. 모든 악보 맨 위에는 코드(예: C, Am, G7)가 코드가 바뀌는
-곳에만 표시됩니다. 모든 처리는 내 컴퓨터에서 이루어집니다.
+곳에만 표시됩니다. 나눈 악기 가운데 원하는 것만 골라 합친 새 음원(예: 보컬만 뺀 MR)도
+만들 수 있습니다. 모든 처리는 내 컴퓨터에서 이루어집니다.
 
 [English instructions are below.](#english)
 
@@ -33,18 +34,33 @@ Python이나 다른 프로그램을 따로 설치하지 않아도 되며, 한·�
 - 새 언어는 프로그램을 고치지 않고 `locales/<언어>/LC_MESSAGES/notirua.po` 번역
   파일 하나만 추가하면 됩니다(템플릿 `locales/notirua.pot`). 번역 기여를 환영합니다.
 
+### 트랙을 골라 새 음원 만들기
+
+악기별로 나눈 트랙(보컬, 드럼, 베이스, 기타, 피아노, 다른 악기) 가운데 원하는 것만
+골라 새 음원 파일(MP3, M4A, WAV)로 만들 수 있습니다. 보컬만 뺀 MR, 내 악기만 뺀
+합주·연습용 반주, 공연용 음원을 만들 때 씁니다. 결과 화면의 **음원 만들기** 버튼이나
+명령줄 `notirua mix`로 만듭니다.
+
+- **보컬 빼기(MR)**, **모두 선택**, **모두 해제** 버튼으로 빠르게 고르고, **미리 듣기**로
+  먼저 들어 볼 수 있습니다.
+- MP3는 320 kbps, M4A는 AAC 256 kbps, WAV는 16비트로 저장합니다(44.1 kHz 스테레오).
+- 악보를 만든 구간과 같은 구간을 쓰고, 악보의 조를 바꿔도 음원은 원래 음높이
+  그대로입니다. 이미 악기를 나눈 곡은 다시 나누지 않아 몇 초면 끝납니다.
+- 파일 이름이 담긴 악기를 알려 줍니다(예: `곡 - MR.mp3`, `곡 - 기타 제외.mp3`,
+  `곡 - 드럼, 베이스.mp3`).
+
 ## 내려받기와 설치
 
-최신 배포판은 [**Notirua 0.3.0 릴리스 페이지**](https://github.com/jerry-leem/notirua/releases/tag/v0.3.0)에
+최신 배포판은 [**Notirua 0.4.0 릴리스 페이지**](https://github.com/jerry-leem/notirua/releases/tag/v0.4.0)에
 있습니다. 릴리스 페이지에 한국어 설치 방법, 사용법, 바뀐 점, 알려진 제한이 함께 적혀
 있습니다. 지난 버전은 [모든 릴리스](https://github.com/jerry-leem/notirua/releases)에서
 볼 수 있습니다.
 
-| 컴퓨터 | 내려받기 (0.3.0) | 설치 |
+| 컴퓨터 | 내려받기 (0.4.0) | 설치 |
 |---|---|---|
-| Mac (Apple Silicon), macOS 14 이상 | [Notirua-0.3.0-macos-arm64.dmg](https://github.com/jerry-leem/notirua/releases/download/v0.3.0/Notirua-0.3.0-macos-arm64.dmg) (120 MB) | 열어서 Notirua를 Applications 폴더로 끌어다 놓기 |
-| Windows 10/11 (x64) | [Notirua-0.3.0-windows-x64-setup.exe](https://github.com/jerry-leem/notirua/releases/download/v0.3.0/Notirua-0.3.0-windows-x64-setup.exe) (107 MB) | 실행해서 안내에 따라 설치(관리자 권한 필요 없음) |
-| Linux x86_64 (glibc 2.31 이상) | [Notirua-0.3.0-linux-x86_64.AppImage](https://github.com/jerry-leem/notirua/releases/download/v0.3.0/Notirua-0.3.0-linux-x86_64.AppImage) (176 MB) | `chmod +x`로 실행 권한을 주고 실행 |
+| Mac (Apple Silicon), macOS 14 이상 | [Notirua-0.4.0-macos-arm64.dmg](https://github.com/jerry-leem/notirua/releases/download/v0.4.0/Notirua-0.4.0-macos-arm64.dmg) (120 MB) | 열어서 Notirua를 Applications 폴더로 끌어다 놓기 |
+| Windows 10/11 (x64) | [Notirua-0.4.0-windows-x64-setup.exe](https://github.com/jerry-leem/notirua/releases/download/v0.4.0/Notirua-0.4.0-windows-x64-setup.exe) (107 MB) | 실행해서 안내에 따라 설치(관리자 권한 필요 없음) |
+| Linux x86_64 (glibc 2.31 이상) | [Notirua-0.4.0-linux-x86_64.AppImage](https://github.com/jerry-leem/notirua/releases/download/v0.4.0/Notirua-0.4.0-linux-x86_64.AppImage) (176 MB) | `chmod +x`로 실행 권한을 주고 실행 |
 | Intel Mac | 준비 중 | 아래 [소스로 실행하기](#소스로-실행하기) |
 
 - 필요 사양: RAM 8GB, 빈 디스크 약 1GB(앱, 구성요소, 중간 결과)
@@ -60,9 +76,11 @@ Python이나 다른 프로그램을 따로 설치하지 않아도 되며, 한·�
 
 1. `pyproject.toml`의 `version`을 올리고 `uv lock`을 실행합니다.
 2. 플랫폼별 설치 파일을 만듭니다.
-   - macOS: `uv run python packaging/build_lgpl_av.py`(처음 한 번),
+   - macOS: `uv run python packaging/build_lgpl_av.py`(처음 한 번, FFmpeg 설정이 바뀌면 다시),
      `uv run python packaging/build_app.py`, `uv run python packaging/make_dmg.py`
    - Linux: `packaging/linux/build.sh`(Docker 필요, Ubuntu 20.04 이미지 안에서 빌드)
+   - Windows: `gh workflow run release.yml --ref main`(GitHub Actions), 끝나면
+     `gh run download <run-id> -n notirua-windows -D dist/windows`
 3. `build_app.py`는 번들을 만든 뒤 `packaging/check_bundle.py`로 검사합니다. GPL
    FFmpeg, torch/tensorflow, 쓰지 않는 Qt 모듈이 들어 있거나, 번역·라이선스·모델이
    빠졌거나, 명령줄이 실행되지 않으면 실패합니다.
@@ -112,7 +130,9 @@ uv sync
    **곡명**도 여기서 바꿀 수 있고, Enter를 누르면 모든 쪽과 파일 이름에 반영됩니다
    (악보만 다시 그리므로 몇 초면 됩니다). **모두 저장**은 기존 파일을 덮어쓰지 않고
    PDF를 폴더에 복사합니다. 아래쪽에 **MusicXML**, **MIDI**, **WAV로 저장**,
-   **악기별 소리 듣기**가 있습니다.
+   **악기별 소리 듣기**, **음원 만들기**가 있습니다.
+6. **음원 만들기.** 남길 악기를 체크하고(기본은 보컬만 뺀 MR) 형식을 고른 뒤
+   **저장…** 버튼을 누릅니다. 소리가 없는 악기는 흐리게 보이며 고를 수 없습니다.
 
 **설정**에서 언어, 용지, 저장 폴더를 바꾸고 구성요소를 관리하며 중간 결과를 비울
 수 있습니다. 오른쪽 위 버튼이나 메뉴로 엽니다.
@@ -125,7 +145,7 @@ uv sync
 | 파일 열기 / 모두 저장 | **파일** 메뉴 (⌘O / ⌘S) | **파일** 메뉴 (Ctrl+O / Ctrl+S) |
 
 macOS에서는 Dock 아이콘을 오른쪽 클릭해도 **음악 파일 열기…** 메뉴와 **설정…** 메뉴가 나옵니다.
-창 제목에 버전이 표시됩니다(예: `Notirua 0.3.0`).
+창 제목에 버전이 표시됩니다(예: `Notirua 0.4.0`).
 
 ## 명령줄 사용법
 
@@ -146,12 +166,16 @@ uv run notirua transcribe "곡.m4a" --out ./out --title "봄날" \
 uv run notirua transcribe "공연.mp4" --start 30 --end 210 --out ./out
 uv run notirua transcribe "곡.m4a" --out ./out --fresh   # 중간 결과를 지우고 처음부터
 
+uv run notirua mix "곡.m4a" --out ./out                  # 보컬만 뺀 MR (MP3)
+uv run notirua mix "곡.m4a" --out ./out --without guitar # 기타만 뺀 반주
+uv run notirua mix "곡.m4a" --out ./out --stems drums,bass --format wav
+
 uv run notirua components              # 설치된 구성요소
 uv run notirua cache                   # 저장된 중간 결과 크기
 uv run notirua cache --clear
 uv run notirua --lang ko               # 한국어로 창 열기
 uv run notirua --lang ko transcribe --help     # 모든 옵션 (한국어)
-uv run notirua --version               # notirua 0.3.0
+uv run notirua --version               # notirua 0.4.0
 ```
 
 ## 파일이 저장되는 곳
@@ -166,7 +190,7 @@ Notirua를 지우려면 앱(또는 소스로 내려받은 폴더)과 위 폴더�
 
 ## 버전
 
-시맨틱 버전(`MAJOR.MINOR.PATCH`)을 따릅니다. 현재 버전은 **0.3.0**이며, 1.0 전까지는
+시맨틱 버전(`MAJOR.MINOR.PATCH`)을 따릅니다. 현재 버전은 **0.4.0**이며, 1.0 전까지는
 MINOR 버전에서도 동작이 바뀔 수 있습니다. `notirua --version`이나 창 제목으로 확인하고,
 버전마다 바뀐 내용은 [릴리스 페이지](https://github.com/jerry-leem/notirua/releases)에
 있습니다.
@@ -198,7 +222,9 @@ splits audio into instruments (vocals, drums, bass, guitar, piano, other),
 writes each one down as notation — with
 tablature for guitar and bass — lets you transpose, and saves PDFs with the
 song title and page numbers. Chord symbols (such as C, Am, G7) appear above
-every score wherever the chord changes. Everything runs on your computer.
+every score wherever the chord changes. You can also save a new audio file
+with only the instruments you choose, such as a backing track without
+vocals. Everything runs on your computer.
 
 ### Features
 
@@ -229,18 +255,36 @@ titles (macOS and Windows use their system fonts).
   `locales/<language>/LC_MESSAGES/notirua.po` (template:
   `locales/notirua.pot`). Translations are welcome.
 
+#### Make a new audio file from chosen tracks
+
+Pick any of the separated tracks (vocals, drums, bass, guitar, piano, other)
+and save just those as a new audio file (MP3, M4A, or WAV) — a backing track
+without vocals, a practice mix without your own instrument, or a mix for a
+live show. Use **Make audio file** on the result screen or `notirua mix` on
+the command line.
+
+- Choose quickly with **Remove vocals (MR)**, **Select all**, and **Clear
+  all**, and use **Listen first** before saving.
+- MP3 is 320 kbps, M4A is AAC at 256 kbps, and WAV is 16-bit (44.1 kHz
+  stereo).
+- The audio uses the same time range as the sheet music and keeps its
+  original key, even after you transpose. A song that is already split takes
+  only seconds.
+- File names say what the mix holds, for example `Song - backing track.mp3`,
+  `Song - without Guitar.mp3`, or `Song - Drums, Bass.mp3`.
+
 ### Download and install
 
 The latest release is
-[**Notirua 0.3.0**](https://github.com/jerry-leem/notirua/releases/tag/v0.3.0);
+[**Notirua 0.4.0**](https://github.com/jerry-leem/notirua/releases/tag/v0.4.0);
 its page has installation and usage notes (in Korean), changes, and known
 limits. Earlier versions are on [all releases](https://github.com/jerry-leem/notirua/releases).
 
-| Computer | Download (0.3.0) | Install |
+| Computer | Download (0.4.0) | Install |
 |---|---|---|
-| Mac (Apple Silicon), macOS 14 or later | [Notirua-0.3.0-macos-arm64.dmg](https://github.com/jerry-leem/notirua/releases/download/v0.3.0/Notirua-0.3.0-macos-arm64.dmg) (120 MB) | Open it and drag Notirua to Applications |
-| Windows 10/11 (x64) | [Notirua-0.3.0-windows-x64-setup.exe](https://github.com/jerry-leem/notirua/releases/download/v0.3.0/Notirua-0.3.0-windows-x64-setup.exe) (107 MB) | Run it and follow the steps (no administrator rights needed) |
-| Linux x86_64 (glibc 2.31 or later) | [Notirua-0.3.0-linux-x86_64.AppImage](https://github.com/jerry-leem/notirua/releases/download/v0.3.0/Notirua-0.3.0-linux-x86_64.AppImage) (176 MB) | `chmod +x` it and run it |
+| Mac (Apple Silicon), macOS 14 or later | [Notirua-0.4.0-macos-arm64.dmg](https://github.com/jerry-leem/notirua/releases/download/v0.4.0/Notirua-0.4.0-macos-arm64.dmg) (120 MB) | Open it and drag Notirua to Applications |
+| Windows 10/11 (x64) | [Notirua-0.4.0-windows-x64-setup.exe](https://github.com/jerry-leem/notirua/releases/download/v0.4.0/Notirua-0.4.0-windows-x64-setup.exe) (107 MB) | Run it and follow the steps (no administrator rights needed) |
+| Linux x86_64 (glibc 2.31 or later) | [Notirua-0.4.0-linux-x86_64.AppImage](https://github.com/jerry-leem/notirua/releases/download/v0.4.0/Notirua-0.4.0-linux-x86_64.AppImage) (176 MB) | `chmod +x` it and run it |
 | Intel Mac | Coming | [Run from source](#run-from-source) |
 
 - Requirements: 8 GB RAM; about 1 GB of free disk space
@@ -257,9 +301,11 @@ limits. Earlier versions are on [all releases](https://github.com/jerry-leem/not
 
 1. Raise `version` in `pyproject.toml` and run `uv lock`.
 2. Build each platform's installer.
-   - macOS: `uv run python packaging/build_lgpl_av.py` (once),
+   - macOS: `uv run python packaging/build_lgpl_av.py` (once, and again when the FFmpeg setup changes),
      `uv run python packaging/build_app.py`, `uv run python packaging/make_dmg.py`
    - Linux: `packaging/linux/build.sh` (needs Docker; builds in Ubuntu 20.04)
+   - Windows: `gh workflow run release.yml --ref main` (GitHub Actions), then
+     `gh run download <run-id> -n notirua-windows -D dist/windows`
 3. `build_app.py` checks the bundle with `packaging/check_bundle.py`. It fails
    on GPL FFmpeg, torch/tensorflow, unused Qt modules, missing catalogs,
    notices, or model, or a command line that does not start.
@@ -317,7 +363,11 @@ Open the installed app from its icon, or run `uv run notirua` from source.
    press Enter and every page and file name follows (only the drawing is
    redone, which takes a few seconds). **Save all** copies the PDFs to a
    folder without overwriting existing files. **MusicXML**, **MIDI**, **Save
-   as WAV**, and **Hear each instrument** are at the bottom.
+   as WAV**, **Hear each instrument**, and **Make audio file** are at the
+   bottom.
+6. **Make audio file.** Check the instruments to keep (everything but the
+   vocals at first), choose a file type, and choose **Save…**. Instruments
+   with no sound are dimmed and cannot be chosen.
 
 **Settings** changes the language, paper, and save folder, manages components,
 and clears saved intermediate results. Open it with the button at the top
@@ -332,7 +382,7 @@ right or from the menu:
 
 On macOS, right-clicking the Dock icon also offers **Open a music file…** and
 **Settings…**. The window title shows the version, for example
-`Notirua 0.3.0`.
+`Notirua 0.4.0`.
 
 ### Use the command line
 
@@ -353,18 +403,25 @@ uv run notirua transcribe "song.m4a" --out ./out --title "Spring" \
 uv run notirua transcribe "live.mp4" --start 30 --end 210 --out ./out
 uv run notirua transcribe "song.m4a" --out ./out --fresh  # start over without saved results
 
+uv run notirua mix "song.m4a" --out ./out                  # backing track without vocals (MP3)
+uv run notirua mix "song.m4a" --out ./out --without guitar # everything but the guitar
+uv run notirua mix "song.m4a" --out ./out --stems drums,bass --format wav
+
 uv run notirua components              # installed components
 uv run notirua cache                   # size of saved intermediate results
 uv run notirua cache --clear
 uv run notirua --lang en               # open the window in English
 uv run notirua transcribe --help       # every option
-uv run notirua --version               # notirua 0.3.0
+uv run notirua --version               # notirua 0.4.0
 ```
 
 More `transcribe` options: `--to-key "G major"`, `--guitar-tuning drop_d`,
 `--bass-tuning five_string`, `--time-signature 3/4`, `--tempo 96`,
 `--key "D minor"`, `--shift-downbeat 1`, `--tab staff|tab|both`,
 `--pdf-lang ko`, `--no-combined`, `--no-separate-pdfs`, `--track N`.
+`mix` takes `--stems` or `--without` (comma separated), `--format mp3|m4a|wav`,
+`--title`, `--track`, `--start`, and `--end`; with neither `--stems` nor
+`--without` it leaves out the vocals.
 
 ### Where Notirua keeps its files
 
@@ -379,7 +436,7 @@ To remove Notirua, delete the app (or the cloned folder) and these folders.
 ### Version
 
 Notirua uses [Semantic Versioning](https://semver.org): `MAJOR.MINOR.PATCH`.
-The current version is **0.3.0**. While the major version is 0, a minor
+The current version is **0.4.0**. While the major version is 0, a minor
 release may still change behavior. `notirua --version` and the window title
 show it, and the [releases page](https://github.com/jerry-leem/notirua/releases)
 lists what changed in each release.
