@@ -17,9 +17,12 @@ song title and page numbers. Everything runs on your computer.
 - 8 GB RAM; about 1 GB of disk space for the app, components, and saved results
 - [uv](https://docs.astral.sh/uv/getting-started/installation/) and git. uv
   installs the right Python (3.11) by itself.
-- Linux only: Qt needs `libegl1 libgl1 libxkbcommon0 libfontconfig1 libdbus-1-3`
-  (Debian/Ubuntu package names), and Korean, Japanese, or Chinese titles need a
-  CJK font such as `fonts-noto-cjk`.
+- Linux only: desktop systems usually have Qt's libraries already. On a minimal
+  Debian/Ubuntu install add `libegl1 libgl1 libglib2.0-0 libatomic1
+  libfontconfig1 libdbus-1-3 libxkbcommon-x11-0 libxcb-cursor0 libxcb-icccm4
+  libxcb-image0 libxcb-keysyms1 libxcb-randr0 libxcb-render-util0
+  libxcb-shape0`. Korean, Japanese, or Chinese titles need a CJK font such as
+  `fonts-noto-cjk`.
 
 ## Install
 
@@ -140,8 +143,9 @@ Notirua는 음원 파일을 넣으면 악기별(보컬, 드럼, 베이스, 기�
 - RAM 8GB, 디스크 약 1GB(앱, 구성요소, 중간 결과)
 - [uv](https://docs.astral.sh/uv/getting-started/installation/)와 git. Python 3.11은
   uv가 알아서 설치합니다.
-- Linux만: Qt용 `libegl1 libgl1 libxkbcommon0 libfontconfig1 libdbus-1-3`(Debian/Ubuntu
-  패키지 이름), 한·중·일 곡명을 위한 CJK 글꼴(예: `fonts-noto-cjk`)
+- Linux만: 데스크톱 환경에는 보통 Qt 라이브러리가 이미 있습니다. 최소 설치한
+  Debian/Ubuntu라면 위 영어 안내의 패키지 목록을 설치하세요. 한·중·일 곡명에는 CJK
+  글꼴(예: `fonts-noto-cjk`)이 필요합니다.
 
 ### 설치
 
