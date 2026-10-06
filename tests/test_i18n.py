@@ -198,6 +198,14 @@ def test_cli_help_and_errors_follow_language(
     assert "notirua transcribe: 오류: 다음 인수가 필요합니다: file" in capsys.readouterr().err
 
     with pytest.raises(SystemExit):
+        cli.main(["--lang", "ko", "transcribe", "a.wav", "--tempo", "fast"])
+    assert "인수 --tempo: 'fast'은(는) 숫자가 아닙니다." in capsys.readouterr().err
+
+    with pytest.raises(SystemExit):
+        cli.main(["--lang", "en", "transcribe", "a.wav", "--transpose", "1.5"])
+    assert "argument --transpose: '1.5' is not a whole number." in capsys.readouterr().err
+
+    with pytest.raises(SystemExit):
         cli.main(["--lang", "en", "--help"])
     assert capsys.readouterr().out.startswith("usage: notirua")
 

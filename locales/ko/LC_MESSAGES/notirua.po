@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Notirua VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-10-06 21:14+0900\n"
+"POT-Creation-Date: 2026-10-06 21:21+0900\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: ko\n"
@@ -559,6 +559,14 @@ msgstr "{tonic} 장조"
 #, python-brace-format
 msgid "{tonic} minor"
 msgstr "{tonic} 단조"
+
+#, python-brace-format
+msgid "{value} is not a number."
+msgstr "{value}은(는) 숫자가 아닙니다."
+
+#, python-brace-format
+msgid "{value} is not a whole number."
+msgstr "{value}은(는) 정수가 아닙니다."
 
 #, python-brace-format
 msgid "♩ = {bpm} · {key}"

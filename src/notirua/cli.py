@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import math
 import shutil
 import sys
 import time
@@ -87,6 +88,25 @@ def _print_error(exc: NotiruaError) -> None:
     print(_("Error code: {code}").format(code=exc.code), file=sys.stderr)
 
 
+def _whole_number(text: str) -> int:
+    try:
+        return int(text)
+    except ValueError:
+        raise argparse.ArgumentTypeError(
+            _("{value} is not a whole number.").format(value=repr(text))
+        ) from None
+
+
+def _number(text: str) -> float:
+    try:
+        value = float(text)
+    except ValueError:
+        value = math.nan
+    if not math.isfinite(value):
+        raise argparse.ArgumentTypeError(_("{value} is not a number.").format(value=repr(text)))
+    return value
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         prog="notirua",
@@ -106,7 +126,9 @@ def build_parser() -> argparse.ArgumentParser:
             choices=",".join(STEMS)
         ),
     )
-    t.add_argument("--transpose", type=int, default=0, help=_("Semitones to move, -12 to +12."))
+    t.add_argument(
+        "--transpose", type=_whole_number, default=0, help=_("Semitones to move, -12 to +12.")
+    )
     t.add_argument("--to-key", help=_('Transpose to this key, for example "G major".'))
     t.add_argument("--paper", choices=["a4", "letter"], help=_("Paper size."))
     t.add_argument("--pdf-lang", help=_("Language for labels inside the PDF."))
@@ -119,10 +141,10 @@ def build_parser() -> argparse.ArgumentParser:
         help=_("standard, five_string, drop_d, half_down, or MIDI numbers."),
     )
     t.add_argument("--time-signature", help=_("For example 4/4 or 3/4."))
-    t.add_argument("--tempo", type=float, help=_("Beats per minute, if detection is wrong."))
+    t.add_argument("--tempo", type=_number, help=_("Beats per minute, if detection is wrong."))
     t.add_argument("--key", help=_('Key, if detection is wrong, for example "D minor".'))
     t.add_argument(
-        "--shift-downbeat", type=int, default=0, help=_("Move the first beat by N beats.")
+        "--shift-downbeat", type=_whole_number, default=0, help=_("Move the first beat by N beats.")
     )
     t.add_argument(
         "--tab",
@@ -138,9 +160,11 @@ def build_parser() -> argparse.ArgumentParser:
     )
     t.add_argument("--musicxml", action="store_true", help=_("Also save MusicXML."))
     t.add_argument("--midi", action="store_true", help=_("Also save MIDI."))
-    t.add_argument("--track", type=int, help=_("Audio track number when the file has several."))
-    t.add_argument("--start", type=float, help=_("Start time in seconds."))
-    t.add_argument("--end", type=float, help=_("End time in seconds."))
+    t.add_argument(
+        "--track", type=_whole_number, help=_("Audio track number when the file has several.")
+    )
+    t.add_argument("--start", type=_number, help=_("Start time in seconds."))
+    t.add_argument("--end", type=_number, help=_("End time in seconds."))
 
     s = sub.add_parser("setup", help=_("Install the components Notirua needs."))
     s.add_argument(
