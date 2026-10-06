@@ -16,6 +16,8 @@
 }
 \score {
   <<
+\new ChordNames \with { majorSevenSymbol = \markup { maj7 } } \chordmode {
+    g1:maj7 }
 \new Staff \with { instrumentName = "Vocals" } { \clef "treble" \time 4/4 \key g \major \tempo 4 = 96
     g'4 fis'4 d'2 | \label #'notirua-last-page }
 \new StaffGroup \with { instrumentName = "Guitar" } <<

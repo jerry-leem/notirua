@@ -14,9 +14,10 @@ from collections.abc import Sequence
 from dataclasses import dataclass, field
 from fractions import Fraction
 
+from notirua.core.chords import Chord, detect_chords
 from notirua.core.engrave.layout import Item, Measure, layout_part, measure_count
 from notirua.core.model import Part, Score
-from notirua.core.transpose import Key, parse_key, spell
+from notirua.core.transpose import NATURAL_PC, Key, parse_key, scale_spelling, spell
 
 LILYPOND_VERSION = "2.26.0"
 LAST_PAGE_LABEL = "notirua-last-page"
@@ -56,6 +57,7 @@ _STRAIGHT_TOKENS: dict[Fraction, str] = {
     Fraction(1, 4): "16",
 }
 _TRIPLET_TOKENS: dict[Fraction, str] = {Fraction(1, 3): "8", Fraction(2, 3): "4"}
+_CHORD_MODIFIERS = {"": "", "m": ":m", "7": ":7", "m7": ":m7", "maj7": ":maj7", "dim": ":dim"}
 
 
 @dataclass(frozen=True)
@@ -162,6 +164,46 @@ def music_text(
 def _tuning_text(tuning: Sequence[int]) -> str:
     c = Key("C", "major")
     return "\\stringTuning <" + " ".join(pitch_name(p, c) for p in tuning) + ">"
+
+
+def _chord_pieces(start: Fraction, end: Fraction, measure_beats: Fraction) -> list[Fraction]:
+    """Cut ``[start, end)`` at bar lines so every piece has a plain duration."""
+    pieces = []
+    while start < end:
+        stop = min(end, (start // measure_beats + 1) * measure_beats)
+        pieces.append(stop - start)
+        start = stop
+    return pieces
+
+
+def chord_root_name(pc: int, key: Key) -> str:
+    """LilyPond name of a chord root: the key's spelling, else a natural letter (C, not B#)."""
+    in_scale = any((NATURAL_PC[letter] + alter) % 12 == pc for letter, alter in scale_spelling(key))
+    natural = next((letter for letter, value in NATURAL_PC.items() if value == pc), None)
+    if natural is not None and not in_scale:
+        return natural.lower()
+    return pitch_name(48 + pc, key).rstrip("',")
+
+
+def chord_names_block(chords: Sequence[Chord], key: Key, measure_beats: Fraction) -> str:
+    """A ``ChordNames`` line that names each chord once, where it changes."""
+    tokens: list[str] = []
+    pos = Fraction(0)
+    for chord in chords:
+        for piece in _chord_pieces(pos, chord.onset, measure_beats):
+            tokens.append("s" + duration_token(piece))
+        root = chord_root_name(chord.root, key)
+        end = chord.onset + chord.duration
+        for i, piece in enumerate(_chord_pieces(chord.onset, end, measure_beats)):
+            if i == 0:
+                tokens.append(root + duration_token(piece) + _CHORD_MODIFIERS[chord.quality])
+            else:
+                tokens.append("s" + duration_token(piece))
+        pos = end
+    return (
+        "\\new ChordNames \\with { majorSevenSymbol = \\markup { maj7 } } \\chordmode {\n"
+        f"    {' '.join(tokens)} }}"
+    )
 
 
 def _global(score: Score, key: Key | None, with_tempo: bool) -> str:
@@ -290,10 +332,13 @@ def render_ly(
     out = [f'\\version "{LILYPOND_VERSION}"\n', _paper(title, options.paper)]
     if not groups:
         raise ValueError("no parts to engrave")
+    # Chords come from every instrument, so each score shows the same symbols.
+    chords = detect_chords(score.parts, score.measure_beats, n_measures)
+    chord_line = [chord_names_block(chords, key, score.measure_beats)] if chords else []
     if not combined:
         names = [options.instrument_names.get(s, s.title()) for s, _p in groups]
         out.append(_header(score.title, " · ".join(names), options.info_line))
-        blocks = [
+        blocks = chord_line + [
             staff_block(s, ps, score, key, n_measures, options, first=i == 0, label=i == 0)
             for i, (s, ps) in enumerate(groups)
         ]
@@ -303,7 +348,9 @@ def render_ly(
     out.append("\\book {\n")
     for i, (s, ps) in enumerate(groups):
         last = i == len(groups) - 1
-        block = staff_block(s, ps, score, key, n_measures, options, first=True, label=last)
+        block = "\n".join(
+            [*chord_line, staff_block(s, ps, score, key, n_measures, options, True, last)]
+        )
         sub = ly_string(options.instrument_names.get(s, s.title()))
         out.append(
             "\\bookpart {\n"

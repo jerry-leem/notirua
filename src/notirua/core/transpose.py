@@ -99,6 +99,11 @@ def spell(pitch: int, key: Key) -> tuple[str, int, int]:
     raise AssertionError(pc)
 
 
+def scale_spelling(key: Key) -> list[tuple[str, int]]:
+    """``(letter, alteration)`` of the key's scale notes (with the minor leading tone)."""
+    return _scale(key)
+
+
 def _octave(pitch: int, letter: str, alter: int) -> int:
     # B#3 sounds as C4 but is written in octave 3: use the unaltered letter's pitch.
     return (pitch - alter) // 12 - 1

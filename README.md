@@ -2,7 +2,8 @@
 
 Notirua는 음원 파일을 넣으면 악기별(보컬, 드럼, 베이스, 기타, 피아노, 다른 악기)로
 나누고, 악보와 기타·베이스 TAB 악보를 만들어 곡명과 페이지 번호가 들어간 PDF로
-저장하는 데스크톱 앱입니다. 모든 처리는 내 컴퓨터에서 이루어집니다.
+저장하는 데스크톱 앱입니다. 모든 악보 맨 위에는 코드(예: C, Am, G7)가 코드가 바뀌는
+곳에만 표시됩니다. 모든 처리는 내 컴퓨터에서 이루어집니다.
 
 > 현재 개발 초기 단계입니다(`PROGRESS.md` 참고). macOS, Windows, Linux에서 소스로
 > 실행할 수 있고, 설치 파일은 아직 배포하지 않습니다.
@@ -68,7 +69,7 @@ uv run notirua
 | 파일 열기 / 모두 저장 | **파일** 메뉴 (⌘O / ⌘S) | **파일** 메뉴 (Ctrl+O / Ctrl+S) |
 
 macOS에서는 Dock 아이콘을 오른쪽 클릭해도 **음악 파일 열기…** 메뉴와 **설정…** 메뉴가 나옵니다.
-창 제목에 버전이 표시됩니다(예: `Notirua 0.2.2`).
+창 제목에 버전이 표시됩니다(예: `Notirua 0.2.3`).
 
 ## 명령줄 사용법
 
@@ -88,7 +89,7 @@ uv run notirua cache                   # 저장된 중간 결과 크기
 uv run notirua cache --clear
 uv run notirua --lang ko               # 한국어로 창 열기
 uv run notirua --lang ko transcribe --help     # 모든 옵션 (한국어)
-uv run notirua --version               # notirua 0.2.2
+uv run notirua --version               # notirua 0.2.3
 ```
 
 ## 파일이 저장되는 곳
@@ -103,7 +104,7 @@ Notirua를 지우려면 내려받은(clone) 폴더와 위 폴더들을 지우면
 
 ## 버전
 
-시맨틱 버전(`MAJOR.MINOR.PATCH`)을 따릅니다. 현재 버전은 **0.2.2**이며, 1.0 전까지는
+시맨틱 버전(`MAJOR.MINOR.PATCH`)을 따릅니다. 현재 버전은 **0.2.3**이며, 1.0 전까지는
 MINOR 버전에서도 동작이 바뀔 수 있습니다. `uv run notirua --version`으로 확인하고, 바뀐
 내용은 `CHANGELOG.md`에 적습니다.
 
@@ -136,7 +137,8 @@ Notirua는 MIT 라이선스로 배포합니다(`LICENSE`). 함께 들어가거�
 Turn a song into sheet music: Notirua splits audio into instruments (vocals,
 drums, bass, guitar, piano, other), writes each one down as notation — with
 tablature for guitar and bass — lets you transpose, and saves PDFs with the
-song title and page numbers. Everything runs on your computer.
+song title and page numbers. Chord symbols (such as C, Am, G7) appear above
+every score wherever the chord changes. Everything runs on your computer.
 
 > Status: early development (see `PROGRESS.md`). Notirua runs from source on
 > macOS, Windows, and Linux; ready-made installers are not published yet.
@@ -209,7 +211,7 @@ right or from the menu:
 
 On macOS, right-clicking the Dock icon also offers **Open a music file…** and
 **Settings…**. The window title shows the version, for example
-`Notirua 0.2.2`.
+`Notirua 0.2.3`.
 
 ### Use the command line
 
@@ -229,7 +231,7 @@ uv run notirua cache                   # size of saved intermediate results
 uv run notirua cache --clear
 uv run notirua --lang en               # open the window in English
 uv run notirua transcribe --help       # every option
-uv run notirua --version               # notirua 0.2.2
+uv run notirua --version               # notirua 0.2.3
 ```
 
 More `transcribe` options: `--to-key "G major"`, `--guitar-tuning drop_d`,
@@ -250,7 +252,7 @@ To remove Notirua, delete the cloned folder and these folders.
 ### Version
 
 Notirua uses [Semantic Versioning](https://semver.org): `MAJOR.MINOR.PATCH`.
-The current version is **0.2.2**. While the major version is 0, a minor
+The current version is **0.2.3**. While the major version is 0, a minor
 release may still change behavior. `uv run notirua --version` prints it, and
 `CHANGELOG.md` lists what changed in each release.
 
