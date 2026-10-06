@@ -404,12 +404,19 @@ def test_unreadable_file_suggests_another_file(
 def test_ui_thread_stays_responsive(
     qtbot: QtBot, ready_user: settings_mod.Settings, job: FakeJob, song: Path
 ) -> None:
+    """SPEC 9.5: while a job runs, the UI thread never stalls for 100 ms."""
     job.delay = 1.5
     window = make_window(qtbot, ready_user, no_components, job.pipeline)
     ticks: list[float] = []
+
+    def tick() -> None:
+        # Only while the job runs; opening the finished result is not part of the job.
+        if window.busy():
+            ticks.append(time.monotonic())
+
     timer = QTimer()
     timer.setInterval(10)
-    timer.timeout.connect(lambda: ticks.append(time.monotonic()))
+    timer.timeout.connect(tick)
     window.open_file(song)
     timer.start()
     window.options_page.start_button.click()
