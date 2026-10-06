@@ -42,3 +42,4 @@ installed.json
 !/README.md
 !/docs/LICENSES.md
 !/docs/ui/wording.md
+!/packaging/release_notes.md

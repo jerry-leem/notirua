@@ -5,15 +5,44 @@ Notirua는 음원 파일을 넣으면 악기별(보컬, 드럼, 베이스, 기�
 저장하는 데스크톱 앱입니다. 모든 악보 맨 위에는 코드(예: C, Am, G7)가 코드가 바뀌는
 곳에만 표시됩니다. 모든 처리는 내 컴퓨터에서 이루어집니다.
 
-> 현재 개발 초기 단계입니다(`PROGRESS.md` 참고). macOS, Windows, Linux에서 소스로
-> 실행할 수 있고, 설치 파일은 아직 배포하지 않습니다.
-
 [English instructions are below.](#english)
 
-## 필요한 것
+## 내려받기와 설치
+
+설치 파일은 [릴리스 페이지](https://github.com/jerry-leem/notirua/releases/latest)에서
+받습니다. 릴리스마다 한국어 설치 방법, 사용법, 바뀐 점이 함께 적혀 있습니다.
+
+| 컴퓨터 | 받을 파일 | 설치 |
+|---|---|---|
+| Mac (Apple Silicon), macOS 14 이상 | `Notirua-<버전>-macos-arm64.dmg` | 열어서 Notirua를 Applications 폴더로 끌어다 놓기 |
+| Linux x86_64 (glibc 2.31 이상) | `Notirua-<버전>-linux-x86_64.AppImage` | `chmod +x`로 실행 권한을 주고 실행 |
+| Windows 10/11, Intel Mac | 준비 중 | 아래 [소스로 실행하기](#소스로-실행하기) |
+
+- 필요 사양: RAM 8GB, 빈 디스크 약 1GB(앱, 구성요소, 중간 결과)
+- macOS 앱은 아직 Apple 서명·공증 전이라 처음 열 때 경고가 나옵니다. macOS 15
+  이상은 **시스템 설정 → 개인정보 보호 및 보안**에서 **그래도 열기**를, macOS 14는
+  Finder에서 Control-클릭 후 **열기**를 누르세요. 한 번만 하면 됩니다.
+- `model-htdemucs_6s-…` 릴리스는 앱이 쓰는 악기 분리 모델의 예비 내려받기
+  위치입니다. 직접 받을 필요는 없습니다.
+
+### 릴리스를 만드는 방법 (관리자용)
+
+1. `pyproject.toml`의 `version`을 올리고 `uv lock`을 실행합니다.
+2. 플랫폼별 설치 파일을 만듭니다.
+   - macOS: `uv run python packaging/build_lgpl_av.py`(처음 한 번),
+     `uv run python packaging/build_app.py`, `uv run python packaging/make_dmg.py`
+   - Linux: `packaging/linux/build.sh`(Docker 필요, Ubuntu 20.04 이미지 안에서 빌드)
+3. `build_app.py`는 번들을 만든 뒤 `packaging/check_bundle.py`로 검사합니다. GPL
+   FFmpeg, torch/tensorflow, 쓰지 않는 Qt 모듈이 들어 있거나, 번역·라이선스·모델이
+   빠졌거나, 명령줄이 실행되지 않으면 실패합니다.
+4. `packaging/release_notes.md`의 `{{version}}`을 바꿔 본문으로 쓰고,
+   `v<버전>` 태그로 GitHub 릴리스를 만들어 설치 파일을 올립니다.
+5. 서명 비밀 값(`NOTIRUA_MACOS_SIGN_IDENTITY`, `NOTIRUA_NOTARY_PROFILE`)이 있으면
+   `make_dmg.py`가 서명과 공증까지 합니다.
+
+## 소스로 실행하기
 
 - macOS 14 Sonoma 이상(Apple Silicon, Intel), Windows 10/11(x64), Linux x86_64
-- RAM 8GB, 디스크 약 1GB(앱, 구성요소, 중간 결과)
 - [uv](https://docs.astral.sh/uv/getting-started/installation/)와 git. Python 3.11은
   uv가 알아서 설치합니다.
 - Linux만: 데스크톱 환경에는 보통 Qt 라이브러리가 이미 있습니다. 최소 설치한
@@ -21,8 +50,6 @@ Notirua는 음원 파일을 넣으면 악기별(보컬, 드럼, 베이스, 기�
   libdbus-1-3 libxkbcommon-x11-0 libxcb-cursor0 libxcb-icccm4 libxcb-image0
   libxcb-keysyms1 libxcb-randr0 libxcb-render-util0 libxcb-shape0`을 설치하세요.
   한·중·일 곡명에는 CJK 글꼴(예: `fonts-noto-cjk`)이 필요합니다.
-
-## 설치
 
 ```bash
 git clone https://github.com/jerry-leem/notirua.git
@@ -32,9 +59,7 @@ uv sync
 
 ## 앱 사용법
 
-```bash
-uv run notirua
-```
+설치한 앱은 Notirua 아이콘으로 엽니다. 소스로 실행할 때는 `uv run notirua`입니다.
 
 1. **처음 실행: 구성요소 설치.** 악기 분리 모델(246MB, MIT)과 악보 조판기
    LilyPond(39MB, GPL-3.0)가 필요합니다. 화면에 크기, 출처, 라이선스가 나옵니다.
@@ -69,9 +94,14 @@ uv run notirua
 | 파일 열기 / 모두 저장 | **파일** 메뉴 (⌘O / ⌘S) | **파일** 메뉴 (Ctrl+O / Ctrl+S) |
 
 macOS에서는 Dock 아이콘을 오른쪽 클릭해도 **음악 파일 열기…** 메뉴와 **설정…** 메뉴가 나옵니다.
-창 제목에 버전이 표시됩니다(예: `Notirua 0.2.3`).
+창 제목에 버전이 표시됩니다(예: `Notirua 0.3.0`).
 
 ## 명령줄 사용법
+
+설치한 앱에서는 `uv run notirua` 대신 아래처럼 실행합니다.
+
+- macOS: `/Applications/Notirua.app/Contents/MacOS/notirua-cli`
+- Linux: `./Notirua-<버전>-linux-x86_64.AppImage` (인자 없이 실행하면 창이 열림)
 
 ```bash
 uv run notirua setup                   # 동의를 물은 뒤 구성요소 설치
@@ -89,7 +119,7 @@ uv run notirua cache                   # 저장된 중간 결과 크기
 uv run notirua cache --clear
 uv run notirua --lang ko               # 한국어로 창 열기
 uv run notirua --lang ko transcribe --help     # 모든 옵션 (한국어)
-uv run notirua --version               # notirua 0.2.3
+uv run notirua --version               # notirua 0.3.0
 ```
 
 ## 파일이 저장되는 곳
@@ -100,13 +130,14 @@ uv run notirua --version               # notirua 0.2.3
 | 저장된 중간 결과 | `~/Library/Caches/notirua` | `%LOCALAPPDATA%\notirua\Cache` | `~/.cache/notirua` |
 | 로그 (문제 신고용) | `~/Library/Logs/notirua` | `%LOCALAPPDATA%\notirua\Logs` | `~/.local/state/notirua/log` |
 
-Notirua를 지우려면 내려받은(clone) 폴더와 위 폴더들을 지우면 됩니다.
+Notirua를 지우려면 앱(또는 소스로 내려받은 폴더)과 위 폴더들을 지우면 됩니다.
 
 ## 버전
 
-시맨틱 버전(`MAJOR.MINOR.PATCH`)을 따릅니다. 현재 버전은 **0.2.3**이며, 1.0 전까지는
-MINOR 버전에서도 동작이 바뀔 수 있습니다. `uv run notirua --version`으로 확인하고, 바뀐
-내용은 `CHANGELOG.md`에 적습니다.
+시맨틱 버전(`MAJOR.MINOR.PATCH`)을 따릅니다. 현재 버전은 **0.3.0**이며, 1.0 전까지는
+MINOR 버전에서도 동작이 바뀔 수 있습니다. `notirua --version`이나 창 제목으로 확인하고,
+버전마다 바뀐 내용은 [릴리스 페이지](https://github.com/jerry-leem/notirua/releases)에
+있습니다.
 
 ## 개발
 
@@ -116,8 +147,6 @@ uv run pytest -m slow           # 실제 구성요소로 하는 전체 테스트
 uv run ruff check . && uv run ruff format --check . && uv run mypy src/notirua
 ```
 
-모든 개발 명령은 `AGENTS.md`에 있습니다.
-
 ## 라이선스
 
 Notirua는 MIT 라이선스로 배포합니다(`LICENSE`). 함께 들어가거나 내려받는 구성요소는
@@ -125,10 +154,8 @@ Notirua는 MIT 라이선스로 배포합니다(`LICENSE`). 함께 들어가거�
 
 ## 문서
 
-- `SPEC.md` — 요구사항 · `AGENTS.md` — 기여자·에이전트 안내
-- `PROGRESS.md` — 현재 상태와 다음 할 일
-- `docs/DECISIONS.md` — 측정값과 결정 · `docs/LICENSES.md` — 타사 라이선스
-- `docs/TRANSLATING.md` — 언어 추가 방법
+- [릴리스 페이지](https://github.com/jerry-leem/notirua/releases) — 설치 파일, 설치 방법, 바뀐 점
+- `docs/LICENSES.md` — 타사 라이선스
 
 ---
 
@@ -140,10 +167,42 @@ tablature for guitar and bass — lets you transpose, and saves PDFs with the
 song title and page numbers. Chord symbols (such as C, Am, G7) appear above
 every score wherever the chord changes. Everything runs on your computer.
 
-> Status: early development (see `PROGRESS.md`). Notirua runs from source on
-> macOS, Windows, and Linux; ready-made installers are not published yet.
+### Download and install
 
-### Requirements
+Installers are on the
+[releases page](https://github.com/jerry-leem/notirua/releases/latest), with
+installation and usage notes (in Korean) for each release.
+
+| Computer | File | Install |
+|---|---|---|
+| Mac (Apple Silicon), macOS 14 or later | `Notirua-<version>-macos-arm64.dmg` | Open it and drag Notirua to Applications |
+| Linux x86_64 (glibc 2.31 or later) | `Notirua-<version>-linux-x86_64.AppImage` | `chmod +x` it and run it |
+| Windows 10/11, Intel Mac | Coming | [Run from source](#run-from-source) |
+
+- Requirements: 8 GB RAM; about 1 GB of free disk space
+- The macOS app is not signed or notarized by Apple yet, so the first launch
+  shows a warning. On macOS 15 or later choose **Open Anyway** in **System
+  Settings → Privacy & Security**; on macOS 14 Control-click the app in Finder
+  and choose **Open**. This is needed once.
+- The `model-htdemucs_6s-…` release is a backup download location for the
+  instrument separation model. There is no need to download it yourself.
+
+### Making a release (maintainers)
+
+1. Raise `version` in `pyproject.toml` and run `uv lock`.
+2. Build each platform's installer.
+   - macOS: `uv run python packaging/build_lgpl_av.py` (once),
+     `uv run python packaging/build_app.py`, `uv run python packaging/make_dmg.py`
+   - Linux: `packaging/linux/build.sh` (needs Docker; builds in Ubuntu 20.04)
+3. `build_app.py` checks the bundle with `packaging/check_bundle.py`. It fails
+   on GPL FFmpeg, torch/tensorflow, unused Qt modules, missing catalogs,
+   notices, or model, or a command line that does not start.
+4. Use `packaging/release_notes.md` (with `{{version}}` filled in) as the
+   body of a GitHub release tagged `v<version>`, and attach the installers.
+5. With the signing secrets (`NOTIRUA_MACOS_SIGN_IDENTITY`,
+   `NOTIRUA_NOTARY_PROFILE`), `make_dmg.py` also signs and notarizes.
+
+### Run from source
 
 - macOS 14 Sonoma or later (Apple Silicon or Intel), Windows 10/11 (x64), or
   Linux x86_64
@@ -157,8 +216,6 @@ every score wherever the chord changes. Everything runs on your computer.
   libxcb-shape0`. Korean, Japanese, or Chinese titles need a CJK font such as
   `fonts-noto-cjk`.
 
-### Install
-
 ```bash
 git clone https://github.com/jerry-leem/notirua.git
 cd notirua
@@ -167,9 +224,7 @@ uv sync
 
 ### Use the app
 
-```bash
-uv run notirua
-```
+Open the installed app from its icon, or run `uv run notirua` from source.
 
 1. **First run: setup.** Notirua needs two components: the instrument
    separation model (246 MB, MIT) and the LilyPond score engraver (39 MB,
@@ -211,9 +266,14 @@ right or from the menu:
 
 On macOS, right-clicking the Dock icon also offers **Open a music file…** and
 **Settings…**. The window title shows the version, for example
-`Notirua 0.2.3`.
+`Notirua 0.3.0`.
 
 ### Use the command line
+
+The installed app runs the commands below without `uv run`:
+
+- macOS: `/Applications/Notirua.app/Contents/MacOS/notirua-cli`
+- Linux: `./Notirua-<version>-linux-x86_64.AppImage` (no arguments opens the window)
 
 ```bash
 uv run notirua setup                   # asks before downloading the components
@@ -231,7 +291,7 @@ uv run notirua cache                   # size of saved intermediate results
 uv run notirua cache --clear
 uv run notirua --lang en               # open the window in English
 uv run notirua transcribe --help       # every option
-uv run notirua --version               # notirua 0.2.3
+uv run notirua --version               # notirua 0.3.0
 ```
 
 More `transcribe` options: `--to-key "G major"`, `--guitar-tuning drop_d`,
@@ -247,14 +307,15 @@ More `transcribe` options: `--to-key "G major"`, `--guitar-tuning drop_d`,
 | Saved intermediate results | `~/Library/Caches/notirua` | `%LOCALAPPDATA%\notirua\Cache` | `~/.cache/notirua` |
 | Logs (for bug reports) | `~/Library/Logs/notirua` | `%LOCALAPPDATA%\notirua\Logs` | `~/.local/state/notirua/log` |
 
-To remove Notirua, delete the cloned folder and these folders.
+To remove Notirua, delete the app (or the cloned folder) and these folders.
 
 ### Version
 
 Notirua uses [Semantic Versioning](https://semver.org): `MAJOR.MINOR.PATCH`.
-The current version is **0.2.3**. While the major version is 0, a minor
-release may still change behavior. `uv run notirua --version` prints it, and
-`CHANGELOG.md` lists what changed in each release.
+The current version is **0.3.0**. While the major version is 0, a minor
+release may still change behavior. `notirua --version` and the window title
+show it, and the [releases page](https://github.com/jerry-leem/notirua/releases)
+lists what changed in each release.
 
 ### Develop
 
@@ -264,8 +325,6 @@ uv run pytest -m slow           # end-to-end tests with the real components
 uv run ruff check . && uv run ruff format --check . && uv run mypy src/notirua
 ```
 
-`AGENTS.md` lists every development command.
-
 ### License
 
 Notirua is released under the MIT License (`LICENSE`). Components it bundles or
@@ -273,7 +332,5 @@ downloads keep their own licenses (`docs/LICENSES.md`).
 
 ### Documents
 
-- `SPEC.md` — requirements (Korean) · `AGENTS.md` — contributor/agent guide
-- `PROGRESS.md` — current status and next steps
-- `docs/DECISIONS.md` — measurements and decisions · `docs/LICENSES.md` — third-party licenses
-- `docs/TRANSLATING.md` — how to add a language
+- [Releases](https://github.com/jerry-leem/notirua/releases) — installers, installation notes, changes
+- `docs/LICENSES.md` — third-party licenses
