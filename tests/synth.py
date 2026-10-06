@@ -88,6 +88,27 @@ def click_track(bpm: float, seconds: float, sr: int = SR) -> npt.NDArray[np.floa
     return out
 
 
+def voice(
+    seconds: float, pitches: Sequence[int] = (57, 60, 62, 64, 62, 60, 57, 55), sr: int = SR
+) -> npt.NDArray[np.float32]:
+    """A sung "ah": a glottal buzz with vibrato through three vowel formants."""
+    from scipy.signal import lfilter
+
+    t = np.arange(int(seconds * sr)) / sr
+    per_note = int(np.ceil(t.size / len(pitches)))
+    f0 = np.repeat([midi_to_hz(p) for p in pitches], per_note)[: t.size]
+    f0 = f0 * (1 + 0.012 * np.sin(2 * np.pi * 5.5 * t))
+    phase = 2 * np.pi * np.cumsum(f0) / sr
+    buzz = sum(np.sin(k * phase) / k for k in range(1, 40))
+    out = np.zeros(t.size)
+    for center, width, gain in ((700, 110, 1.0), (1220, 120, 0.5), (2600, 160, 0.25)):
+        r = np.exp(-np.pi * width / sr)
+        theta = 2 * np.pi * center / sr
+        out += gain * lfilter([1 - r], [1, -2 * r * np.cos(theta), r * r], buzz)
+    fade = np.minimum(1.0, np.minimum(t, seconds - t) * 8)
+    return (0.25 * out / np.max(np.abs(out)) * fade).astype(np.float32)
+
+
 def to_stereo(mono: npt.NDArray[np.float32]) -> npt.NDArray[np.float32]:
     return np.stack([mono, mono]).astype(np.float32)
 

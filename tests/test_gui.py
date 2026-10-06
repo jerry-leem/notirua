@@ -25,6 +25,7 @@ from notirua.components import manifest
 from notirua.components.manager import ComponentManager
 from notirua.core.pipeline import Pipeline
 from notirua.gui.main_window import MainWindow
+from notirua.gui.mix_dialog import MixDialog
 from notirua.gui.widgets import STATE_ICONS, ProgressPanel
 from tests import synth
 from tests.component_fakes import Handler, fake_components
@@ -676,3 +677,85 @@ def test_title_can_be_changed_on_the_result_screen(
         timeout=WAIT_MS,
     )
     assert window.result.title == "새 제목"
+
+
+# -- make audio file (0.4.0) -------------------------------------------------------
+def open_mix(qtbot: QtBot, window: MainWindow, song: Path) -> MixDialog:
+    window.open_file(song)
+    window.options_page.start_button.click()
+    wait_result(qtbot, window)
+    qtbot.mouseClick(window.result_page.mix_button, Qt.MouseButton.LeftButton)
+    dialog = window.mix_dialog
+    assert dialog is not None and dialog.isVisible()
+    return dialog
+
+
+def test_make_audio_file_from_chosen_instruments(
+    qtbot: QtBot,
+    ready_user: settings_mod.Settings,
+    job: FakeJob,
+    song: Path,
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    asked: list[str] = []
+
+    def save_as(_parent: object, _caption: str, start: str, _filter: str) -> tuple[str, str]:
+        asked.append(start)
+        return str(tmp_path / "saved" / Path(start).stem), ""  # the suffix is added back
+
+    monkeypatch.setattr(QFileDialog, "getSaveFileName", save_as)
+    window = make_window(qtbot, ready_user, no_components, job.pipeline)
+    dialog = open_mix(qtbot, window, song)
+    # The fake song only has guitar and piano; silent instruments cannot be chosen.
+    assert dialog.chosen() == ["guitar", "piano"]
+    assert not dialog.checks["vocals"].isEnabled()
+    assert "no sound" in dialog.checks["vocals"].text()
+    assert dialog.checks["guitar"].isEnabled()
+
+    qtbot.mouseClick(dialog.none_button, Qt.MouseButton.LeftButton)
+    assert dialog.chosen() == []
+    assert not dialog.save_button.isEnabled() and not dialog.preview_button.isEnabled()
+    qtbot.mouseClick(dialog.all_button, Qt.MouseButton.LeftButton)
+    assert dialog.chosen() == ["guitar", "piano"]
+    dialog.checks["guitar"].setChecked(False)
+    assert dialog.save_button.isEnabled()
+
+    dialog.format_combo.setCurrentIndex(dialog.format_combo.findData("wav"))
+    qtbot.mouseClick(dialog.save_button, Qt.MouseButton.LeftButton)
+    target = tmp_path / "saved" / "봄날 song - Piano.wav"
+    qtbot.waitUntil(lambda: dialog.last_file == target, timeout=WAIT_MS)
+    assert Path(asked[0]).name == "봄날 song - Piano.wav"
+    assert target.is_file()
+    assert "Saved" in dialog.status.text()
+    assert ready_user.mix_format == "wav"
+    assert job.counter.separate == 1  # mixing reuses the separated instruments
+    assert not dialog.busy.isVisible() and dialog.save_button.isEnabled()
+
+
+def test_make_audio_file_preview_and_stop(
+    qtbot: QtBot,
+    ready_user: settings_mod.Settings,
+    job: FakeJob,
+    song: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    played: list[Path] = []
+    monkeypatch.setattr("notirua.gui.mix_dialog.open_path", played.append)
+    window = make_window(qtbot, ready_user, no_components, job.pipeline)
+    dialog = open_mix(qtbot, window, song)
+    qtbot.mouseClick(dialog.preview_button, Qt.MouseButton.LeftButton)
+    qtbot.waitUntil(lambda: bool(played), timeout=WAIT_MS)
+    assert played[0].suffix == ".wav" and played[0].is_file()
+
+    # A slow first split can be stopped; nothing is saved.
+    job.pipeline.cache_root = job.pipeline.cache_root.parent / "empty-cache"
+    job.delay = 5.0
+    job.pipeline._separator = None
+    qtbot.mouseClick(dialog.preview_button, Qt.MouseButton.LeftButton)
+    qtbot.waitUntil(lambda: dialog.busy.isVisible(), timeout=WAIT_MS)
+    assert not dialog.save_button.isEnabled()
+    qtbot.mouseClick(dialog.stop_button, Qt.MouseButton.LeftButton)
+    qtbot.waitUntil(lambda: not dialog.busy.isVisible(), timeout=3_000)
+    assert "Nothing was saved" in dialog.status.text()
+    assert len(played) == 1

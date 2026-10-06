@@ -117,6 +117,15 @@ def test_main_screens_fit(qtbot: QtBot, pseudo: None, tmp_path: Path) -> None:
     QApplication.processEvents()
     assert problems(window) == [], "result screen"
 
+    window.result_page.mix_button.click()
+    dialog = window.mix_dialog
+    assert dialog is not None
+    show(qtbot, dialog, (dialog.sizeHint().width(), dialog.sizeHint().height()))
+    dialog.busy.setVisible(True)
+    QApplication.processEvents()
+    assert problems(dialog) == [], "make audio file"
+    dialog.close()
+
     window.progress_page.show_error(CorruptFileError())
     window.progress_page.error_box.toggle.setChecked(True)
     window.stack.setCurrentWidget(window.progress_page)

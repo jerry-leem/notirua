@@ -162,3 +162,40 @@ def test_injection_title_does_not_execute(tmp_path: Path) -> None:
     engraver = LilyPondEngraver(ComponentManager(COMPONENTS).require("lilypond"))
     engraver.engrave(render_ly(score, ["vocals"], EngraveOptions()), tmp_path / "x.pdf")
     assert not marker.exists()
+
+
+@needs_components
+def test_backing_track_has_less_voice(pipeline: Pipeline, tmp_path: Path) -> None:
+    """0.4.0: leaving out the vocals takes most of a sung line out of the mix."""
+    import numpy as np
+
+    from notirua.core.decode import decode
+    from notirua.core.mix import available_formats
+    from notirua.core.model import STEMS
+
+    seconds = 12.0
+    piano = synth.render_notes(synth.scale_notes(100), total_s=seconds)
+    drums = synth.click_track(100, seconds)
+    sung = synth.voice(seconds)
+    n = min(piano.size, drums.size, sung.size)
+    song = synth.write_wav(
+        tmp_path / "song.wav", synth.to_stereo(0.5 * piano[:n] + 0.5 * drums[:n] + sung[:n])
+    )
+    fmt = "mp3" if "mp3" in available_formats() else "wav"
+    without = pipeline.export_mix(
+        song, set(STEMS) - {"vocals"}, tmp_path / f"mr.{fmt}", fmt, JobOptions()
+    )
+    assert "vocals" not in without.silent
+    everything = pipeline.export_mix(song, STEMS, tmp_path / "all.wav", "wav", JobOptions())
+
+    def voice_share(path: Path) -> float:
+        audio = decode(path).mean(axis=0)
+        m = min(audio.size, n)
+        return float(audio[:m] @ sung[:m] / (sung[:m] @ sung[:m]))
+
+    original = decode(song).mean(axis=0)
+    mixed = decode(everything.path).mean(axis=0)
+    m = min(original.size, mixed.size)
+    # All six give the song back (the model does not split it exactly, about 0.96 here).
+    assert np.corrcoef(original[:m], mixed[:m])[0, 1] > 0.9
+    assert voice_share(without.path) < 0.8 * voice_share(everything.path)

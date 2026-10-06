@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-10-06 23:05+0900\n"
+"POT-Creation-Date: 2026-10-07 02:26+0900\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -115,6 +115,9 @@ msgstr ""
 msgid "Cancelled."
 msgstr ""
 
+msgid "Cancelled. Nothing was saved."
+msgstr ""
+
 msgid "Cannot write to the install location."
 msgstr ""
 
@@ -161,6 +164,14 @@ msgstr ""
 msgid "Choose another file"
 msgstr ""
 
+msgid "Choose at least one instrument."
+msgstr ""
+
+msgid ""
+"Choose the instruments to keep. They are put together into one audio "
+"file, for example a backing track without vocals."
+msgstr ""
+
 msgid "Choose where to install components"
 msgstr ""
 
@@ -173,10 +184,16 @@ msgstr ""
 msgid "Clear"
 msgstr ""
 
+msgid "Clear all"
+msgstr ""
+
 msgid "Clear saved intermediate results"
 msgstr ""
 
 msgid "Clear…"
+msgstr ""
+
+msgid "Close"
 msgstr ""
 
 msgid "Component bundle (*.zip)"
@@ -290,6 +307,12 @@ msgstr ""
 msgid "File not found: {path}"
 msgstr ""
 
+msgid "File type"
+msgstr ""
+
+msgid "File type of the new audio file."
+msgstr ""
+
 msgid "Finding the beat, tempo, and key"
 msgstr ""
 
@@ -385,6 +408,14 @@ msgstr ""
 msgid "Instruments to include, comma separated: {choices}."
 msgstr ""
 
+#, python-brace-format
+msgid "Instruments to keep, comma separated: {choices}."
+msgstr ""
+
+#, python-brace-format
+msgid "Instruments to leave out, comma separated: {choices}."
+msgstr ""
+
 msgid "Interface language, for example en or ko."
 msgstr ""
 
@@ -419,6 +450,9 @@ msgstr ""
 msgid "List available languages."
 msgstr ""
 
+msgid "Listen first"
+msgstr ""
+
 msgid "Listening for notes"
 msgstr ""
 
@@ -426,10 +460,33 @@ msgstr ""
 msgid "Listening for {instrument} notes ({index}/{count})"
 msgstr ""
 
+msgid "M4A (AAC)"
+msgstr ""
+
+msgid "M4A file (*.m4a)"
+msgstr ""
+
 msgid "MIDI file (*.mid)"
 msgstr ""
 
+msgid "MP3 (smaller file)"
+msgstr ""
+
+msgid "MP3 file (*.mp3)"
+msgstr ""
+
 msgid "MP3, M4A, WAV, FLAC, OGG, MP4 video, and more"
+msgstr ""
+
+msgid "Make an audio file from only the instruments you choose."
+msgstr ""
+
+msgid ""
+"Make an audio file from only the instruments you choose. Without --stems "
+"or --without, everything but the vocals is kept."
+msgstr ""
+
+msgid "Make audio file"
 msgstr ""
 
 msgid "Make sheet music"
@@ -443,6 +500,9 @@ msgstr ""
 
 #, python-brace-format
 msgid "Making sheet music for {title}"
+msgstr ""
+
+msgid "Making the audio file"
 msgstr ""
 
 msgid "More settings"
@@ -483,6 +543,10 @@ msgid "No screen found, so the window cannot open."
 msgstr ""
 
 msgid "No sound"
+msgstr ""
+
+#, python-brace-format
+msgid "No sound in this song: {instruments}"
 msgstr ""
 
 #, python-brace-format
@@ -593,6 +657,9 @@ msgstr ""
 msgid "Remove an installed component."
 msgstr ""
 
+msgid "Remove vocals (MR)"
+msgstr ""
+
 #, python-brace-format
 msgid "Remove {name} and download it again?"
 msgstr ""
@@ -647,6 +714,9 @@ msgstr ""
 msgid "Save folder"
 msgstr ""
 
+msgid "Save only the instruments you choose as one audio file (MP3, M4A, WAV)."
+msgstr ""
+
 msgid "Saved intermediate results"
 msgstr ""
 
@@ -660,15 +730,25 @@ msgid ""
 msgstr ""
 
 #, python-brace-format
+msgid "Saved {name}."
+msgstr ""
+
+#, python-brace-format
 msgid "Saved {n} file."
 msgid_plural "Saved {n} files."
 msgstr[0] ""
 msgstr[1] ""
 
+msgid "Save…"
+msgstr ""
+
 msgid "Saving files"
 msgstr ""
 
 msgid "Score engraver (LilyPond)"
+msgstr ""
+
+msgid "Select all"
 msgstr ""
 
 msgid "Semitones to move, -12 to +12."
@@ -742,6 +822,9 @@ msgstr ""
 msgid "Song title printed on every page."
 msgstr ""
 
+msgid "Song title used in the file name."
+msgstr ""
+
 #, python-brace-format
 msgid "Source: {domain}"
 msgstr ""
@@ -781,6 +864,9 @@ msgstr ""
 
 #, python-brace-format
 msgid "The audio is longer than {limit} minutes."
+msgstr ""
+
+msgid "The audio keeps its original key, even if you transposed the music."
 msgstr ""
 
 msgid "The download failed."
@@ -829,6 +915,10 @@ msgid "There is not enough disk space."
 msgstr ""
 
 msgid "There is not enough disk space. Free up space or choose another location."
+msgstr ""
+
+#, python-brace-format
+msgid "This copy of Notirua cannot save {format} files."
 msgstr ""
 
 msgid "Time signature"
@@ -896,6 +986,9 @@ msgid "Version"
 msgstr ""
 
 msgid "Vocals"
+msgstr ""
+
+msgid "WAV (no compression)"
 msgstr ""
 
 msgid "WAV file (*.wav)"
@@ -1019,6 +1112,14 @@ msgid "yes"
 msgstr ""
 
 #, python-brace-format
+msgid "{first}, {second}"
+msgstr ""
+
+#, python-brace-format
+msgid "{instrument} (no sound)"
+msgstr ""
+
+#, python-brace-format
 msgid "{instrument} ({reason})"
 msgstr ""
 
@@ -1037,6 +1138,22 @@ msgid "{n} score"
 msgid_plural "{n} scores"
 msgstr[0] ""
 msgstr[1] ""
+
+#, python-brace-format
+msgid "{title} - all instruments"
+msgstr ""
+
+#, python-brace-format
+msgid "{title} - backing track"
+msgstr ""
+
+#, python-brace-format
+msgid "{title} - without {instruments}"
+msgstr ""
+
+#, python-brace-format
+msgid "{title} - {instruments}"
+msgstr ""
 
 #, python-brace-format
 msgid "{tonic} major"

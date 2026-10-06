@@ -52,6 +52,7 @@ class Settings:
     stage_weights: dict[str, float] = field(default_factory=lambda: dict(DEFAULT_STAGE_WEIGHTS))
     tab_weights: dict[str, float] = field(default_factory=dict)
     transcription: dict[str, float] = field(default_factory=dict)
+    mix_format: str = "mp3"  # last format chosen in "Make audio file"
 
     @property
     def components_path(self) -> Path:

@@ -38,6 +38,7 @@ from notirua import settings as settings_mod
 from notirua.core.errors import NotiruaError
 from notirua.core.pipeline import (
     INSTRUMENT_NAMES,
+    SKIP_SILENT,
     JobOptions,
     JobResult,
     Pipeline,
@@ -48,6 +49,7 @@ from notirua.core.pipeline import (
 )
 from notirua.core.progress import CancelToken, ProgressCallback, ProgressEvent
 from notirua.gui.file_page import MAX_RECENT, FilePage
+from notirua.gui.mix_dialog import MixDialog
 from notirua.gui.options_page import OptionsPage
 from notirua.gui.progress_page import ProgressPage
 from notirua.gui.result_page import ResultPage
@@ -86,6 +88,7 @@ class MainWindow(QMainWindow):
         self.job_task: Task | None = None
         self.render_task: Task | None = None
         self.side_tasks: list[Task] = []
+        self.mix_dialog: MixDialog | None = None
         self.input_path: Path | None = None
         self.options: JobOptions | None = None
         self.result: JobResult | None = None
@@ -137,6 +140,7 @@ class MainWindow(QMainWindow):
         self.result_page.save_all_requested.connect(self.save_all)
         self.result_page.export_requested.connect(self.export_file)
         self.result_page.stem_audio_requested.connect(self.stem_audio)
+        self.result_page.mix_requested.connect(self.open_mix_dialog)
         self.result_page.new_file_requested.connect(self._choose_other_file)
         self.result_page.status.linkActivated.connect(lambda link: open_path(Path(link)))
         for page in (
@@ -446,6 +450,20 @@ class MainWindow(QMainWindow):
             (lambda r: open_path(r)) if play else (lambda r: self._saved_message(1, r.parent)),
         )
 
+    def open_mix_dialog(self) -> None:
+        """Make audio file: the chosen instruments as one MP3, M4A, or WAV file."""
+        path, options, result = self.input_path, self.options, self.result
+        if path is None or options is None or result is None:
+            return
+        silent = [s for s, reason in result.skipped.items() if reason == SKIP_SILENT]
+        if self.mix_dialog is not None:
+            self.mix_dialog.close()
+            self.mix_dialog.deleteLater()
+        self.mix_dialog = MixDialog(
+            self.user, self.pipeline, path, options, result.title, silent, self._workdir, self
+        )
+        self.mix_dialog.open()
+
     def _side_task(self, work: Work, on_done: Callable[[Any], None]) -> None:
         task = Task(work, "side", self)
         task.succeeded.connect(on_done)
@@ -530,9 +548,16 @@ class MainWindow(QMainWindow):
             self.resize(900, 680)
 
     def closeEvent(self, event: QCloseEvent) -> None:
+        mix_task = self.mix_dialog.task if self.mix_dialog is not None else None
         running = [
             t
-            for t in (self.job_task, self.render_task, self.setup_page.task, *self.side_tasks)
+            for t in (
+                self.job_task,
+                self.render_task,
+                self.setup_page.task,
+                mix_task,
+                *self.side_tasks,
+            )
             if t is not None and t.running
         ]
         if running:

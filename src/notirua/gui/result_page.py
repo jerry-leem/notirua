@@ -42,6 +42,7 @@ class ResultPage(QWidget):
     save_all_requested = Signal()
     export_requested = Signal(str)  # "musicxml" | "midi"
     stem_audio_requested = Signal(str, bool)  # stem, play (True) or save (False)
+    mix_requested = Signal()
     new_file_requested = Signal()
 
     def __init__(self, parent: QWidget | None = None) -> None:
@@ -170,6 +171,11 @@ class ResultPage(QWidget):
         self.wav_button = QPushButton(_("Save as WAV"))
         self.wav_menu = QMenu(self.wav_button)
         self.wav_button.setMenu(self.wav_menu)
+        self.mix_button = QPushButton(_("Make audio file"))
+        self.mix_button.setToolTip(
+            _("Save only the instruments you choose as one audio file (MP3, M4A, WAV).")
+        )
+        self.mix_button.clicked.connect(self.mix_requested.emit)
         self.musicxml_button = QPushButton("MusicXML")
         self.musicxml_button.setAccessibleName(_("Save as MusicXML"))
         self.musicxml_button.clicked.connect(lambda: self.export_requested.emit("musicxml"))
@@ -180,6 +186,7 @@ class ResultPage(QWidget):
         self.save_button.clicked.connect(self.save_all_requested.emit)
         bottom.addWidget(self.listen_button)
         bottom.addWidget(self.wav_button)
+        bottom.addWidget(self.mix_button)
         bottom.addStretch(1)
         bottom.addWidget(self.musicxml_button)
         bottom.addWidget(self.midi_button)

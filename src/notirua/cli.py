@@ -176,6 +176,40 @@ def build_parser() -> argparse.ArgumentParser:
         help=_("Delete this file's saved intermediate results and start over."),
     )
 
+    m = sub.add_parser(
+        "mix",
+        help=_("Make an audio file from only the instruments you choose."),
+        description=_(
+            "Make an audio file from only the instruments you choose. "
+            "Without --stems or --without, everything but the vocals is kept."
+        ),
+    )
+    m.add_argument("file", type=Path, help=_("Audio or video file to read."))
+    m.add_argument("--out", type=Path, default=Path("."), help=_("Folder for the results."))
+    picks = m.add_mutually_exclusive_group()
+    picks.add_argument(
+        "--stems",
+        help=_("Instruments to keep, comma separated: {choices}.").format(choices=",".join(STEMS)),
+    )
+    picks.add_argument(
+        "--without",
+        help=_("Instruments to leave out, comma separated: {choices}.").format(
+            choices=",".join(STEMS)
+        ),
+    )
+    m.add_argument(
+        "--format",
+        choices=["mp3", "m4a", "wav"],
+        default="mp3",
+        help=_("File type of the new audio file."),
+    )
+    m.add_argument("--title", help=_("Song title used in the file name."))
+    m.add_argument(
+        "--track", type=_whole_number, help=_("Audio track number when the file has several.")
+    )
+    m.add_argument("--start", type=_number, help=_("Start time in seconds."))
+    m.add_argument("--end", type=_number, help=_("End time in seconds."))
+
     s = sub.add_parser("setup", help=_("Install the components Notirua needs."))
     s.add_argument(
         "--accept-licenses",
@@ -229,6 +263,8 @@ def main(argv: Sequence[str] | None = None) -> int:
     try:
         if args.command == "transcribe":
             return cmd_transcribe(args, user)
+        if args.command == "mix":
+            return cmd_mix(args, user)
         if args.command == "setup":
             return cmd_setup(args, user)
         if args.command == "components":
@@ -336,6 +372,98 @@ def cmd_transcribe(args: argparse.Namespace, user: settings_mod.Settings) -> int
         print(_("Note: {message}").format(message=_(w)))
     if "drums" in result.pdfs:
         print(_("Drum sheet music is for reference only."))
+    return EXIT_OK
+
+
+def _stem_list(text: str) -> list[str] | None:
+    """Instruments named in ``text``; prints an error and returns None if one is unknown."""
+    names = [s.strip() for s in text.split(",") if s.strip()]
+    unknown = [s for s in names if s not in STEMS]
+    if unknown:
+        print(_("Unknown instrument: {name}").format(name=", ".join(unknown)), file=sys.stderr)
+        return None
+    if not names:
+        print(_("Choose at least one instrument."), file=sys.stderr)
+        return None
+    return names
+
+
+def cmd_mix(args: argparse.Namespace, user: settings_mod.Settings) -> int:
+    from notirua.components.manager import manager_from_settings
+    from notirua.core import mix
+    from notirua.core.pipeline import INSTRUMENT_NAMES, JobOptions, Pipeline, safe_filename
+
+    manager = manager_from_settings(user)
+    missing = [c for c in manager.missing() if c.id == "htdemucs_6s"]
+    if missing:
+        names = ", ".join(_(c.name_id) for c in missing)
+        print(
+            _("Some components are not installed yet: {names}").format(names=names), file=sys.stderr
+        )
+        print(_("Run “notirua setup” first."), file=sys.stderr)
+        return EXIT_SETUP
+    if not args.file.is_file():
+        print(_("File not found: {path}").format(path=args.file), file=sys.stderr)
+        return EXIT_USAGE
+    if args.stems is not None:
+        chosen = _stem_list(args.stems)
+        if chosen is None:
+            return EXIT_USAGE
+        include = set(chosen)
+    else:
+        left_out = _stem_list(args.without) if args.without is not None else ["vocals"]
+        if left_out is None:
+            return EXIT_USAGE
+        include = set(STEMS) - set(left_out)
+        if not include:
+            print(_("Choose at least one instrument."), file=sys.stderr)
+            return EXIT_USAGE
+    if args.format not in mix.available_formats():
+        print(
+            _("This copy of Notirua cannot save {format} files.").format(
+                format=args.format.upper()
+            ),
+            file=sys.stderr,
+        )
+        return EXIT_USAGE
+    options = JobOptions(
+        title=args.title, stream_index=args.track, start_s=args.start, end_s=args.end
+    )
+    suffix = mix.FORMATS[args.format][0]
+
+    def target(title: str, silent: list[str]) -> Path:
+        available = [s for s in STEMS if s not in silent]
+        name = mix.mix_name(title, include, available, _, INSTRUMENT_NAMES)
+        return Path(args.out) / f"{safe_filename(name)}{suffix}"
+
+    cancel = CancelToken()
+    pipeline = Pipeline(
+        stage_weights=user.stage_weights, cache_limit_bytes=int(user.cache_limit_gb * 1024**3)
+    )
+    try:
+        result = pipeline.export_mix(
+            args.file,
+            include,
+            target,
+            args.format,
+            options,
+            progress=ProgressPrinter(),
+            cancel=cancel,
+        )
+    except KeyboardInterrupt:
+        cancel.cancel()
+        raise Cancelled() from None
+    print(
+        _("Done in {seconds} s: {count}.").format(
+            seconds=round(result.elapsed_s),
+            count=ngettext("{n} file", "{n} files", 1).format(n=1),
+        )
+    )
+    print(f"  {result.path}")
+    quiet = [s for s in result.silent if s in include]
+    if quiet:
+        names = mix.join_names([_(INSTRUMENT_NAMES[s]) for s in quiet], _)
+        print(_("No sound in this song: {instruments}").format(instruments=names))
     return EXIT_OK
 
 

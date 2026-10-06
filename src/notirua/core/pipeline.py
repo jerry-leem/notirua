@@ -11,7 +11,7 @@ from __future__ import annotations
 import logging
 import re
 import time
-from collections.abc import Callable
+from collections.abc import Callable, Collection
 from dataclasses import dataclass, field
 from fractions import Fraction
 from pathlib import Path
@@ -74,6 +74,7 @@ STAGE_MESSAGES = {
     "engrave": N_("Drawing the sheet music"),
     "export": N_("Saving files"),
 }
+MIX_MESSAGE = N_("Making the audio file")
 STAGE_CACHED = N_("Reusing earlier results")
 TRANSCRIBE_STEM = N_("Listening for {instrument} notes ({index}/{count})")
 ENGRAVE_STEM = N_("Drawing {instrument} sheet music ({index}/{count})")
@@ -134,6 +135,18 @@ class JobResult:
     warnings: list[str]
     elapsed_s: float
     stems_audio: dict[str, Path] = field(default_factory=dict)
+
+
+@dataclass
+class MixResult:
+    path: Path
+    title: str
+    silent: list[str]  # instruments without sound in this song
+    elapsed_s: float
+
+
+# Chooses the output file once the title and the silent instruments are known.
+MixTarget = Path | Callable[[str, list[str]], Path]
 
 
 @dataclass
@@ -225,6 +238,12 @@ def export_score(score: Score, fmt: str, target: Path, pdf_language: str | None 
     return export.write_musicxml(score, target, {s: tr.gettext(INSTRUMENT_NAMES[s]) for s in STEMS})
 
 
+def _audio_keys(opts: JobOptions) -> tuple[str, str]:
+    """Cache keys of the decoded mix and of the separated instruments."""
+    decode_key = cache_mod.options_hash("decode", opts.stream_index, opts.start_s, opts.end_s)
+    return decode_key, cache_mod.options_hash("separate", decode_key, "htdemucs_6s")
+
+
 class Pipeline:
     def __init__(
         self,
@@ -308,42 +327,11 @@ class Pipeline:
             cache.clear()
         warnings: list[str] = []
 
-        # 1. decode -------------------------------------------------------
-        rep.start("decode")
-        info = probe(input_path)
+        # 1-2. decode and separate ---------------------------------------
+        info, mix, stems_audio = self._decode_and_separate(
+            cache, input_path, opts, out_dir, rep, cancel
+        )
         title = (opts.title or info.title or input_path.stem).strip() or input_path.stem
-        decode_key = cache_mod.options_hash("decode", opts.stream_index, opts.start_s, opts.end_s)
-        sep_key = cache_mod.options_hash("separate", decode_key, "htdemucs_6s")
-        self._check_space(info, opts, out_dir, cache.has_audio("separate", sep_key, STEMS))
-        cached_mix = cache.load_audio("decode", decode_key, ["mix"])
-        if cached_mix is not None:
-            mix = cached_mix["mix"]
-            rep.done("decode", STAGE_CACHED)
-        else:
-            mix = decode(
-                input_path,
-                stream_index=opts.stream_index,
-                start_s=opts.start_s,
-                end_s=opts.end_s,
-                progress=rep.sub("decode"),
-                cancel=cancel,
-            )
-            cache.save_audio("decode", decode_key, {"mix": mix})
-            rep.done("decode")
-        cancel.raise_if_cancelled()
-
-        # 2. separate -----------------------------------------------------
-        rep.start("separate")
-        stems_audio = cache.load_audio("separate", sep_key, list(STEMS))
-        if stems_audio is not None:
-            rep.done("separate", STAGE_CACHED)
-        else:
-            separator = self.separator()
-            raw = separator.separate(mix, progress=rep.sub("separate"), cancel=cancel)
-            stems_audio = {s: raw[s] for s in STEMS if s in raw}
-            cache.save_audio("separate", sep_key, stems_audio)
-            rep.done("separate")
-        cancel.raise_if_cancelled()
 
         skipped: dict[str, str] = {}
         wanted = [s for s in STEMS if opts.stems is None or s in opts.stems]
@@ -360,6 +348,7 @@ class Pipeline:
 
         # 3. transcribe ---------------------------------------------------
         rep.start("transcribe")
+        sep_key = _audio_keys(opts)[1]
         tr_key = cache_mod.options_hash(
             "transcribe", sep_key, PostprocessSettings(), DrumSettings(), sorted(active), "gate1"
         )
@@ -528,6 +517,50 @@ class Pipeline:
             elapsed_s=time.monotonic() - started,
         )
 
+    def _decode_and_separate(
+        self,
+        cache: cache_mod.StageCache,
+        input_path: Path,
+        opts: JobOptions,
+        out_dir: Path,
+        rep: ProgressReporter,
+        cancel: CancelToken,
+    ) -> tuple[AudioInfo, AudioArray, dict[str, AudioArray]]:
+        """The decode and separate stages, from the cache when possible."""
+        rep.start("decode")
+        info = probe(input_path)
+        decode_key, sep_key = _audio_keys(opts)
+        self._check_space(info, opts, out_dir, cache.has_audio("separate", sep_key, STEMS))
+        cached_mix = cache.load_audio("decode", decode_key, ["mix"])
+        if cached_mix is not None:
+            mix = cached_mix["mix"]
+            rep.done("decode", STAGE_CACHED)
+        else:
+            mix = decode(
+                input_path,
+                stream_index=opts.stream_index,
+                start_s=opts.start_s,
+                end_s=opts.end_s,
+                progress=rep.sub("decode"),
+                cancel=cancel,
+            )
+            cache.save_audio("decode", decode_key, {"mix": mix})
+            rep.done("decode")
+        cancel.raise_if_cancelled()
+
+        rep.start("separate")
+        stems_audio = cache.load_audio("separate", sep_key, list(STEMS))
+        if stems_audio is not None:
+            rep.done("separate", STAGE_CACHED)
+        else:
+            separator = self.separator()
+            raw = separator.separate(mix, progress=rep.sub("separate"), cancel=cancel)
+            stems_audio = {s: raw[s] for s in STEMS if s in raw}
+            cache.save_audio("separate", sep_key, stems_audio)
+            rep.done("separate")
+        cancel.raise_if_cancelled()
+        return info, mix, stems_audio
+
     def _check_space(
         self, info: AudioInfo, opts: JobOptions, out_dir: Path, separated: bool
     ) -> None:
@@ -567,3 +600,56 @@ class Pipeline:
             write_wav(target, audio)
             return target
         raise FileNotFoundError(stem)
+
+    def export_mix(
+        self,
+        input_path: Path,
+        include: Collection[str],
+        target: MixTarget,
+        fmt: str = "mp3",
+        options: JobOptions | None = None,
+        progress: ProgressCallback | None = None,
+        cancel: CancelToken | None = None,
+    ) -> MixResult:
+        """Mix the chosen instruments into one audio file (0.4.0).
+
+        Uses the separated instruments of ``options``' time range from the
+        cache, and separates (only) when they are not there yet. Transposition
+        is not applied: the audio keeps its original pitch.
+        """
+        from notirua.core import mix as mix_mod
+
+        opts = options or JobOptions()
+        cancel = cancel or CancelToken()
+        started = time.monotonic()
+        stages = [
+            StageSpec("decode", self.weights.get("decode", 1.0), STAGE_MESSAGES["decode"]),
+            StageSpec("separate", self.weights.get("separate", 1.0), STAGE_MESSAGES["separate"]),
+            StageSpec("mix", self.weights.get("export", 1.0) * 2, MIX_MESSAGE),
+        ]
+        reporter = ProgressReporter("mix", stages, progress)
+        with reporter:
+            cache = cache_mod.StageCache(
+                self.cache_root, cache_mod.file_hash(input_path), self.cache_limit_bytes
+            )
+            out_dir = target.parent if isinstance(target, Path) else Path.cwd()
+            try:
+                info, _mix, stems_audio = self._decode_and_separate(
+                    cache, input_path, opts, out_dir, reporter, cancel
+                )
+                reporter.start("mix")
+                title = (opts.title or info.title or input_path.stem).strip() or input_path.stem
+                silent = [s for s in STEMS if s not in stems_audio or is_silent(stems_audio[s])]
+                path = target if isinstance(target, Path) else target(title, silent)
+                audio = mix_mod.mix_stems(stems_audio, include)
+                mix_mod.write_audio(path, audio, fmt, progress=reporter.sub("mix"), cancel=cancel)
+                reporter.done("mix")
+            except Cancelled:
+                raise
+            except Exception:
+                running = next((s for s, st in reporter.states.items() if st == "running"), None)
+                if running:
+                    reporter.fail(running)
+                raise
+            cache.enforce_limit()
+        return MixResult(path, title, silent, time.monotonic() - started)
