@@ -68,12 +68,34 @@ def fallback_chain(language: str) -> list[str]:
     return chain
 
 
+def _windows_language() -> str | None:
+    """The user's Windows display language as a BCP 47 tag, e.g. ``ko-KR``.
+
+    ``locale.getlocale()`` returns Windows names such as ``Korean_Korea`` there,
+    which never match a catalog folder.
+    """
+    try:
+        import ctypes
+
+        buffer = ctypes.create_unicode_buffer(85)  # LOCALE_NAME_MAX_LENGTH
+        kernel32 = ctypes.windll.kernel32  # type: ignore[attr-defined]
+        if kernel32.GetUserDefaultLocaleName(buffer, len(buffer)):
+            return buffer.value or None
+    except (AttributeError, OSError):
+        pass
+    return None
+
+
 def os_language() -> str | None:
     """Best-effort OS UI language, e.g. ``ko_KR``."""
     for var in ("LANGUAGE", "LC_ALL", "LC_MESSAGES", "LANG"):
         value = os.environ.get(var)
         if value and value not in ("C", "POSIX", "C.UTF-8"):
             return value.split(":")[0]
+    if sys.platform == "win32":
+        found = _windows_language()
+        if found:
+            return found
     try:
         lang, _enc = locale.getlocale()
     except ValueError:
