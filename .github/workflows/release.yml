@@ -39,17 +39,27 @@ jobs:
       # GCC (UCRT, like MSVC) rather than MSVC: with only the needed parts
       # enabled, MSVC crashes on libavformat/cbs.c (C1001). FFmpeg's mingw build
       # also writes MSVC import libraries (.lib) for PyAV, which builds with MSVC.
-      - name: Build LGPL-only FFmpeg with MinGW GCC
+      - name: Build LAME and LGPL-only FFmpeg with MinGW GCC
         if: steps.ffmpeg-cache.outputs.cache-hit != 'true'
         shell: msys2 {0}
         run: |
           set -euo pipefail
           ROOT="$(pwd)"
           PREFIX="$ROOT/build/lgpl-av/ffmpeg"
-          VERSION=$(uv run --no-project --python 3.11 python -c "import sys; sys.path.insert(0, 'packaging'); import build_lgpl_av as b; print(b.FFMPEG_VERSION, b.FFMPEG_SHA256, b.FFMPEG_URL)")
-          read -r FF_VERSION FF_SHA FF_URL <<< "$VERSION"
-          FLAGS=$(uv run --no-project --python 3.11 python packaging/build_lgpl_av.py --print-configure-flags "$PREFIX")
+          LAME="$ROOT/build/lgpl-av/lame"
+          VERSION=$(uv run --no-project --python 3.11 python -c "import sys; sys.path.insert(0, 'packaging'); import build_lgpl_av as b; print(b.FFMPEG_VERSION, b.FFMPEG_SHA256, b.FFMPEG_URL, b.LAME_VERSION, b.LAME_SHA256, b.LAME_URL)")
+          read -r FF_VERSION FF_SHA FF_URL LAME_VERSION LAME_SHA LAME_URL <<< "$VERSION"
+          # GCC is a Windows program: give it LAME's folder as C:/... rather than /d/....
+          FLAGS=$(uv run --no-project --python 3.11 python packaging/build_lgpl_av.py --print-configure-flags "$PREFIX" --lame-prefix "$(cygpath -m "$LAME")")
           mkdir -p build/lgpl-av && cd build/lgpl-av
+          # LAME (LGPL) as a static library, linked into avcodec for MP3 saving.
+          curl -fsSLo lame.tar.gz "$LAME_URL"
+          echo "$LAME_SHA  lame.tar.gz" | sha256sum -c -
+          tar xf lame.tar.gz
+          (cd "lame-$LAME_VERSION" && ./configure --prefix="$LAME" --disable-shared \
+              --enable-static --disable-frontend --disable-gtktest --disable-decoder \
+            && make -j"$(nproc)" && make install)
+          ls "$LAME/lib"
           curl -fsSLo ffmpeg.tar.xz "$FF_URL"
           echo "$FF_SHA  ffmpeg.tar.xz" | sha256sum -c -
           tar xf ffmpeg.tar.xz

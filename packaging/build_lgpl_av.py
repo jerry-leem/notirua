@@ -6,18 +6,20 @@ The PyPI ``av`` wheels link FFmpeg against libx264/libx265 (GPL), which would
 put a bundled app under GPL terms. This script:
 
 1. downloads pinned FFmpeg and PyAV sources (SHA-256 checked),
-2. configures FFmpeg with ``--disable-everything`` plus only the demuxers,
-   decoders, parsers, and filters Notirua needs (and a few LGPL encoders so the
-   result can be self-tested); no ``--enable-gpl``, ``--enable-nonfree``, or
-   external codec libraries,
-3. builds the PyAV wheel against it and vendors the libraries into the wheel
+2. builds LAME (libmp3lame, LGPL) as a static library for MP3 saving (0.4.0),
+3. configures FFmpeg with ``--disable-everything`` plus only the demuxers,
+   decoders, parsers, and filters Notirua needs, and the encoders for "Make
+   audio file" (AAC, MP3 through LAME, WAV); no ``--enable-gpl``,
+   ``--enable-nonfree``, or other external codec libraries,
+4. builds the PyAV wheel against it and vendors the libraries into the wheel
    (delocate on macOS, auditwheel on Linux),
-4. installs the wheel into a scratch venv and runs :func:`check_lgpl` plus a
-   decode round trip.
+5. installs the wheel into a scratch venv and runs :func:`check_lgpl` plus an
+   encode and decode round trip for every format.
 
-macOS and Linux build FFmpeg from source here. On Windows, FFmpeg is built
-with MSVC inside MSYS2 (``.github/workflows/release.yml``) using the flags from
-``--print-configure-flags``, and this script then runs with ``--ffmpeg-prefix``.
+macOS and Linux build LAME and FFmpeg from source here. On Windows, both are
+built with MinGW GCC inside MSYS2 (``.github/workflows/release.yml``) using the
+flags from ``--print-configure-flags`` (LAME is expected in ``PREFIX/../lame``),
+and this script then runs with ``--ffmpeg-prefix``.
 ``check_lgpl`` is the same everywhere.
 """
 
@@ -40,6 +42,14 @@ FFMPEG_VERSION = "8.1.2"
 FFMPEG_URL = f"https://ffmpeg.org/releases/ffmpeg-{FFMPEG_VERSION}.tar.xz"
 FFMPEG_SIZE = 11_710_924
 FFMPEG_SHA256 = "464beb5e7bf0c311e68b45ae2f04e9cc2af88851abb4082231742a74d97b524c"
+
+# LAME 3.100 (LGPL-2.0-or-later), linked statically into libavcodec for MP3 saving.
+LAME_VERSION = "3.100"
+LAME_URL = (
+    f"https://downloads.sourceforge.net/project/lame/lame/{LAME_VERSION}/lame-{LAME_VERSION}.tar.gz"
+)
+LAME_SIZE = 1_524_133
+LAME_SHA256 = "ddfe36cab873794038ae2c1210557ad34857a4b6bdc515785d1da9e175b1da1e"
 
 PYAV_VERSION = "18.1.0"
 PYAV_URL = (
@@ -67,9 +77,10 @@ DECODERS = [
 PARSERS = ["aac", "ac3", "flac", "mpegaudio", "opus", "vorbis"]
 # PyAV's AudioResampler builds an abuffer -> aformat -> abuffersink graph.
 FILTERS = ["abuffer", "abuffersink", "aformat", "anull", "aresample", "buffer", "buffersink"]
-# Native LGPL encoders and muxers, only so the built wheel can test itself.
-ENCODERS = ["aac", "alac", "flac", "pcm_s16be", "pcm_s16le"]
-MUXERS = ["aiff", "flac", "ipod", "mov", "mp4", "wav"]
+# "Make audio file" writes MP3 (LAME), M4A (AAC), and WAV; the rest let the
+# built wheel test itself.
+ENCODERS = ["aac", "alac", "flac", "libmp3lame", "pcm_s16be", "pcm_s16le"]
+MUXERS = ["aiff", "flac", "ipod", "mov", "mp3", "mp4", "wav"]
 
 # Anything here in the FFmpeg configuration means the build is not LGPL-only.
 FORBIDDEN = ("--enable-gpl", "--enable-nonfree", "libx264", "libx265", "libxvid", "libfdk")
@@ -89,7 +100,9 @@ def _download(url: str, target: Path, size: int, sha256: str) -> Path:
     return download(url, target, expected_size=size, sha256=sha256)
 
 
-def configure_flags(prefix: PurePath) -> list[str]:
+def configure_flags(prefix: PurePath, lame: PurePath | None = None) -> list[str]:
+    """FFmpeg's configure flags; LAME's static build is in ``lame`` (default ``prefix/../lame``)."""
+    lame = lame or prefix.parent / "lame"
     flags = [
         f"--prefix={prefix}",
         "--enable-shared",
@@ -107,16 +120,55 @@ def configure_flags(prefix: PurePath) -> list[str]:
         *(f"--enable-filter={x}" for x in FILTERS),
         *(f"--enable-encoder={x}" for x in ENCODERS),
         *(f"--enable-muxer={x}" for x in MUXERS),
+        "--enable-libmp3lame",
+        f"--extra-cflags=-I{lame / 'include'}",
+        f"--extra-ldflags=-L{lame / 'lib'}",
     ]
     if platform.machine().lower() in ("x86_64", "amd64") and shutil.which("nasm") is None:
         flags.append("--disable-x86asm")
     return flags
 
 
+def build_lame(work: Path) -> Path:
+    """LAME as a static, position-independent library (no command-line encoder)."""
+    prefix = work / "lame"
+    if (prefix / "lib" / "libmp3lame.a").is_file():
+        return prefix
+    archive = _download(LAME_URL, work / f"lame-{LAME_VERSION}.tar.gz", LAME_SIZE, LAME_SHA256)
+    src = work / f"lame-{LAME_VERSION}"
+    if not src.is_dir():
+        with tarfile.open(archive) as tar:
+            tar.extractall(work, filter="data")
+    flags = [
+        f"--prefix={prefix}",
+        "--disable-shared",
+        "--enable-static",
+        "--with-pic",
+        "--disable-frontend",
+        "--disable-gtktest",
+        "--disable-decoder",
+    ]
+    if sys.platform == "darwin":
+        # LAME's 2017 config.guess does not know Apple Silicon.
+        machine = platform.machine()
+        flags.append(f"--host={'aarch64' if machine == 'arm64' else machine}-apple-darwin")
+    _run(["./configure", *flags], cwd=src)
+    _run(["make", f"-j{os.cpu_count() or 2}"], cwd=src)
+    _run(["make", "install"], cwd=src)
+    return prefix
+
+
 def build_ffmpeg(work: Path) -> Path:
     prefix = work / "ffmpeg"
-    if (prefix / "lib" / "pkgconfig" / "libavcodec.pc").is_file():
+    lame = build_lame(work)
+    flags = configure_flags(prefix, lame)
+    # Rebuild when the configuration changed (a new encoder, LAME, ...).
+    stamp = prefix / "notirua-configure.txt"
+    if (prefix / "lib" / "pkgconfig" / "libavcodec.pc").is_file() and (
+        stamp.is_file() and stamp.read_text(encoding="utf-8") == "\n".join(flags)
+    ):
         return prefix
+    shutil.rmtree(prefix, ignore_errors=True)
     archive = _download(
         FFMPEG_URL, work / f"ffmpeg-{FFMPEG_VERSION}.tar.xz", FFMPEG_SIZE, FFMPEG_SHA256
     )
@@ -124,9 +176,12 @@ def build_ffmpeg(work: Path) -> Path:
     if not src.is_dir():
         with tarfile.open(archive) as tar:
             tar.extractall(work, filter="data")
-    _run(["./configure", *configure_flags(prefix)], cwd=src)
+    if (src / "ffbuild" / "config.mak").is_file():
+        _run(["make", "distclean"], cwd=src)
+    _run(["./configure", *flags], cwd=src)
     _run(["make", f"-j{os.cpu_count() or 2}"], cwd=src)
     _run(["make", "install"], cwd=src)
+    stamp.write_text("\n".join(flags), encoding="utf-8")
     return prefix
 
 
@@ -194,7 +249,9 @@ SELF_TEST = textwrap.dedent(
     problems = check_lgpl()
     assert not problems, problems
     tmp = Path(tempfile.mkdtemp())
-    for name, fmt, codec, sample in (("a.m4a", "ipod", "aac", "fltp"),
+    assert "--enable-libmp3lame" in av._core.library_meta["libavcodec"]["configuration"]
+    for name, fmt, codec, sample in (("a.mp3", "mp3", "libmp3lame", "fltp"),
+                                     ("a.m4a", "ipod", "aac", "fltp"),
                                      ("a.flac", "flac", "flac", "s16"),
                                      ("a.wav", "wav", "pcm_s16le", "s16")):
         path = tmp / name
@@ -243,6 +300,10 @@ def main() -> None:
         "--ffmpeg-prefix", type=Path, help="use an FFmpeg already built with these flags"
     )
     parser.add_argument(
+        "--lame-prefix",
+        help="LAME's install folder for --print-configure-flags (default: PREFIX/../lame)",
+    )
+    parser.add_argument(
         "--print-configure-flags",
         metavar="PREFIX",
         help="print FFmpeg's configure flags for PREFIX and exit (Windows CI)",
@@ -250,7 +311,8 @@ def main() -> None:
     args = parser.parse_args()
     if args.print_configure_flags:
         # An MSYS2 path such as /d/a/notirua/ffmpeg: keep its forward slashes.
-        print(" ".join(configure_flags(PurePosixPath(args.print_configure_flags))))
+        lame = PurePosixPath(args.lame_prefix) if args.lame_prefix else None
+        print(" ".join(configure_flags(PurePosixPath(args.print_configure_flags), lame)))
         return
     work = args.work.resolve()
     work.mkdir(parents=True, exist_ok=True)
