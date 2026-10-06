@@ -82,6 +82,28 @@ def test_install_and_remove(tmp_path: Path, server: str) -> None:
     assert not {s.component.id: s for s in m.status()}["tool"].installed
 
 
+def test_mirror_is_used_when_the_first_source_fails(tmp_path: Path, server: str) -> None:
+    model, _tool, files = fake_components(server)
+    f = model.files["any"]
+    mirrored = replace(f, url=f"{server}/missing.onnx", mirrors=("https://example.org/x", f.url))
+    model = replace(model, files={"any": mirrored})
+    assert mirrored.domain == f"{server.split('//')[1]}, example.org"
+    Handler.files = files
+    m = _manager(tmp_path, [model])
+    m.install([model], m.make_consent([model]))
+    assert {s.component.id: s for s in m.status()}["model"].installed
+
+
+def test_every_source_failing_reports_the_last_error(tmp_path: Path, server: str) -> None:
+    model, _tool, files = fake_components(server)
+    f = replace(model.files["any"], url=f"{server}/a", mirrors=(f"{server}/b",))
+    model = replace(model, files={"any": f})
+    Handler.files = files
+    m = _manager(tmp_path, [model])
+    with pytest.raises(DownloadError, match="/b"):
+        m.install([model], m.make_consent([model]))
+
+
 def test_resume_after_connection_drop(tmp_path: Path, server: str) -> None:
     model, _tool, files = fake_components(server)
     Handler.files = files
@@ -171,5 +193,6 @@ def test_manifest_is_pinned() -> None:
     for c in manifest.COMPONENTS:
         for f in c.files.values():
             assert len(f.sha256) == 64 and f.size > 0
-            assert f.url.startswith("https://")
-            assert "latest" not in f.url
+            for url in f.urls:
+                assert url.startswith("https://")
+                assert "latest" not in url

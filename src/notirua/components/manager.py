@@ -14,7 +14,7 @@ import sys
 import tarfile
 import tempfile
 import zipfile
-from collections.abc import Sequence
+from collections.abc import Callable, Sequence
 from dataclasses import dataclass
 from datetime import UTC, datetime
 from pathlib import Path
@@ -24,6 +24,7 @@ from notirua.components.download import DownloadStatus, PauseToken, download, sh
 from notirua.components.manifest import (
     MANIFEST_VERSION,
     Component,
+    ComponentFile,
     components_for_platform,
     current_platform,
 )
@@ -213,11 +214,9 @@ class ComponentManager:
                     )
 
                 try:
-                    archive = download(
-                        f.url,
+                    archive = _download_any(
+                        f,
                         dl_dir / f.filename,
-                        expected_size=f.size,
-                        sha256=f.sha256,
                         progress=on_bytes,
                         cancel=cancel,
                         pause=pause,
@@ -340,6 +339,38 @@ class ComponentManager:
                 json.dumps({"manifest_version": MANIFEST_VERSION, "files": sorted(files)}),
             )
         return out
+
+
+def _download_any(
+    f: ComponentFile,
+    dest: Path,
+    *,
+    progress: Callable[[DownloadStatus], None],
+    cancel: CancelToken,
+    pause: PauseToken | None,
+) -> Path:
+    """Download ``f`` from its URL, then from each mirror in turn.
+
+    A partial file carries over between hosts because every host serves the
+    same bytes (the SHA-256 decides).
+    """
+    last: DownloadError | None = None
+    for url in f.urls:
+        try:
+            return download(
+                url,
+                dest,
+                expected_size=f.size,
+                sha256=f.sha256,
+                progress=progress,
+                cancel=cancel,
+                pause=pause,
+            )
+        except DownloadError as exc:  # ChecksumMismatchError included
+            log.warning("download from %s failed: %s", url, exc)
+            last = exc
+    assert last is not None
+    raise last
 
 
 def _safe_zip_extract(zf: zipfile.ZipFile, dest: Path) -> None:

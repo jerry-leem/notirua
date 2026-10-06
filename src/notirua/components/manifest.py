@@ -24,10 +24,16 @@ class ComponentFile:
     size: int
     archive: str | None  # "tar.gz" | "zip" | None (single file)
     filename: str
+    mirrors: tuple[str, ...] = ()  # tried in order when ``url`` fails; same bytes
+
+    @property
+    def urls(self) -> tuple[str, ...]:
+        return (self.url, *self.mirrors)
 
     @property
     def domain(self) -> str:
-        return urlparse(self.url).netloc
+        """Every host a download may contact, for the consent screen."""
+        return ", ".join(dict.fromkeys(urlparse(u).netloc for u in self.urls))
 
 
 @dataclass(frozen=True)
@@ -60,6 +66,11 @@ def current_platform() -> str:
 
 _LILYPOND_BASE = "https://gitlab.com/lilypond/lilypond/-/releases/v2.26.0/downloads/"
 _DEMUCS_REV = "49df9b6989cf2150840ea65b0bef77a2e471b678"
+# Unchanged copy on the project's own GitHub release (DECISIONS D17).
+_MODEL_MIRROR = (
+    "https://github.com/jerry-leem/notirua/releases/download/"
+    "model-htdemucs_6s-49df9b6/htdemucs_6s.onnx"
+)
 
 SEPARATION_MODEL = Component(
     id="htdemucs_6s",
@@ -77,6 +88,7 @@ SEPARATION_MODEL = Component(
             size=258_159_781,
             archive=None,
             filename="htdemucs_6s.onnx",
+            mirrors=(_MODEL_MIRROR,),
         )
     },
     entry="htdemucs_6s.onnx",
