@@ -1,5 +1,7 @@
 # Third-party licenses
 
+Notirua itself is released under the MIT License (`LICENSE`).
+
 Everything Notirua bundles or downloads, with source and license. This table
 is also shown on the app's About screen (M4). Non-commercial (CC BY-NC*) or
 unlicensed components are never included (SPEC 7.4).
@@ -21,6 +23,7 @@ unlicensed components are never included (SPEC 7.4).
 | Babel | 2.18 | BSD-3-Clause | https://babel.pocoo.org |
 | music21 | 10.x | BSD-3-Clause | https://github.com/cuthbertLab/music21 |
 | PySide6 / Qt 6 (Essentials + QtPdf from Addons) | 6.11 | LGPL-3.0 (dynamically linked) | https://www.qt.io/qt-for-python |
+| Noto Sans CJK KR (Linux build only) | Sans2.004 | OFL-1.1 (`licenses/noto-cjk/`) | https://github.com/notofonts/noto-cjk |
 | PDFium (inside QtPdf) | Qt 6.11 | BSD-3-Clause | https://pdfium.googlesource.com/pdfium |
 
 ## Downloaded on first run (with consent)
