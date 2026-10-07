@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import hashlib
 import io
+import sys
 import zipfile
 from collections.abc import Iterator
 from dataclasses import replace
@@ -90,7 +91,8 @@ def test_install_after_consent(tmp_path: Path, server: str) -> None:
     entry = manager.require("deno")
     assert entry == tmp_path / "deno" / "deno"
     assert entry.read_bytes().startswith(b"#!/bin/sh")
-    assert entry.stat().st_mode & 0o111  # executable on Linux and macOS
+    if sys.platform != "win32":  # Windows has no execute bit
+        assert entry.stat().st_mode & 0o111  # executable on Linux and macOS
     assert manager.missing(required_only=False) == []
 
 
