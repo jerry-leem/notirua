@@ -29,12 +29,14 @@ sys.path.insert(0, str(ROOT / "packaging"))
 import icons  # noqa: E402
 import versioning  # noqa: E402
 
-# Wheel platform tag fragments per platform (``build_lgpl_av.py`` output names).
+# Wheel platform tag fragments per platform (``build_lgpl_av.py`` output names). A Python
+# built as universal2 (the python.org installer, found on CI runners) makes a universal2
+# wheel; its slice for this machine is what the bundle uses.
 WHEEL_TAGS = {
-    ("darwin", "arm64"): "macosx_14_0_arm64",
-    ("darwin", "x86_64"): "macosx_14_0_x86_64",
-    ("linux", "x86_64"): "linux*_x86_64",
-    ("win32", "AMD64"): "win_amd64",
+    ("darwin", "arm64"): ("macosx_14_0_arm64", "macosx_14_0_universal2"),
+    ("darwin", "x86_64"): ("macosx_14_0_x86_64", "macosx_14_0_universal2"),
+    ("linux", "x86_64"): ("linux*_x86_64",),
+    ("win32", "AMD64"): ("win_amd64",),
 }
 
 
@@ -44,15 +46,18 @@ def run(cmd: list[str | Path], **kwargs: object) -> None:
 
 
 def find_av_wheel() -> Path:
-    tag = WHEEL_TAGS.get((sys.platform, platform.machine()))
-    if tag is None:
+    tags = WHEEL_TAGS.get((sys.platform, platform.machine()))
+    if tags is None:
         raise SystemExit(f"no LGPL PyAV build for {sys.platform} {platform.machine()}")
-    wheels = sorted((ROOT / "dist" / "lgpl-av").glob(f"av-*{tag}*.whl"))
-    if not wheels:
-        raise SystemExit(
-            f"no LGPL PyAV wheel (*{tag}*) in dist/lgpl-av: run packaging/build_lgpl_av.py"
-        )
-    return wheels[-1]
+    folder = ROOT / "dist" / "lgpl-av"
+    for tag in tags:  # the first tag that has a wheel wins
+        wheels = sorted(folder.glob(f"av-*{tag}*.whl"))
+        if wheels:
+            return wheels[-1]
+    raise SystemExit(
+        f"no LGPL PyAV wheel ({', '.join('*' + t + '*' for t in tags)}) in dist/lgpl-av: "
+        "run packaging/build_lgpl_av.py"
+    )
 
 
 def venv_python(venv: Path) -> Path:

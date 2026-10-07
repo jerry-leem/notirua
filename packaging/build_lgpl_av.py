@@ -91,6 +91,9 @@ def _run(cmd: list[str], cwd: Path | None = None, env: dict[str, str] | None = N
     full_env = dict(env or os.environ)
     if sys.platform == "darwin":
         full_env.setdefault("MACOSX_DEPLOYMENT_TARGET", MACOS_MIN)
+        # FFmpeg is built for this machine only. A universal2 Python (CI runners) would
+        # otherwise build and tag a universal2 wheel whose other half has no FFmpeg.
+        full_env.setdefault("ARCHFLAGS", f"-arch {platform.machine()}")
     subprocess.run(cmd, cwd=cwd, env=full_env, check=True)
 
 

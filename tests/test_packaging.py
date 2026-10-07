@@ -6,6 +6,8 @@ import struct
 import sys
 from pathlib import Path
 
+import pytest
+
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "packaging"))
 
@@ -70,3 +72,24 @@ def test_installer_clears_the_old_program_folder() -> None:
     assert "[InstallDelete]" in iss
     assert 'Name: "{app}\\_internal"' in iss
     assert "Type: filesandordirs" in iss
+
+
+def test_find_av_wheel_accepts_a_universal2_wheel(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """CI's python.org Python makes ``universal2`` wheels; an arm64 one still wins."""
+    import build_app
+
+    folder = tmp_path / "dist" / "lgpl-av"
+    folder.mkdir(parents=True)
+    monkeypatch.setattr(build_app, "ROOT", tmp_path)
+    monkeypatch.setattr(build_app.sys, "platform", "darwin")
+    monkeypatch.setattr(build_app.platform, "machine", lambda: "arm64")
+    with pytest.raises(SystemExit):
+        build_app.find_av_wheel()
+    universal = folder / "av-18.1.0-cp311-abi3-macosx_14_0_universal2.whl"
+    universal.write_bytes(b"x")
+    assert build_app.find_av_wheel() == universal
+    arm = folder / "av-18.1.0-cp311-abi3-macosx_14_0_arm64.whl"
+    arm.write_bytes(b"x")
+    assert build_app.find_av_wheel() == arm
