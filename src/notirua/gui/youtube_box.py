@@ -1,12 +1,17 @@
-"""The YouTube link box of screen ①: paste a link, choose the quality, save the audio (0.5.0)."""
+"""The YouTube link box of screen ①: paste a link, choose the quality, save the audio (0.5.0).
+
+Two buttons: save the MP3 only (0.5.2), or save it and go on to the sheet music.
+"""
 
 from __future__ import annotations
+
+import html
+from pathlib import Path
 
 from PySide6.QtCore import Signal
 from PySide6.QtGui import QClipboard
 from PySide6.QtWidgets import (
     QApplication,
-    QCheckBox,
     QComboBox,
     QFrame,
     QHBoxLayout,
@@ -20,7 +25,7 @@ from PySide6.QtWidgets import (
 from notirua import settings as settings_mod
 from notirua.core import youtube as yt
 from notirua.core.errors import InvalidYoutubeLinkError
-from notirua.gui.widgets import heading
+from notirua.gui.widgets import heading, open_path
 from notirua.i18n import N_, _
 
 QUALITY_LABELS = {
@@ -33,9 +38,14 @@ QUALITY_LABELS = {
 
 
 class YoutubeBox(QFrame):
-    """Emits ``requested(link text, kbps, make sheet music too)`` for a valid link."""
+    """Emits ``requested(link text, kbps, make sheet music too)`` for a valid link.
+
+    After an MP3-only save, :meth:`show_saved` says where the file is and offers
+    ``score_requested(path)`` to make the sheet music from it later.
+    """
 
     requested = Signal(str, int, bool)
+    score_requested = Signal(Path)
 
     def __init__(self, parent: QWidget | None = None) -> None:
         super().__init__(parent)
@@ -81,17 +91,29 @@ class YoutubeBox(QFrame):
         options.addStretch(1)
         layout.addLayout(options)
 
-        self.make_score = QCheckBox(_("Make the sheet music right after saving the audio"))
-        self.make_score.setChecked(True)
-        self.make_score.toggled.connect(self._update_button)
-        layout.addWidget(self.make_score)
-
         buttons = QHBoxLayout()
         buttons.addStretch(1)
-        self.save_button = QPushButton()
-        self.save_button.clicked.connect(self._submit)
+        self.audio_button = QPushButton(_("Save MP3 only"))
+        self.audio_button.setAccessibleName(_("Save the audio as an MP3 file only"))
+        self.audio_button.clicked.connect(lambda: self._submit(make_score=False))
+        buttons.addWidget(self.audio_button)
+        self.save_button = QPushButton(_("Save MP3 and make sheet music"))
+        self.save_button.clicked.connect(lambda: self._submit(make_score=True))
         buttons.addWidget(self.save_button)
         layout.addLayout(buttons)
+
+        saved_row = QHBoxLayout()
+        self.saved_note = QLabel()
+        self.saved_note.setWordWrap(True)
+        self.saved_note.linkActivated.connect(lambda folder: open_path(Path(folder)))
+        saved_row.addWidget(self.saved_note, 1)
+        self.score_button = QPushButton(_("Make sheet music from it"))
+        self.score_button.clicked.connect(self._score_saved)
+        saved_row.addWidget(self.score_button)
+        layout.addLayout(saved_row)
+        self._saved_path: Path | None = None
+        self.saved_note.setVisible(False)
+        self.score_button.setVisible(False)
 
         notice = QLabel(
             _(
@@ -101,8 +123,8 @@ class YoutubeBox(QFrame):
         )
         notice.setWordWrap(True)
         layout.addWidget(notice)
-        self._update_button()
-        self.save_button.setEnabled(False)
+        self.make_score = True  # what Enter in the link box does: the button used last
+        self._update_buttons()
 
     # -- state ---------------------------------------------------------------------
     def load_settings(self, user: settings_mod.Settings) -> None:
@@ -110,7 +132,8 @@ class YoutubeBox(QFrame):
         self.quality.setCurrentIndex(
             index if index >= 0 else self.quality.findData(yt.DEFAULT_BITRATE)
         )
-        self.make_score.setChecked(user.youtube_make_score)
+        self.make_score = user.youtube_make_score
+        self._update_buttons()
 
     def link(self) -> yt.YoutubeLink | None:
         try:
@@ -122,14 +145,38 @@ class YoutubeBox(QFrame):
         self.link_edit.setText(text)
         self.link_edit.setFocus()
 
-    def _update_button(self) -> None:
-        self.save_button.setText(
-            _("Save audio and make sheet music") if self.make_score.isChecked() else _("Save audio")
+    def _update_buttons(self) -> None:
+        valid = self.link() is not None
+        for button, makes_score in ((self.save_button, True), (self.audio_button, False)):
+            button.setEnabled(valid)
+            button.setDefault(makes_score == self.make_score)
+
+    def show_saved(self, path: Path) -> None:
+        """After an MP3-only save: say where the file is, offer the sheet music."""
+        folder = html.escape(str(path.parent), quote=True)
+        self.saved_note.setText(
+            "✓ "
+            + _("Audio saved: {name} — {link}").format(
+                name=html.escape(path.name),
+                link=f'<a href="{folder}">' + _("Open the folder") + "</a>",
+            )
         )
+        self._saved_path = path
+        self.saved_note.setVisible(True)
+        self.score_button.setVisible(True)
+
+    def hide_saved(self) -> None:
+        self._saved_path = None
+        self.saved_note.setVisible(False)
+        self.score_button.setVisible(False)
+
+    def _score_saved(self) -> None:
+        if self._saved_path is not None:
+            self.score_requested.emit(self._saved_path)
 
     def _text_changed(self, text: str) -> None:
         valid = self.link() is not None
-        self.save_button.setEnabled(valid)
+        self._update_buttons()
         if not text.strip():
             self.status.clear()
             self.refresh_clipboard()
@@ -165,15 +212,17 @@ class YoutubeBox(QFrame):
             self.link_edit.setFocus()
             return False
         self.link_edit.setText(link.url)
-        self.save_button.setFocus()
+        (self.save_button if self.make_score else self.audio_button).setFocus()
         return True
 
     # -- go ------------------------------------------------------------------------
-    def _submit(self) -> None:
+    def _submit(self, make_score: bool | None = None) -> None:
+        """Save the audio; ``make_score`` is None for Enter (repeat the last button)."""
         if self.link() is None:
             return
+        if make_score is not None:
+            self.make_score = make_score
+            self._update_buttons()
         self.requested.emit(
-            self.link_edit.text().strip(),
-            int(self.quality.currentData()),
-            self.make_score.isChecked(),
+            self.link_edit.text().strip(), int(self.quality.currentData()), self.make_score
         )

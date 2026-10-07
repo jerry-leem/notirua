@@ -94,10 +94,11 @@ def test_the_first_screen_explains_links(
     assert window.stack.currentWidget() is window.file_page
     assert box.link_edit.placeholderText() == "Paste a YouTube link"
     assert not box.save_button.isEnabled()
-    assert box.make_score.isChecked()
-    assert box.save_button.text() == "Save audio and make sheet music"
-    box.make_score.setChecked(False)
-    assert box.save_button.text() == "Save audio"
+    assert not box.audio_button.isEnabled()
+    assert box.save_button.text() == "Save MP3 and make sheet music"
+    assert box.audio_button.text() == "Save MP3 only"
+    assert box.save_button.isDefault() and not box.audio_button.isDefault()
+    assert not box.saved_note.isVisible() and not box.score_button.isVisible()
     assert [box.quality.itemData(i) for i in range(box.quality.count())] == [
         128,
         160,
@@ -198,20 +199,29 @@ def test_link_to_score_in_one_go(
 
 
 @needs_mp3
-def test_audio_only_stops_at_the_options_screen(
+def test_mp3_only_makes_no_sheet_music(
     qtbot: QtBot, user: settings_mod.Settings, job: FakeJob, tmp_path: Path
 ) -> None:
     window = make_window(qtbot, user, job)
     box = window.file_page.youtube
     enter_link(window)
-    box.make_score.setChecked(False)
-    box.save_button.click()
-    qtbot.waitUntil(lambda: window.stack.currentWidget() is window.options_page, timeout=WAIT_MS)
-    assert window.options_page.saved_note.isVisible()
-    assert "Some Song.mp3" in window.options_page.saved_note.text()
-    assert (tmp_path / "user-music" / "Some Song.mp3").is_file()
-    assert job.counter.separate == 0  # no score yet: the user chooses the options first
+    box.audio_button.click()
+    qtbot.waitUntil(lambda: box.saved_note.isVisible(), timeout=WAIT_MS)
+    saved = tmp_path / "user-music" / "Some Song.mp3"
+    assert saved.is_file()
+    assert window.stack.currentWidget() is window.file_page
+    assert "Some Song.mp3" in box.saved_note.text()
+    assert box.score_button.isVisible()
+    assert job.counter.separate == 0  # no sheet music
+    assert window.result is None
     assert user.youtube_make_score is False
+    assert str(saved) in user.recent_files
+    assert box.audio_button.isDefault()  # Enter repeats the last choice
+    # The sheet music can still be made from it later.
+    box.score_button.click()
+    assert window.stack.currentWidget() is window.options_page
+    assert window.options_page.saved_note.isVisible()
+    assert not box.saved_note.isVisible()
     window.options_page.start_button.click()
     wait_result(qtbot, window)
     assert job.counter.separate == 1
@@ -240,14 +250,14 @@ def test_failure_shows_the_reason_and_try_again_repeats(
 
     window = make_window(qtbot, user, job, kwargs)
     enter_link(window)
-    window.file_page.youtube.make_score.setChecked(False)
-    window.file_page.youtube.save_button.click()
+    window.file_page.youtube.audio_button.click()
     qtbot.waitUntil(lambda: window.progress_page.error_box.isVisible(), timeout=WAIT_MS)
     assert window.stack.currentWidget() is window.progress_page
     assert "sign in" in window.progress_page.error_box.title.text()
     assert not window.busy()
     window.progress_page.retry_button.click()
-    qtbot.waitUntil(lambda: window.stack.currentWidget() is window.options_page, timeout=WAIT_MS)
+    qtbot.waitUntil(lambda: window.file_page.youtube.saved_note.isVisible(), timeout=WAIT_MS)
+    assert window.stack.currentWidget() is window.file_page
     assert len(attempts) == 2
 
 
@@ -311,8 +321,14 @@ def test_declining_the_helper_downloads_nothing(
 
 @needs_mp3
 def test_accepting_the_helper_installs_it_and_goes_on(
-    qtbot: QtBot, user: settings_mod.Settings, job: FakeJob, server: str, tmp_path: Path
+    qtbot: QtBot,
+    user: settings_mod.Settings,
+    job: FakeJob,
+    server: str,
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
 ) -> None:
+    monkeypatch.setattr(yt.shutil, "which", lambda _name: None)  # ignore a deno on the PATH
     deno, files = _fake_deno(server)
     Handler.files.update(files)
     window = make_window(qtbot, user, job, runtime=None)
@@ -326,12 +342,9 @@ def test_accepting_the_helper_installs_it_and_goes_on(
     mw.JS_RUNTIME = deno  # type: ignore[misc]
     try:
         window.confirm_runtime_download = lambda: True  # type: ignore[method-assign]
-        window.file_page.youtube.make_score.setChecked(False)
         enter_link(window)
-        window.file_page.youtube.save_button.click()
-        qtbot.waitUntil(
-            lambda: window.stack.currentWidget() is window.options_page, timeout=WAIT_MS
-        )
+        window.file_page.youtube.audio_button.click()
+        qtbot.waitUntil(lambda: window.file_page.youtube.saved_note.isVisible(), timeout=WAIT_MS)
     finally:
         mw.JS_RUNTIME = JS_RUNTIME  # type: ignore[misc]
     assert manager.require("deno").is_file()

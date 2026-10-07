@@ -55,7 +55,7 @@ class Settings:
     mix_format: str = "mp3"  # last format chosen in "Make audio file"
     youtube_bitrate: int = 160  # kbps of the MP3 saved from a YouTube link
     youtube_dir: str | None = None  # None = <Music>/Notirua
-    youtube_make_score: bool = True  # go on to the sheet music right after saving the audio
+    youtube_make_score: bool = True  # last YouTube button: True = also make the sheet music
     proxy: str | None = None  # proxy server for YouTube, e.g. http://proxy.example.com:8080
 
     @property

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Notirua VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-10-07 06:57+0000\n"
+"POT-Creation-Date: 2026-10-07 19:09+0900\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: ko\n"
@@ -618,8 +618,8 @@ msgstr "악보 만들기"
 msgid "Make sheet music from an audio file."
 msgstr "음악 파일로 악보를 만듭니다."
 
-msgid "Make the sheet music right after saving the audio"
-msgstr "음원을 저장한 뒤 바로 악보 만들기"
+msgid "Make sheet music from it"
+msgstr "이 음원으로 악보 만들기"
 
 msgid "Making sheet music failed."
 msgstr "악보를 만들지 못했습니다."
@@ -879,6 +879,12 @@ msgstr "시스템과 같음"
 msgid "Save"
 msgstr "저장"
 
+msgid "Save MP3 and make sheet music"
+msgstr "MP3 저장 후 악보 만들기"
+
+msgid "Save MP3 only"
+msgstr "MP3만 저장"
+
 msgid "Save all"
 msgstr "모두 저장"
 
@@ -891,17 +897,14 @@ msgstr "MusicXML로 저장"
 msgid "Save as WAV"
 msgstr "WAV로 저장"
 
-msgid "Save audio"
-msgstr "음원 저장"
-
-msgid "Save audio and make sheet music"
-msgstr "음원 저장 후 악보 만들기"
-
 msgid "Save folder"
 msgstr "저장 폴더"
 
 msgid "Save only the instruments you choose as one audio file (MP3, M4A, WAV)."
 msgstr "고른 악기만 합쳐 음원 파일 하나(MP3, M4A, WAV)로 저장합니다."
+
+msgid "Save the audio as an MP3 file only"
+msgstr "악보 없이 소리만 MP3 파일로 저장"
 
 msgid ""
 "Save the audio of a YouTube video as an MP3 file named after the video. "
@@ -1470,4 +1473,13 @@ msgstr "♩ = {bpm} · {key}"
 
 #~ msgid "JavaScript runtime (Deno)"
 #~ msgstr ""
+
+#~ msgid "Make the sheet music right after saving the audio"
+#~ msgstr "음원을 저장한 뒤 바로 악보 만들기"
+
+#~ msgid "Save audio"
+#~ msgstr "음원 저장"
+
+#~ msgid "Save audio and make sheet music"
+#~ msgstr "음원 저장 후 악보 만들기"
 

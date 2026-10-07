@@ -18,7 +18,7 @@ ACCENTS = str.maketrans(
     "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ",
     "àƀçđéƒĝĥîĵķļɱñöþǫŕšţûṽŵẋýžÀßÇÐÉƑĜĤÎĴĶĻṀÑÖÞǪŔŠŢÛṼŴẊÝŽ",
 )
-PLACEHOLDER = re.compile(r"(\{\w+\})")
+PLACEHOLDER = re.compile(r"(\{\w+\}|%(?:\(\w+\))?[sdr])")  # str.format and argparse %-style
 
 
 def pseudo(text: str) -> str:

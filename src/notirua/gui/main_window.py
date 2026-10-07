@@ -148,6 +148,7 @@ class MainWindow(QMainWindow):
         self.file_page.file_chosen.connect(self.open_file)
         self.file_page.youtube_requested.connect(self.start_youtube)
         self.file_page.youtube.load_settings(user)
+        self.file_page.youtube.score_requested.connect(self.score_saved_audio)
         self.file_page.set_recent(user.recent_files)
         self.options_page = OptionsPage(user)
         self.options_page.start_requested.connect(self.start_job)
@@ -243,10 +244,7 @@ class MainWindow(QMainWindow):
         if self.busy():
             return
         self.input_path = path
-        self.file_page.start_dir = str(path.parent)
-        recent = [str(path), *(f for f in self.user.recent_files if f != str(path))]
-        self.user.recent_files = recent[:MAX_RECENT]
-        settings_mod.save(self.user)
+        self._remember_recent(path)
         duration, title, tracks = None, None, None
         try:
             info = inspect(path)
@@ -263,6 +261,12 @@ class MainWindow(QMainWindow):
             tracks,
         )
         self.stack.setCurrentWidget(self.options_page)
+
+    def _remember_recent(self, path: Path) -> None:
+        self.file_page.start_dir = str(path.parent)
+        recent = [str(path), *(f for f in self.user.recent_files if f != str(path))]
+        self.user.recent_files = recent[:MAX_RECENT]
+        settings_mod.save(self.user)
 
     # -- drag and drop anywhere in the window (FR-8) -------------------------
     def dragEnterEvent(self, event: QDragEnterEvent) -> None:
@@ -355,6 +359,7 @@ class MainWindow(QMainWindow):
         self.user.youtube_make_score = make_score
         settings_mod.save(self.user)
         self._youtube_request = (link, kbps, make_score)
+        self.file_page.youtube.hide_saved()
         self._retry_kind = "youtube"
         runtime = self.js_runtime_path()
         if runtime is None:
@@ -426,14 +431,22 @@ class MainWindow(QMainWindow):
         self.saved_audio = saved
         self.setWindowTitle(APP_TITLE)
         assert self._youtube_request is not None
-        make_score = self._youtube_request[2]
-        self.open_file(saved.path)
-        self.options_page.show_saved_audio(saved.path)
-        if make_score:
+        if self._youtube_request[2]:
             # The audio is saved: carry on to the sheet music with the usual defaults.
+            self.score_saved_audio(saved.path)
             self.options_page.start_button.click()
         else:
+            # MP3 only (0.5.2): back to the first screen, which says where the file is.
+            self._remember_recent(saved.path)
+            self.show_file_page()
+            self.file_page.youtube.show_saved(saved.path)
             self._notify(_("The audio is saved."), saved.title)
+
+    def score_saved_audio(self, path: Path) -> None:
+        """Open an MP3 saved from YouTube on the options screen."""
+        self.file_page.youtube.hide_saved()
+        self.open_file(path)
+        self.options_page.show_saved_audio(path)
 
     def _youtube_failed(self, error: BaseException) -> None:
         self.job_task = None
