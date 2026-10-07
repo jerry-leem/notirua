@@ -183,7 +183,10 @@ jobs:
             dist/lgpl-av/*.whl
 
   macos:
-    runs-on: macos-14
+    # macOS 15 or newer: the LilyPond build the app downloads needs a newer system than 14
+    # to start (its "Try the app" step). The app itself is built for macOS 14 and later
+    # (MACOSX_DEPLOYMENT_TARGET in build_lgpl_av.py).
+    runs-on: macos-15
     timeout-minutes: 120
     steps:
       - uses: actions/checkout@v4
