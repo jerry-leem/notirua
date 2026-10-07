@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-10-07 05:45+0000\n"
+"POT-Creation-Date: 2026-10-07 06:57+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -39,6 +39,12 @@ msgid "5-string"
 msgstr ""
 
 msgid "A YouTube link is in the clipboard. Press “Paste”."
+msgstr ""
+
+msgid ""
+"A company or school network, firewall, or proxy can block it. Enter your "
+"proxy address in Settings, or try another network such as a phone "
+"hotspot."
 msgstr ""
 
 #, python-brace-format
@@ -306,6 +312,9 @@ msgstr ""
 msgid "Downloading the audio"
 msgstr ""
 
+msgid "Downloading the audio: trying another way"
+msgstr ""
+
 #, python-brace-format
 msgid "Downloading the audio: {received} of {total}"
 msgstr ""
@@ -347,6 +356,9 @@ msgid "Drums"
 msgstr ""
 
 msgid "Each press moves a semitone (half step). Two presses make a whole step."
+msgstr ""
+
+msgid "Empty: use the system settings. Example: http://proxy:8080"
 msgstr ""
 
 msgid "End time in seconds."
@@ -393,6 +405,11 @@ msgid "For a YouTube link: MP3 quality in kbps (default {kbps})."
 msgstr ""
 
 msgid "For a YouTube link: folder for the saved MP3 (default: Music/Notirua)."
+msgstr ""
+
+msgid ""
+"For a YouTube link: proxy server, for example "
+"http://proxy.example.com:8080."
 msgstr ""
 
 msgid "For example 4/4 or 3/4."
@@ -773,6 +790,17 @@ msgstr ""
 msgid "Previous page"
 msgstr ""
 
+msgid "Proxy for YouTube"
+msgstr ""
+
+msgid "Proxy server for YouTube"
+msgstr ""
+
+msgid ""
+"Proxy server, for example http://proxy.example.com:8080 (default: the "
+"system's)."
+msgstr ""
+
 msgid "Quality"
 msgstr ""
 
@@ -902,6 +930,9 @@ msgid "Saved {n} file."
 msgid_plural "Saved {n} files."
 msgstr[0] ""
 msgstr[1] ""
+
+msgid "Saved."
+msgstr ""
 
 #, python-brace-format
 msgid "Saved: {path}"
@@ -1116,6 +1147,9 @@ msgstr ""
 msgid "This is not a link to a single YouTube video."
 msgstr ""
 
+msgid "This is not a proxy address. It looks like http://proxy.example.com:8080."
+msgstr ""
+
 msgid "This looks like a YouTube video link."
 msgstr ""
 
@@ -1228,6 +1262,9 @@ msgid "YouTube is asking for a check or has limited your requests for now."
 msgstr ""
 
 msgid "YouTube link"
+msgstr ""
+
+msgid "YouTube's video server did not send the audio."
 msgstr ""
 
 #, python-brace-format

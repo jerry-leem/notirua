@@ -119,6 +119,16 @@ class SettingsDialog(QDialog):
         youtube_row.addWidget(self.youtube_dir, 1)
         youtube_row.addWidget(choose_youtube)
         form.addRow(_("Audio from YouTube"), youtube_row)
+        self.proxy = QLineEdit(self.user.proxy or "")
+        self.proxy.setAccessibleName(_("Proxy server for YouTube"))
+        self.proxy.setPlaceholderText(
+            _("Empty: use the system settings. Example: http://proxy:8080")
+        )
+        self.proxy.editingFinished.connect(self._proxy_changed)
+        form.addRow(_("Proxy for YouTube"), self.proxy)
+        self.proxy_note = QLabel()
+        self.proxy_note.setWordWrap(True)
+        form.addRow("", self.proxy_note)
         return page
 
     def _language_changed(self) -> None:
@@ -138,6 +148,21 @@ class SettingsDialog(QDialog):
             self.user.output_dir = folder
             self.output_dir.setText(folder)
             settings_mod.save(self.user)
+
+    def _proxy_changed(self) -> None:
+        """Save a valid proxy address; say what is wrong with an invalid one."""
+        try:
+            address = youtube.check_proxy(self.proxy.text())
+        except ValueError:
+            self.proxy_note.setText(
+                "✗ "
+                + _("This is not a proxy address. It looks like http://proxy.example.com:8080.")
+            )
+            return
+        self.proxy_note.setText("✓ " + _("Saved.") if address else "")
+        self.user.proxy = address
+        self.proxy.setText(address or "")
+        settings_mod.save(self.user)
 
     def _choose_youtube_dir(self) -> None:
         folder = QFileDialog.getExistingDirectory(

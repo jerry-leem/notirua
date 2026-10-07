@@ -243,3 +243,30 @@ def test_check_fails_when_a_part_is_missing(
 def test_youtube_without_a_link_is_a_usage_error(capsys: pytest.CaptureFixture[str]) -> None:
     assert cli.main(["--lang", "en", "youtube"]) == cli.EXIT_USAGE
     assert "Give the link" in capsys.readouterr().err
+
+
+def test_proxy_option_and_setting_reach_the_client(
+    fake_youtube: dict[str, Any], tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    seen: list[str | None] = []
+    real = cli.yt.YoutubeClient
+
+    def client(runtime: Path | None = None, proxy: str | None = None, **_kw: Any) -> Any:
+        seen.append(proxy)
+        return real(runtime, ydl_factory=lambda o: FakeYdl(o, **fake_youtube["kwargs"]))
+
+    monkeypatch.setattr(cli.yt, "YoutubeClient", client)
+    assert cli.main(["youtube", URL, "--out", str(tmp_path)]) == cli.EXIT_OK
+    assert cli.main(["youtube", URL, "--out", str(tmp_path), "--proxy", "proxy.corp:8080"]) == 0
+    user = settings_mod.load()
+    user.proxy = "http://saved.corp:3128"
+    settings_mod.save(user)
+    assert cli.main(["youtube", URL, "--out", str(tmp_path)]) == cli.EXIT_OK
+    assert seen == [None, "proxy.corp:8080", "http://saved.corp:3128"]
+
+
+def test_a_bad_proxy_address_is_a_usage_error(
+    fake_youtube: dict[str, Any], capsys: pytest.CaptureFixture[str]
+) -> None:
+    assert cli.main(["--lang", "en", "youtube", URL, "--proxy", "nonsense"]) == cli.EXIT_USAGE
+    assert "not a proxy address" in capsys.readouterr().err

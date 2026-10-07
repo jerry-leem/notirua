@@ -136,6 +136,10 @@ def build_parser() -> argparse.ArgumentParser:
         ),
     )
     t.add_argument(
+        "--proxy",
+        help=_("For a YouTube link: proxy server, for example http://proxy.example.com:8080."),
+    )
+    t.add_argument(
         "--audio-out",
         type=Path,
         help=_("For a YouTube link: folder for the saved MP3 (default: Music/Notirua)."),
@@ -246,6 +250,10 @@ def build_parser() -> argparse.ArgumentParser:
         choices=list(yt.BITRATES),
         help=_("MP3 quality in kbps (default {kbps}).").format(kbps=yt.DEFAULT_BITRATE),
     )
+    y.add_argument(
+        "--proxy",
+        help=_("Proxy server, for example http://proxy.example.com:8080 (default: the system's)."),
+    )
 
     s = sub.add_parser("setup", help=_("Install the components Notirua needs."))
     s.add_argument(
@@ -352,9 +360,19 @@ def _youtube_runtime(user: settings_mod.Settings) -> Path | None:
 
 
 def _save_youtube_audio(
-    link: yt.YoutubeLink, out_dir: Path, kbps: int, user: settings_mod.Settings
+    link: yt.YoutubeLink,
+    out_dir: Path,
+    kbps: int,
+    user: settings_mod.Settings,
+    proxy: str | None = None,
 ) -> yt.SavedAudio | int:
     """Save the MP3, or return the exit code to stop with."""
+    try:
+        yt.check_proxy(proxy)
+    except ValueError:
+        print(_("This is not a proxy address. It looks like http://proxy.example.com:8080."),
+              file=sys.stderr)  # fmt: skip
+        return EXIT_USAGE
     runtime = _youtube_runtime(user)
     if runtime is None:
         print(_("Reading YouTube links needs a small helper program."), file=sys.stderr)
@@ -366,7 +384,7 @@ def _save_youtube_audio(
             link,
             out_dir,
             kbps,
-            client=yt.YoutubeClient(runtime),
+            client=yt.YoutubeClient(runtime, proxy=proxy or user.proxy),
             progress=ProgressPrinter(),
             cancel=cancel,
         )
@@ -405,7 +423,9 @@ def cmd_youtube(args: argparse.Namespace, user: settings_mod.Settings) -> int:
     if link is None:
         return EXIT_USAGE
     out_dir = args.out or yt.default_folder(user.youtube_dir)
-    saved = _save_youtube_audio(link, out_dir, args.bitrate or user.youtube_bitrate, user)
+    saved = _save_youtube_audio(
+        link, out_dir, args.bitrate or user.youtube_bitrate, user, args.proxy
+    )
     return saved if isinstance(saved, int) else EXIT_OK
 
 
@@ -421,7 +441,9 @@ def _use_youtube_source(args: argparse.Namespace, user: settings_mod.Settings) -
     except InvalidYoutubeLinkError:
         return None  # not a link either: the usual "File not found" follows
     out_dir = args.audio_out or yt.default_folder(user.youtube_dir)
-    saved = _save_youtube_audio(link, out_dir, args.bitrate or user.youtube_bitrate, user)
+    saved = _save_youtube_audio(
+        link, out_dir, args.bitrate or user.youtube_bitrate, user, getattr(args, "proxy", None)
+    )
     if isinstance(saved, int):
         return saved
     args.file = saved.path

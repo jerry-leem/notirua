@@ -25,7 +25,7 @@ from collections.abc import Callable, Iterable
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
-from urllib.parse import parse_qs, urlparse
+from urllib.parse import parse_qs, urlparse, urlunparse
 
 from notirua import paths
 from notirua.core.decode import MAX_DURATION_S, decode
@@ -39,6 +39,7 @@ from notirua.core.errors import (
     YoutubeError,
     YoutubeLiveError,
     YoutubeNetworkError,
+    YoutubeRefusedError,
     YoutubeSignInError,
     YoutubeUnavailableError,
 )
@@ -241,6 +242,19 @@ _ERROR_PATTERNS: tuple[tuple[tuple[str, ...], type[YoutubeError]], ...] = (
     (("live event", "premieres in", "will begin in", "this live"), YoutubeLiveError),
     (
         (
+            "http error 503",
+            "http error 403",
+            "http error 502",
+            "http error 504",
+            "service unavailable",
+            "forbidden",
+            "giving up after",
+            "proxy",
+        ),
+        YoutubeRefusedError,
+    ),
+    (
+        (
             "javascript runtime",
             "js runtime",
             "challenge",
@@ -309,6 +323,75 @@ def _default_factory(options: dict[str, Any]) -> Any:
     return yt_dlp.YoutubeDL(options)
 
 
+PROXY_SCHEMES = ("http", "https", "socks4", "socks4a", "socks5", "socks5h")
+
+# The ways to ask YouTube, in order. The first is yt-dlp's own choice. A stream address is tied
+# to the address that asked for it, so the second forces IPv4 for every request; the third also
+# asks as the TV and embedded players, which need no proof-of-origin token.
+ATTEMPTS: tuple[dict[str, Any], ...] = (
+    {},
+    {"source_address": "0.0.0.0"},
+    {
+        "source_address": "0.0.0.0",
+        "extractor_args": {"youtube": {"player_client": ["tv", "web_embedded"]}},
+    },
+)
+TRYING_AGAIN = N_("Downloading the audio: trying another way")
+
+
+def check_proxy(text: str | None) -> str | None:
+    """A proxy address for yt-dlp, or ``None`` when ``text`` is empty (use the system's proxy).
+
+    ``host:port`` becomes ``http://host:port``. Raises ``ValueError`` for anything that is not
+    an http, https, or socks proxy address.
+    """
+    raw = (text or "").strip()
+    if not raw:
+        return None
+    if any(c.isspace() for c in raw):
+        raise ValueError(f"a proxy address has no spaces: {text!r}")
+    if "://" not in raw:
+        raw = "http://" + raw
+    try:
+        parts = urlparse(raw)
+        port = parts.port
+    except ValueError as exc:
+        raise ValueError(f"not a proxy address: {text!r}") from exc
+    if parts.scheme.lower() not in PROXY_SCHEMES or not parts.hostname or port is None:
+        raise ValueError(f"a proxy address looks like http://host:port, not {text!r}")
+    return raw
+
+
+def mask_proxy(address: str | None) -> str:
+    """The proxy address without its password, for logs."""
+    if not address:
+        return "-"
+    parts = urlparse(address)
+    if parts.password is None:
+        return address
+    netloc = f"{parts.username}:***@{parts.hostname}" + (f":{parts.port}" if parts.port else "")
+    return urlunparse(parts._replace(netloc=netloc))
+
+
+def system_proxies() -> dict[str, str]:
+    """The proxies Python finds in the environment and (on Windows) the system settings."""
+    import urllib.request
+
+    return {scheme: mask_proxy(url) for scheme, url in urllib.request.getproxies().items()}
+
+
+def format_summary(raw: dict[str, Any] | None) -> list[str]:
+    """A few audio formats of ``raw`` for the log: id, protocol, host, client."""
+    found = []
+    for fmt in (raw or {}).get("formats", []) or []:
+        if fmt.get("vcodec") not in (None, "none") or fmt.get("acodec") in (None, "none"):
+            continue
+        host = urlparse(str(fmt.get("url") or "")).hostname or "-"
+        client = fmt.get("__yt_dlp_client", "-")
+        found.append(f"{fmt.get('format_id')}:{fmt.get('protocol')}:{host}:{client}")
+    return found[:4]
+
+
 class YoutubeClient:
     """Reads a video's page and downloads its audio (yt-dlp behind a small interface)."""
 
@@ -317,13 +400,19 @@ class YoutubeClient:
         js_runtime: Path | None = None,
         cache_dir: Path | None = None,
         ydl_factory: YdlFactory = _default_factory,
+        proxy: str | None = None,
     ) -> None:
         self.js_runtime = js_runtime
+        self.proxy = check_proxy(proxy)
         self.cache_dir = cache_dir if cache_dir is not None else paths.cache_dir() / "yt-dlp"
         self._factory = ydl_factory
 
     def _options(
-        self, work_dir: Path, hook: Callable[[dict[str, Any]], None], log_: _Quiet
+        self,
+        work_dir: Path,
+        hook: Callable[[dict[str, Any]], None],
+        log_: _Quiet,
+        overrides: dict[str, Any] | None = None,
     ) -> dict[str, Any]:
         options: dict[str, Any] = {
             "format": "bestaudio[ext=m4a]/bestaudio/best",
@@ -334,7 +423,7 @@ class YoutubeClient:
             "noprogress": True,
             "logger": log_,
             "progress_hooks": [hook],
-            "retries": 3,
+            "retries": 5,
             "fragment_retries": 3,
             "socket_timeout": 20,
             "cachedir": str(self.cache_dir),
@@ -343,6 +432,9 @@ class YoutubeClient:
         runtimes = runtimes_option(self.js_runtime)
         if runtimes is not None:
             options["js_runtimes"] = runtimes
+        if self.proxy is not None:  # else yt-dlp uses the system's proxy settings
+            options["proxy"] = self.proxy
+        options.update(overrides or {})
         return options
 
     def fetch(
@@ -353,11 +445,15 @@ class YoutubeClient:
         max_duration_s: float = MAX_DURATION_S,
         on_info: Callable[[VideoInfo], None] | None = None,
         on_bytes: Callable[[int, int | None], None] | None = None,
+        on_retry: Callable[[int], None] | None = None,
         cancel: CancelToken | None = None,
     ) -> tuple[VideoInfo, Path]:
-        """Read the page, check the video, and download its audio into ``work_dir``."""
+        """Read the page, check the video, and download its audio into ``work_dir``.
+
+        When YouTube's server refuses the audio (HTTP 403/5xx), the next way in ``ATTEMPTS`` is
+        tried; any other problem stops at once.
+        """
         cancel = cancel or CancelToken()
-        quiet = _Quiet()
 
         def hook(status: dict[str, Any]) -> None:
             cancel.raise_if_cancelled()
@@ -365,24 +461,47 @@ class YoutubeClient:
                 total = status.get("total_bytes") or status.get("total_bytes_estimate")
                 on_bytes(int(status.get("downloaded_bytes") or 0), int(total) if total else None)
 
-        options = self._options(work_dir, hook, quiet)
-        try:
-            with self._factory(options) as ydl:
-                raw = ydl.extract_info(link.url, download=False)
-                cancel.raise_if_cancelled()
-                info = check_video(raw, link, max_duration_s)
-                if on_info is not None:
-                    on_info(info)
-                ydl.process_ie_result(raw, download=True)
-        except Cancelled:
-            raise
-        except NotiruaError:
-            raise
-        except Exception as exc:
-            if cancel.cancelled:
-                raise Cancelled() from exc
-            log.warning("yt-dlp failed for %s: %s | %s", link.video_id, exc, quiet.messages[-3:])
-            raise classify_error(exc) from exc
+        for number, overrides in enumerate(ATTEMPTS, start=1):
+            cancel.raise_if_cancelled()
+            if number > 1 and on_retry is not None:
+                on_retry(number)
+            quiet = _Quiet()
+            raw: dict[str, Any] | None = None
+            try:
+                with self._factory(self._options(work_dir, hook, quiet, overrides)) as ydl:
+                    raw = ydl.extract_info(link.url, download=False)
+                    cancel.raise_if_cancelled()
+                    info = check_video(raw, link, max_duration_s)
+                    if on_info is not None and number == 1:
+                        on_info(info)
+                    ydl.process_ie_result(raw, download=True)
+            except Cancelled:
+                raise
+            except NotiruaError:
+                raise
+            except Exception as exc:
+                if cancel.cancelled:
+                    raise Cancelled() from exc
+                error = classify_error(exc)
+                log.warning(
+                    "yt-dlp attempt %d/%d failed for %s (%s): %s | formats %s | proxy %s | "
+                    "system proxies %s | %s",
+                    number,
+                    len(ATTEMPTS),
+                    link.video_id,
+                    type(error).__name__,
+                    str(exc).replace("\n", " ")[:200],
+                    format_summary(raw),
+                    mask_proxy(self.proxy),
+                    system_proxies(),
+                    quiet.messages[-3:],
+                )
+                if isinstance(error, YoutubeRefusedError) and number < len(ATTEMPTS):
+                    for leftover in work_dir.glob(f"{link.video_id}.*"):
+                        leftover.unlink(missing_ok=True)
+                    continue
+                raise error from exc
+            break
         cancel.raise_if_cancelled()
         return info, find_download(work_dir, link.video_id)
 
@@ -470,8 +589,16 @@ def save_as_mp3(
                         total=_human(total),
                     )
 
+            def on_retry(_number: int) -> None:
+                rep.update("download", None, TRYING_AGAIN)
+
             info, raw_file = client.fetch(
-                parsed, work_dir, on_info=on_info, on_bytes=on_bytes, cancel=cancel
+                parsed,
+                work_dir,
+                on_info=on_info,
+                on_bytes=on_bytes,
+                on_retry=on_retry,
+                cancel=cancel,
             )
             rep.done("download")
             rep.start("convert")

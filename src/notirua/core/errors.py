@@ -170,3 +170,12 @@ class YoutubeChangedError(YoutubeError):
     code = "E-YT-CHANGED"
     message_id = N_("YouTube has changed in a way this version of Notirua cannot follow.")
     hint_id = N_("Install the newest Notirua from the releases page and try again.")
+
+
+class YoutubeRefusedError(YoutubeError):
+    code = "E-YT-REFUSED"
+    message_id = N_("YouTube's video server did not send the audio.")
+    hint_id = N_(
+        "A company or school network, firewall, or proxy can block it. Enter your proxy address "
+        "in Settings, or try another network such as a phone hotspot."
+    )

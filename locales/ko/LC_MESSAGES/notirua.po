@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Notirua VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-10-07 05:45+0000\n"
+"POT-Creation-Date: 2026-10-07 06:57+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: ko\n"
@@ -41,6 +41,14 @@ msgstr "5현"
 
 msgid "A YouTube link is in the clipboard. Press “Paste”."
 msgstr "클립보드에 유튜브 링크가 있습니다. “붙여넣기”를 누르세요."
+
+msgid ""
+"A company or school network, firewall, or proxy can block it. Enter your "
+"proxy address in Settings, or try another network such as a phone "
+"hotspot."
+msgstr ""
+"회사나 학교 네트워크, 방화벽, 프록시가 막고 있을 수 있습니다. 설정에 프록시 주소를 입력하거나, 휴대전화 핫스팟 같은 다른 "
+"네트워크에서 시도해 보세요."
 
 #, python-brace-format
 msgid "A required component is not installed: {name}."
@@ -307,6 +315,9 @@ msgstr "구성요소를 내려받으려면 먼저 동의가 필요합니다."
 msgid "Downloading the audio"
 msgstr "소리를 내려받는 중"
 
+msgid "Downloading the audio: trying another way"
+msgstr "소리를 내려받는 중: 다른 방법으로 다시 시도합니다"
+
 #, python-brace-format
 msgid "Downloading the audio: {received} of {total}"
 msgstr "소리를 내려받는 중: {received} / {total}"
@@ -349,6 +360,9 @@ msgstr "드럼"
 
 msgid "Each press moves a semitone (half step). Two presses make a whole step."
 msgstr "한 번 누를 때마다 반음씩 바뀝니다. 두 번 누르면 온음입니다."
+
+msgid "Empty: use the system settings. Example: http://proxy:8080"
+msgstr "비워 두면 시스템 설정을 씁니다. 예: http://proxy:8080"
 
 msgid "End time in seconds."
 msgstr "끝 시각(초)."
@@ -395,6 +409,11 @@ msgstr "유튜브 링크일 때: MP3 음질(kbps, 기본값 {kbps})."
 
 msgid "For a YouTube link: folder for the saved MP3 (default: Music/Notirua)."
 msgstr "유튜브 링크일 때: MP3를 저장할 폴더(기본값: 음악/Notirua)."
+
+msgid ""
+"For a YouTube link: proxy server, for example "
+"http://proxy.example.com:8080."
+msgstr "유튜브 링크일 때: 프록시 서버 주소(예: http://proxy.example.com:8080)."
 
 msgid "For example 4/4 or 3/4."
 msgstr "예: 4/4, 3/4."
@@ -773,6 +792,17 @@ msgstr "구성요소 라이선스를 확인해 주세요"
 msgid "Previous page"
 msgstr "이전 쪽"
 
+msgid "Proxy for YouTube"
+msgstr "유튜브용 프록시"
+
+msgid "Proxy server for YouTube"
+msgstr "유튜브용 프록시 서버"
+
+msgid ""
+"Proxy server, for example http://proxy.example.com:8080 (default: the "
+"system's)."
+msgstr "프록시 서버 주소(예: http://proxy.example.com:8080). 기본값은 시스템 설정입니다."
+
 msgid "Quality"
 msgstr "음질"
 
@@ -901,6 +931,9 @@ msgstr "{name} 파일을 저장했습니다."
 msgid "Saved {n} file."
 msgid_plural "Saved {n} files."
 msgstr[0] "파일 {n}개를 저장했습니다."
+
+msgid "Saved."
+msgstr "저장했습니다."
 
 #, python-brace-format
 msgid "Saved: {path}"
@@ -1115,6 +1148,9 @@ msgstr "실시간 방송이거나 아직 시작하지 않은 영상입니다."
 msgid "This is not a link to a single YouTube video."
 msgstr "유튜브 영상 하나의 링크가 아닙니다."
 
+msgid "This is not a proxy address. It looks like http://proxy.example.com:8080."
+msgstr "프록시 주소가 아닙니다. http://proxy.example.com:8080 같은 형태로 입력하세요."
+
 msgid "This looks like a YouTube video link."
 msgstr "유튜브 영상 링크로 보입니다."
 
@@ -1228,6 +1264,9 @@ msgstr "유튜브가 확인을 요구하거나 한동안 요청을 제한했습�
 
 msgid "YouTube link"
 msgstr "유튜브 링크"
+
+msgid "YouTube's video server did not send the audio."
+msgstr "유튜브의 영상 서버가 소리를 보내 주지 않았습니다."
 
 #, python-brace-format
 msgid "about {time} left"

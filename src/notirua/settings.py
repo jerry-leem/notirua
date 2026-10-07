@@ -56,6 +56,7 @@ class Settings:
     youtube_bitrate: int = 160  # kbps of the MP3 saved from a YouTube link
     youtube_dir: str | None = None  # None = <Music>/Notirua
     youtube_make_score: bool = True  # go on to the sheet music right after saving the audio
+    proxy: str | None = None  # proxy server for YouTube, e.g. http://proxy.example.com:8080
 
     @property
     def components_path(self) -> Path:
