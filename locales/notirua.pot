@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-10-07 06:57+0000\n"
+"POT-Creation-Date: 2026-10-07 19:09+0900\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -615,7 +615,7 @@ msgstr ""
 msgid "Make sheet music from an audio file."
 msgstr ""
 
-msgid "Make the sheet music right after saving the audio"
+msgid "Make sheet music from it"
 msgstr ""
 
 msgid "Making sheet music failed."
@@ -877,6 +877,12 @@ msgstr ""
 msgid "Save"
 msgstr ""
 
+msgid "Save MP3 and make sheet music"
+msgstr ""
+
+msgid "Save MP3 only"
+msgstr ""
+
 msgid "Save all"
 msgstr ""
 
@@ -889,16 +895,13 @@ msgstr ""
 msgid "Save as WAV"
 msgstr ""
 
-msgid "Save audio"
-msgstr ""
-
-msgid "Save audio and make sheet music"
-msgstr ""
-
 msgid "Save folder"
 msgstr ""
 
 msgid "Save only the instruments you choose as one audio file (MP3, M4A, WAV)."
+msgstr ""
+
+msgid "Save the audio as an MP3 file only"
 msgstr ""
 
 msgid ""

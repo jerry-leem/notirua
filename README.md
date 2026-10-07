@@ -30,17 +30,22 @@ Notirua의 핵심 기능입니다. 노래 파일(MP3, M4A, WAV, FLAC 등 오디�
 ### 유튜브 링크로 음원 받기
 
 음원 파일이 없어도 됩니다. 첫 화면에 유튜브 영상 링크를 붙여넣으면 소리만 MP3 파일로
-저장하고, 이어서 악보 PDF까지 한 번에 만들 수 있습니다.
+저장하고, 이어서 악보 PDF까지 한 번에 만들 수 있습니다. 악보 없이 MP3 파일만 받을 수도
+있습니다.
 
 1. 영상의 링크를 복사합니다(브라우저 주소창 또는 **공유** 버튼).
 2. Notirua 첫 화면에서 **붙여넣기**를 누르거나 Ctrl+V(macOS는 ⌘V)를 누릅니다. 클립보드에
    유튜브 링크가 있으면 화면이 알려 줍니다. 링크가 영상 하나의 주소가 맞는지 바로 검사하고,
    재생목록이나 채널 주소처럼 맞지 않으면 이유를 알려 줍니다.
 3. **음질**을 고릅니다. 기본은 160 kbps이고 128, 192, 256, 320 kbps도 고를 수 있습니다.
-4. **음원 저장 후 악보 만들기**를 누릅니다. 소리를 내려받아 영상 제목을 파일 이름으로 한
-   MP3로 저장한 뒤(기본 위치는 음악 폴더 안의 `Notirua`, 설정에서 바꿀 수 있습니다) 곧바로
-   악보 만들기로 이어집니다. 음원만 받으려면 **음원을 저장한 뒤 바로 악보 만들기**를 끄세요.
-   그러면 저장한 뒤 옵션 화면에서 멈추고, 다시 누르면 악보를 만듭니다.
+4. 두 버튼 가운데 하나를 누릅니다. 소리를 내려받아 영상 제목을 파일 이름으로 한 MP3로
+   저장합니다(기본 위치는 음악 폴더 안의 `Notirua`, 설정에서 바꿀 수 있습니다).
+   - **MP3 저장 후 악보 만들기**: 저장한 뒤 곧바로 악보 만들기로 이어집니다.
+   - **MP3만 저장**: 악보는 만들지 않고 MP3 파일만 저장한 뒤 첫 화면으로 돌아옵니다. 화면에
+     저장한 파일 이름과 **폴더 열기** 링크가 나오고, 나중에 마음이 바뀌면 **이 음원으로 악보
+     만들기**를 눌러 그 파일로 악보를 만들 수 있습니다.
+
+   링크 칸에서 Enter를 누르면 마지막으로 누른 버튼과 같은 일을 합니다.
 
 처음 쓸 때 도우미 프로그램(Deno, 약 41MB, MIT)을 한 번 내려받습니다. 동의를 먼저 묻고,
 동의하기 전에는 아무것도 내려받지 않습니다. 유튜브 링크를 쓸 때만 인터넷을 사용하며, 소리를
@@ -77,8 +82,8 @@ Notirua의 핵심 기능입니다. 노래 파일(MP3, M4A, WAV, FLAC 등 오디�
 
 | 운영체제 | 지원 범위 | 설치 파일 |
 |---|---|---|
-| macOS | 14 Sonoma 이상, Apple Silicon과 Intel | Apple Silicon용 `.dmg` (Intel용은 준비 중) |
 | Windows | 10, 11 (x64) | 설치 프로그램 `.exe` |
+| macOS | 14 Sonoma 이상, Apple Silicon과 Intel | Apple Silicon용 `.dmg` (Intel용은 준비 중) |
 | Linux | x86_64, glibc 2.31 이상(Ubuntu 20.04 이상 등) | `.AppImage` 하나로 실행 |
 
 세 운영체제 모두 같은 화면과 기능을 씁니다. 메뉴와 단축키는 각 운영체제의 관례를
@@ -99,17 +104,17 @@ Python이나 다른 프로그램을 따로 설치하지 않아도 되며, 한·�
 
 ## 내려받기와 설치
 
-최신 배포판은 [**Notirua 0.5.1 릴리스 페이지**](https://github.com/jerry-leem/notirua/releases/tag/v0.5.1)에
+최신 배포판은 [**Notirua 0.5.2 릴리스 페이지**](https://github.com/jerry-leem/notirua/releases/tag/v0.5.2)에
 있습니다. 릴리스 페이지에 한국어 설치 방법, 사용법, 바뀐 점, 알려진 제한이 함께 적혀
 있습니다. 지난 버전은 [모든 릴리스](https://github.com/jerry-leem/notirua/releases)에서
 볼 수 있습니다.
 
 | 컴퓨터 | 내려받기 | 설치 |
 |---|---|---|
-| Windows 10/11 (x64) | [Notirua-0.5.1-windows-x64-setup.exe](https://github.com/jerry-leem/notirua/releases/download/v0.5.1/Notirua-0.5.1-windows-x64-setup.exe) | 실행해서 안내에 따라 설치(관리자 권한 필요 없음) |
-| Mac (Apple Silicon), macOS 14 이상 | [Notirua-0.5.1-macos-arm64.dmg](https://github.com/jerry-leem/notirua/releases/download/v0.5.1/Notirua-0.5.1-macos-arm64.dmg) | 열어서 Notirua를 Applications 폴더로 끌어다 놓기 |
-| Linux x86_64 (glibc 2.31 이상) | [Notirua-0.5.1-linux-x86_64.AppImage](https://github.com/jerry-leem/notirua/releases/download/v0.5.1/Notirua-0.5.1-linux-x86_64.AppImage) | `chmod +x`로 실행 권한을 주고 실행 |
+| Windows 10/11 (x64) | [Notirua-0.5.2-windows-x64-setup.exe](https://github.com/jerry-leem/notirua/releases/download/v0.5.2/Notirua-0.5.2-windows-x64-setup.exe) | 실행해서 안내에 따라 설치(관리자 권한 필요 없음) |
+| Mac (Apple Silicon), macOS 14 이상 | [Notirua-0.5.2-macos-arm64.dmg](https://github.com/jerry-leem/notirua/releases/download/v0.5.2/Notirua-0.5.2-macos-arm64.dmg) | 열어서 Notirua를 Applications 폴더로 끌어다 놓기 |
 | Intel Mac | 준비 중 | 아래 [소스로 실행하기](#소스로-실행하기) |
+| Linux x86_64 (glibc 2.31 이상) | [Notirua-0.5.2-linux-x86_64.AppImage](https://github.com/jerry-leem/notirua/releases/download/v0.5.2/Notirua-0.5.2-linux-x86_64.AppImage) | `chmod +x`로 실행 권한을 주고 실행 |
 
 macOS 14에서는 악보를 그리는 조판기(LilyPond)가 시작되지 않을 수 있습니다. 확인된 환경은 macOS 15 이상입니다.
 
@@ -203,7 +208,7 @@ uv sync
 | 파일 열기 / 모두 저장 | **파일** 메뉴 (⌘O / ⌘S) | **파일** 메뉴 (Ctrl+O / Ctrl+S) |
 
 macOS에서는 Dock 아이콘을 오른쪽 클릭해도 **음악 파일 열기…** 메뉴와 **설정…** 메뉴가 나옵니다.
-창 제목에 버전이 표시됩니다(예: `Notirua 0.5.1`).
+창 제목에 버전이 표시됩니다(예: `Notirua 0.5.2`).
 
 ## 명령줄 사용법
 
@@ -240,7 +245,7 @@ uv run notirua cache                   # 저장된 중간 결과 크기
 uv run notirua cache --clear
 uv run notirua --lang ko               # 한국어로 창 열기
 uv run notirua --lang ko transcribe --help     # 모든 옵션 (한국어)
-uv run notirua --version               # notirua 0.5.1
+uv run notirua --version               # notirua 0.5.2
 ```
 
 ## 파일이 저장되는 곳
@@ -255,7 +260,7 @@ Notirua를 지우려면 앱(또는 소스로 내려받은 폴더)과 위 폴더�
 
 ## 버전
 
-시맨틱 버전(`MAJOR.MINOR.PATCH`)을 따릅니다. 현재 버전은 **0.5.1**이며, 1.0 전까지는
+시맨틱 버전(`MAJOR.MINOR.PATCH`)을 따릅니다. 현재 버전은 **0.5.2**이며, 1.0 전까지는
 MINOR 버전에서도 동작이 바뀔 수 있습니다. `notirua --version`이나 창 제목으로 확인하고,
 버전마다 바뀐 내용은 [릴리스 페이지](https://github.com/jerry-leem/notirua/releases)에
 있습니다.
@@ -316,7 +321,7 @@ does not use the internet (YouTube links are the one exception). See
 
 You do not need an audio file. Paste a YouTube video link on the first screen
 and Notirua saves the sound as an MP3 file, then goes on to the sheet music PDF
-in one go.
+in one go. You can also save just the MP3 file without any sheet music.
 
 1. Copy the video's link (the browser's address bar or the **Share** button).
 2. On Notirua's first screen press **Paste**, or press Ctrl+V (⌘V on macOS). The
@@ -324,11 +329,16 @@ in one go.
    at once: playlists, channels, and other addresses are refused with a reason.
 3. Choose the **Quality**. The default is 160 kbps; 128, 192, 256, and 320 kbps
    are also offered.
-4. Press **Save audio and make sheet music**. Notirua downloads the sound and
-   saves an MP3 named after the video (by default in `Notirua` inside your Music
-   folder; change it in Settings), then carries on to the sheet music. To get
-   only the audio, turn off **Make the sheet music right after saving the
-   audio**: Notirua then stops at the options screen after saving.
+4. Press one of the two buttons. Notirua downloads the sound and saves an MP3
+   named after the video (by default in `Notirua` inside your Music folder;
+   change it in Settings).
+   - **Save MP3 and make sheet music** carries on to the sheet music at once.
+   - **Save MP3 only** saves just the MP3 file, makes no sheet music, and returns
+     to the first screen. It shows the file's name with an **Open the folder**
+     link; if you change your mind, **Make sheet music from it** opens that file
+     for the sheet music.
+
+   Enter in the link box does what the button you pressed last did.
 
 The first time, a small helper program (Deno, about 41 MB, MIT) is downloaded
 once. Notirua asks first and downloads nothing before you agree. The internet is
@@ -372,8 +382,8 @@ the command line.
 
 | System | Supported | Installer |
 |---|---|---|
-| macOS | 14 Sonoma or later, Apple Silicon and Intel | `.dmg` for Apple Silicon (Intel coming) |
 | Windows | 10 and 11 (x64) | `.exe` setup program |
+| macOS | 14 Sonoma or later, Apple Silicon and Intel | `.dmg` for Apple Silicon (Intel coming) |
 | Linux | x86_64 with glibc 2.31 or later (Ubuntu 20.04 or later, and others) | a single `.AppImage` |
 
 The screens and features are the same everywhere; menus and shortcuts follow
@@ -398,16 +408,16 @@ titles (macOS and Windows use their system fonts).
 ### Download and install
 
 The latest release is
-[**Notirua 0.5.1**](https://github.com/jerry-leem/notirua/releases/tag/v0.5.1);
+[**Notirua 0.5.2**](https://github.com/jerry-leem/notirua/releases/tag/v0.5.2);
 its page has installation and usage notes (in Korean), changes, and known
 limits. Earlier versions are on [all releases](https://github.com/jerry-leem/notirua/releases).
 
 | Computer | Download | Install |
 |---|---|---|
-| Windows 10/11 (x64) | [Notirua-0.5.1-windows-x64-setup.exe](https://github.com/jerry-leem/notirua/releases/download/v0.5.1/Notirua-0.5.1-windows-x64-setup.exe) | Run it and follow the steps (no administrator rights needed) |
-| Mac (Apple Silicon), macOS 14 or later | [Notirua-0.5.1-macos-arm64.dmg](https://github.com/jerry-leem/notirua/releases/download/v0.5.1/Notirua-0.5.1-macos-arm64.dmg) | Open it and drag Notirua to Applications |
-| Linux x86_64 (glibc 2.31 or later) | [Notirua-0.5.1-linux-x86_64.AppImage](https://github.com/jerry-leem/notirua/releases/download/v0.5.1/Notirua-0.5.1-linux-x86_64.AppImage) | `chmod +x` it and run it |
+| Windows 10/11 (x64) | [Notirua-0.5.2-windows-x64-setup.exe](https://github.com/jerry-leem/notirua/releases/download/v0.5.2/Notirua-0.5.2-windows-x64-setup.exe) | Run it and follow the steps (no administrator rights needed) |
+| Mac (Apple Silicon), macOS 14 or later | [Notirua-0.5.2-macos-arm64.dmg](https://github.com/jerry-leem/notirua/releases/download/v0.5.2/Notirua-0.5.2-macos-arm64.dmg) | Open it and drag Notirua to Applications |
 | Intel Mac | Coming | [Run from source](#run-from-source) |
+| Linux x86_64 (glibc 2.31 or later) | [Notirua-0.5.2-linux-x86_64.AppImage](https://github.com/jerry-leem/notirua/releases/download/v0.5.2/Notirua-0.5.2-linux-x86_64.AppImage) | `chmod +x` it and run it |
 
 On macOS 14 the sheet-music engraver (LilyPond) may not start. macOS 15 or later is the tested setup.
 
@@ -477,8 +487,8 @@ Open the installed app from its icon, or run `uv run notirua` from source.
    use **Choose a file…** (MP3, M4A, WAV, FLAC, OGG, AIFF, MP4 video, and
    more, up to 15 minutes). Instead of a file you can paste a **YouTube link**
    from the clipboard with **Paste** (or Ctrl+V, ⌘V on macOS). The link is
-   checked, the sound is saved as an MP3, and by default the sheet music
-   follows at once ([Save audio from a YouTube link](#save-audio-from-a-youtube-link)).
+   checked, the sound is saved as an MP3, and the sheet music follows at once
+   unless you choose **Save MP3 only** ([Save audio from a YouTube link](#save-audio-from-a-youtube-link)).
 3. **Options.** Check the title and instruments, then choose **Make sheet
    music**. Tuning, time signature, tempo, key, paper, and the language inside
    the PDF are under **More settings**; the defaults are automatic. If earlier
@@ -513,7 +523,7 @@ right or from the menu:
 
 On macOS, right-clicking the Dock icon also offers **Open a music file…** and
 **Settings…**. The window title shows the version, for example
-`Notirua 0.5.1`.
+`Notirua 0.5.2`.
 
 ### Use the command line
 
@@ -550,7 +560,7 @@ uv run notirua cache                   # size of saved intermediate results
 uv run notirua cache --clear
 uv run notirua --lang en               # open the window in English
 uv run notirua transcribe --help       # every option
-uv run notirua --version               # notirua 0.5.1
+uv run notirua --version               # notirua 0.5.2
 ```
 
 More `transcribe` options: `--to-key "G major"`, `--guitar-tuning drop_d`,
@@ -574,7 +584,7 @@ To remove Notirua, delete the app (or the cloned folder) and these folders.
 ### Version
 
 Notirua uses [Semantic Versioning](https://semver.org): `MAJOR.MINOR.PATCH`.
-The current version is **0.5.1**. While the major version is 0, a minor
+The current version is **0.5.2**. While the major version is 0, a minor
 release may still change behavior. `notirua --version` and the window title
 show it, and the [releases page](https://github.com/jerry-leem/notirua/releases)
 lists what changed in each release.
