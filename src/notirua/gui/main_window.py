@@ -92,14 +92,14 @@ class MainWindow(QMainWindow):
         pipeline: Pipeline | None = None,
         manager_factory: ManagerFactory = default_manager_factory,
         runtime_manager_factory: RuntimeManagerFactory = optional_manager_from_settings,
-        youtube_client_factory: YoutubeClientFactory = lambda runtime: yt.YoutubeClient(runtime),
+        youtube_client_factory: YoutubeClientFactory | None = None,
     ) -> None:
         super().__init__()
         self.user = user
         self._pipeline = pipeline
         self.manager_factory = manager_factory
         self.runtime_manager_factory = runtime_manager_factory
-        self.youtube_client_factory = youtube_client_factory
+        self.youtube_client_factory = youtube_client_factory or self._default_youtube_client
         self._youtube_request: tuple[yt.YoutubeLink, int, bool] | None = None
         self._retry_kind = "score"  # what "Try again" repeats: "score" or "youtube"
         self.saved_audio: yt.SavedAudio | None = None
@@ -291,6 +291,14 @@ class MainWindow(QMainWindow):
     def _shortcut_paste(self) -> None:
         if self.stack.currentWidget() is self.file_page and not self.busy():
             self.file_page.paste_link()
+
+    def _default_youtube_client(self, runtime: Path | None) -> yt.YoutubeClient:
+        """The proxy chosen in Settings (if any) is used; otherwise the system's."""
+        try:
+            return yt.YoutubeClient(runtime, proxy=self.user.proxy)
+        except ValueError:  # a hand-edited settings file with a bad address
+            log.warning("ignoring the proxy address in the settings: %r", self.user.proxy)
+            return yt.YoutubeClient(runtime)
 
     def js_runtime_path(self) -> Path | None:
         """A Deno to run YouTube's player scripts: the downloaded one, or one on the PATH."""

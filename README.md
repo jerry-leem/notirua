@@ -51,6 +51,10 @@ Notirua의 핵심 기능입니다. 노래 파일(MP3, M4A, WAV, FLAC 등 오디�
 - 사용할 권리가 있는 영상만 쓰세요. 유튜브 이용약관과 저작권법이 적용됩니다.
 - 15분 이하의 공개 영상만 받을 수 있습니다. 실시간 방송, 비공개·멤버십·연령 제한 영상은
   받지 못합니다.
+- 회사나 학교처럼 프록시를 쓰는 네트워크에서는 **설정 → 일반 → 유튜브용 프록시**에
+  프록시 주소(예: `http://proxy.example.com:8080`)를 입력하세요. 비워 두면 시스템 설정을
+  씁니다. 소리를 받지 못하면 앱이 IPv4 고정, 다른 접속 방식 순서로 자동으로 다시 시도합니다.
+  자동 구성 스크립트(PAC)로만 주어지는 프록시는 읽지 못하니 주소를 직접 입력해야 합니다.
 - 유튜브가 바뀌면 링크가 갑자기 안 될 수 있습니다. 그럴 때는 새 버전의 Notirua를
   설치하세요.
 
@@ -95,16 +99,16 @@ Python이나 다른 프로그램을 따로 설치하지 않아도 되며, 한·�
 
 ## 내려받기와 설치
 
-최신 배포판은 [**Notirua 0.5.0 릴리스 페이지**](https://github.com/jerry-leem/notirua/releases/tag/v0.5.0)에
+최신 배포판은 [**Notirua 0.5.1 릴리스 페이지**](https://github.com/jerry-leem/notirua/releases/tag/v0.5.1)에
 있습니다. 릴리스 페이지에 한국어 설치 방법, 사용법, 바뀐 점, 알려진 제한이 함께 적혀
 있습니다. 지난 버전은 [모든 릴리스](https://github.com/jerry-leem/notirua/releases)에서
 볼 수 있습니다.
 
 | 컴퓨터 | 내려받기 | 설치 |
 |---|---|---|
-| Windows 10/11 (x64) | [Notirua-0.5.0-windows-x64-setup.exe](https://github.com/jerry-leem/notirua/releases/download/v0.5.0/Notirua-0.5.0-windows-x64-setup.exe) | 실행해서 안내에 따라 설치(관리자 권한 필요 없음) |
-| Mac (Apple Silicon), macOS 14 이상 | [Notirua-0.5.0-macos-arm64.dmg](https://github.com/jerry-leem/notirua/releases/download/v0.5.0/Notirua-0.5.0-macos-arm64.dmg) | 열어서 Notirua를 Applications 폴더로 끌어다 놓기 |
-| Linux x86_64 (glibc 2.31 이상) | [Notirua-0.5.0-linux-x86_64.AppImage](https://github.com/jerry-leem/notirua/releases/download/v0.5.0/Notirua-0.5.0-linux-x86_64.AppImage) | `chmod +x`로 실행 권한을 주고 실행 |
+| Windows 10/11 (x64) | [Notirua-0.5.1-windows-x64-setup.exe](https://github.com/jerry-leem/notirua/releases/download/v0.5.1/Notirua-0.5.1-windows-x64-setup.exe) | 실행해서 안내에 따라 설치(관리자 권한 필요 없음) |
+| Mac (Apple Silicon), macOS 14 이상 | [Notirua-0.5.1-macos-arm64.dmg](https://github.com/jerry-leem/notirua/releases/download/v0.5.1/Notirua-0.5.1-macos-arm64.dmg) | 열어서 Notirua를 Applications 폴더로 끌어다 놓기 |
+| Linux x86_64 (glibc 2.31 이상) | [Notirua-0.5.1-linux-x86_64.AppImage](https://github.com/jerry-leem/notirua/releases/download/v0.5.1/Notirua-0.5.1-linux-x86_64.AppImage) | `chmod +x`로 실행 권한을 주고 실행 |
 | Intel Mac | 준비 중 | 아래 [소스로 실행하기](#소스로-실행하기) |
 
 macOS 14에서는 악보를 그리는 조판기(LilyPond)가 시작되지 않을 수 있습니다. 확인된 환경은 macOS 15 이상입니다.
@@ -199,7 +203,7 @@ uv sync
 | 파일 열기 / 모두 저장 | **파일** 메뉴 (⌘O / ⌘S) | **파일** 메뉴 (Ctrl+O / Ctrl+S) |
 
 macOS에서는 Dock 아이콘을 오른쪽 클릭해도 **음악 파일 열기…** 메뉴와 **설정…** 메뉴가 나옵니다.
-창 제목에 버전이 표시됩니다(예: `Notirua 0.5.0`).
+창 제목에 버전이 표시됩니다(예: `Notirua 0.5.1`).
 
 ## 명령줄 사용법
 
@@ -226,6 +230,7 @@ uv run notirua mix "곡.m4a" --out ./out --stems drums,bass --format wav
 
 uv run notirua youtube "https://youtu.be/영상ID" --out ./음원             # 소리만 MP3로 (기본 160 kbps)
 uv run notirua youtube "https://youtu.be/영상ID" --bitrate 320          # 128, 160, 192, 256, 320
+uv run notirua youtube "https://youtu.be/영상ID" --proxy proxy.example.com:8080   # 회사 프록시
 uv run notirua transcribe "https://youtu.be/영상ID" --out ./out         # 받은 뒤 바로 악보까지
 uv run notirua setup --youtube         # 유튜브용 도우미 프로그램(Deno) 설치
 uv run notirua youtube --check         # 유튜브 기능이 설치되어 있는지 확인 (인터넷 불필요)
@@ -235,7 +240,7 @@ uv run notirua cache                   # 저장된 중간 결과 크기
 uv run notirua cache --clear
 uv run notirua --lang ko               # 한국어로 창 열기
 uv run notirua --lang ko transcribe --help     # 모든 옵션 (한국어)
-uv run notirua --version               # notirua 0.5.0
+uv run notirua --version               # notirua 0.5.1
 ```
 
 ## 파일이 저장되는 곳
@@ -250,7 +255,7 @@ Notirua를 지우려면 앱(또는 소스로 내려받은 폴더)과 위 폴더�
 
 ## 버전
 
-시맨틱 버전(`MAJOR.MINOR.PATCH`)을 따릅니다. 현재 버전은 **0.5.0**이며, 1.0 전까지는
+시맨틱 버전(`MAJOR.MINOR.PATCH`)을 따릅니다. 현재 버전은 **0.5.1**이며, 1.0 전까지는
 MINOR 버전에서도 동작이 바뀔 수 있습니다. `notirua --version`이나 창 제목으로 확인하고,
 버전마다 바뀐 내용은 [릴리스 페이지](https://github.com/jerry-leem/notirua/releases)에
 있습니다.
@@ -336,6 +341,12 @@ Please note:
   copyright law apply.
 - Public videos of 15 minutes or less only. Live streams and private,
   members-only, or age-restricted videos cannot be saved.
+- On a network with a proxy (a company or school), enter its address under
+  **Settings → General → Proxy for YouTube** (for example
+  `http://proxy.example.com:8080`). Empty means the system's settings. When the
+  sound cannot be fetched, Notirua tries again by itself: IPv4 only, then another
+  way of asking. A proxy given only as an auto-configuration script (PAC) is not
+  read; type its address instead.
 - When YouTube changes, links may suddenly stop working. Install the newest
   Notirua when that happens.
 
@@ -387,15 +398,15 @@ titles (macOS and Windows use their system fonts).
 ### Download and install
 
 The latest release is
-[**Notirua 0.5.0**](https://github.com/jerry-leem/notirua/releases/tag/v0.5.0);
+[**Notirua 0.5.1**](https://github.com/jerry-leem/notirua/releases/tag/v0.5.1);
 its page has installation and usage notes (in Korean), changes, and known
 limits. Earlier versions are on [all releases](https://github.com/jerry-leem/notirua/releases).
 
 | Computer | Download | Install |
 |---|---|---|
-| Windows 10/11 (x64) | [Notirua-0.5.0-windows-x64-setup.exe](https://github.com/jerry-leem/notirua/releases/download/v0.5.0/Notirua-0.5.0-windows-x64-setup.exe) | Run it and follow the steps (no administrator rights needed) |
-| Mac (Apple Silicon), macOS 14 or later | [Notirua-0.5.0-macos-arm64.dmg](https://github.com/jerry-leem/notirua/releases/download/v0.5.0/Notirua-0.5.0-macos-arm64.dmg) | Open it and drag Notirua to Applications |
-| Linux x86_64 (glibc 2.31 or later) | [Notirua-0.5.0-linux-x86_64.AppImage](https://github.com/jerry-leem/notirua/releases/download/v0.5.0/Notirua-0.5.0-linux-x86_64.AppImage) | `chmod +x` it and run it |
+| Windows 10/11 (x64) | [Notirua-0.5.1-windows-x64-setup.exe](https://github.com/jerry-leem/notirua/releases/download/v0.5.1/Notirua-0.5.1-windows-x64-setup.exe) | Run it and follow the steps (no administrator rights needed) |
+| Mac (Apple Silicon), macOS 14 or later | [Notirua-0.5.1-macos-arm64.dmg](https://github.com/jerry-leem/notirua/releases/download/v0.5.1/Notirua-0.5.1-macos-arm64.dmg) | Open it and drag Notirua to Applications |
+| Linux x86_64 (glibc 2.31 or later) | [Notirua-0.5.1-linux-x86_64.AppImage](https://github.com/jerry-leem/notirua/releases/download/v0.5.1/Notirua-0.5.1-linux-x86_64.AppImage) | `chmod +x` it and run it |
 | Intel Mac | Coming | [Run from source](#run-from-source) |
 
 On macOS 14 the sheet-music engraver (LilyPond) may not start. macOS 15 or later is the tested setup.
@@ -502,7 +513,7 @@ right or from the menu:
 
 On macOS, right-clicking the Dock icon also offers **Open a music file…** and
 **Settings…**. The window title shows the version, for example
-`Notirua 0.5.0`.
+`Notirua 0.5.1`.
 
 ### Use the command line
 
@@ -529,6 +540,7 @@ uv run notirua mix "song.m4a" --out ./out --stems drums,bass --format wav
 
 uv run notirua youtube "https://youtu.be/VIDEO_ID" --out ./audio     # sound only, as MP3 (160 kbps)
 uv run notirua youtube "https://youtu.be/VIDEO_ID" --bitrate 320      # 128, 160, 192, 256, 320
+uv run notirua youtube "https://youtu.be/VIDEO_ID" --proxy proxy.example.com:8080   # company proxy
 uv run notirua transcribe "https://youtu.be/VIDEO_ID" --out ./out     # save, then sheet music
 uv run notirua setup --youtube         # install the helper program for YouTube links (Deno)
 uv run notirua youtube --check         # is YouTube support installed? (no internet needed)
@@ -538,7 +550,7 @@ uv run notirua cache                   # size of saved intermediate results
 uv run notirua cache --clear
 uv run notirua --lang en               # open the window in English
 uv run notirua transcribe --help       # every option
-uv run notirua --version               # notirua 0.5.0
+uv run notirua --version               # notirua 0.5.1
 ```
 
 More `transcribe` options: `--to-key "G major"`, `--guitar-tuning drop_d`,
@@ -562,7 +574,7 @@ To remove Notirua, delete the app (or the cloned folder) and these folders.
 ### Version
 
 Notirua uses [Semantic Versioning](https://semver.org): `MAJOR.MINOR.PATCH`.
-The current version is **0.5.0**. While the major version is 0, a minor
+The current version is **0.5.1**. While the major version is 0, a minor
 release may still change behavior. `notirua --version` and the window title
 show it, and the [releases page](https://github.com/jerry-leem/notirua/releases)
 lists what changed in each release.

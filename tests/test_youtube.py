@@ -399,3 +399,154 @@ def test_real_yt_dlp_accepts_our_options(tmp_path: Path) -> None:
     with yt_dlp.YoutubeDL(options) as ydl:
         assert ydl.params["noplaylist"] is True
         assert "deno" in ydl.params["js_runtimes"]
+
+
+# -- the server refuses the audio (HTTP 503, 403): other ways in, and a proxy -------------------
+@pytest.mark.parametrize(
+    "message",
+    [
+        "ERROR: \n[download] Got error: HTTP Error 503: Service Unavailable. Giving up",
+        "HTTP Error 403: Forbidden",
+        "HTTP Error 502: Bad Gateway. Giving up after 5 retries",
+        "ProxyError: Tunnel connection failed: 403 Forbidden",
+    ],
+)
+def test_refusals_are_told_apart_from_a_bad_connection(message: str) -> None:
+    from notirua.core.errors import YoutubeRefusedError
+
+    error = yt.classify_error(RuntimeError(message))
+    assert type(error) is YoutubeRefusedError
+    assert "proxy" in error.user_hint()
+    assert error.code == "E-YT-REFUSED"
+
+
+def test_a_429_is_still_a_rate_limit() -> None:
+    assert type(yt.classify_error(RuntimeError("HTTP Error 429: Too Many Requests"))) is (
+        YoutubeBotCheckError
+    )
+
+
+@pytest.mark.parametrize(
+    ("text", "expected"),
+    [
+        (None, None),
+        ("", None),
+        ("   ", None),
+        ("http://proxy.example.com:8080", "http://proxy.example.com:8080"),
+        ("proxy.example.com:8080", "http://proxy.example.com:8080"),
+        ("  10.1.2.3:3128 ", "http://10.1.2.3:3128"),
+        ("https://user:p%40ss@proxy.corp:443", "https://user:p%40ss@proxy.corp:443"),
+        ("socks5://127.0.0.1:1080", "socks5://127.0.0.1:1080"),
+    ],
+)
+def test_check_proxy_accepts_proxy_addresses(text: str | None, expected: str | None) -> None:
+    assert yt.check_proxy(text) == expected
+
+
+@pytest.mark.parametrize(
+    "text",
+    [
+        "proxy.example.com",
+        "http://proxy.example.com",
+        "ftp://proxy:21",
+        "http://:8080",
+        "a b:1",
+        "://x:1",
+    ],
+)
+def test_check_proxy_refuses_everything_else(text: str) -> None:
+    with pytest.raises(ValueError):
+        yt.check_proxy(text)
+
+
+def test_proxy_passwords_stay_out_of_logs() -> None:
+    assert yt.mask_proxy("http://bob:secret@proxy:8080") == "http://bob:***@proxy:8080"
+    assert yt.mask_proxy("http://proxy:8080") == "http://proxy:8080"
+    assert yt.mask_proxy(None) == "-"
+    assert "secret" not in str(yt.system_proxies())
+
+
+def test_the_proxy_reaches_yt_dlp_and_is_left_out_when_unset(tmp_path: Path) -> None:
+    for proxy, expected in (("proxy.corp:8080", "http://proxy.corp:8080"), (None, None)):
+        c = yt.YoutubeClient(proxy=proxy, ydl_factory=lambda o: FakeYdl(o, fail=RuntimeError("x")))
+        with pytest.raises(YoutubeError):
+            c.fetch(LINK, tmp_path)
+        assert FakeYdl.last_options.get("proxy") == expected
+    with pytest.raises(ValueError):
+        yt.YoutubeClient(proxy="nonsense")
+
+
+class RefusedYdl(FakeYdl):
+    """Refuses the audio (HTTP 503) until ``works_from`` attempts have been made."""
+
+    seen: ClassVar[list[dict[str, Any]]] = []
+    works_from = 99
+
+    def process_ie_result(self, info: dict[str, Any], download: bool = True) -> None:
+        RefusedYdl.seen.append(self.options)
+        folder = Path(self.options["outtmpl"]).parent
+        (folder / f"{info['id']}.m4a.part").write_bytes(b"partial")
+        if len(RefusedYdl.seen) < self.works_from:
+            raise RuntimeError(
+                "ERROR: \n[download] Got error: HTTP Error 503: Service Unavailable. Giving up"
+            )
+        super().process_ie_result(info, download)
+
+
+def refused_client(works_from: int) -> yt.YoutubeClient:
+    RefusedYdl.seen = []
+    RefusedYdl.works_from = works_from
+    return yt.YoutubeClient(ydl_factory=lambda o: RefusedYdl(o))
+
+
+def test_refused_audio_is_retried_with_other_settings(tmp_path: Path) -> None:
+    retries: list[int] = []
+    _, path = refused_client(3).fetch(LINK, tmp_path, on_retry=retries.append)
+    assert path.suffix == ".m4a" and path.parent == tmp_path
+    assert retries == [2, 3]
+    first, second, third = RefusedYdl.seen
+    assert "source_address" not in first and "extractor_args" not in first
+    assert second["source_address"] == "0.0.0.0"  # IPv4 only
+    assert third["source_address"] == "0.0.0.0"
+    assert third["extractor_args"]["youtube"]["player_client"] == ["tv", "web_embedded"]
+    leftovers = [p.read_bytes() for p in tmp_path.glob("*.part")]
+    assert b"partial" not in leftovers  # a failed attempt's partial file is removed
+
+
+def test_a_working_first_try_is_not_repeated(tmp_path: Path) -> None:
+    retries: list[int] = []
+    refused_client(1).fetch(LINK, tmp_path, on_retry=retries.append)
+    assert len(RefusedYdl.seen) == 1 and retries == []
+
+
+def test_all_attempts_refused_ends_with_the_helpful_error(tmp_path: Path) -> None:
+    from notirua.core.errors import YoutubeRefusedError
+
+    with pytest.raises(YoutubeRefusedError):
+        refused_client(99).fetch(LINK, tmp_path)
+    assert len(RefusedYdl.seen) == len(yt.ATTEMPTS)
+
+
+def test_other_errors_are_not_retried(tmp_path: Path) -> None:
+    class Private(FakeYdl):
+        calls: ClassVar[int] = 0
+
+        def extract_info(self, url: str, download: bool = False) -> dict[str, Any]:
+            Private.calls += 1
+            raise RuntimeError("Private video. Sign in if you've been granted access")
+
+    c = yt.YoutubeClient(ydl_factory=lambda o: Private(o))
+    with pytest.raises(YoutubeSignInError):
+        c.fetch(LINK, tmp_path)
+    assert Private.calls == 1
+
+
+@needs_mp3
+def test_saving_says_when_it_tries_another_way(tmp_path: Path) -> None:
+    events: list[ProgressEvent] = []
+    saved = yt.save_as_mp3(
+        f"https://youtu.be/{ID}", tmp_path, client=refused_client(2), progress=events.append
+    )
+    assert saved.path.is_file()
+    assert any(e.message_id == yt.TRYING_AGAIN for e in events)
+    assert events[-1].overall_fraction == pytest.approx(1.0)

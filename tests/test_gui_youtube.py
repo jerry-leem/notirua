@@ -360,3 +360,38 @@ def test_the_consent_dialog_names_size_license_and_source(
     assert "MIT" in text and "github.com" in text
     assert "40.7 MB" in text  # the pinned download size of the Windows build
     assert "Download and continue" in seen["buttons"]
+
+
+# -- the proxy ------------------------------------------------------------------------------
+def test_the_window_uses_the_proxy_from_the_settings(
+    qtbot: QtBot, user: settings_mod.Settings
+) -> None:
+    window = MainWindow(user, manager_factory=no_components)
+    qtbot.addWidget(window)
+    assert window.youtube_client_factory(None).proxy is None
+    user.proxy = "proxy.corp:8080"
+    assert window.youtube_client_factory(None).proxy == "http://proxy.corp:8080"
+    user.proxy = "garbage"  # a hand-edited settings file must not stop the window
+    assert window.youtube_client_factory(None).proxy is None
+
+
+def test_settings_dialog_saves_a_valid_proxy_and_refuses_a_bad_one(
+    qtbot: QtBot, user: settings_mod.Settings
+) -> None:
+    from notirua.gui.settings_dialog import SettingsDialog
+
+    dialog = SettingsDialog(user, no_components(user))
+    qtbot.addWidget(dialog)
+    dialog.proxy.setText("proxy.corp:8080")
+    dialog.proxy.editingFinished.emit()
+    assert user.proxy == "http://proxy.corp:8080"
+    assert dialog.proxy.text() == "http://proxy.corp:8080"
+    assert settings_mod.load().proxy == "http://proxy.corp:8080"
+    dialog.proxy.setText("not a proxy")
+    dialog.proxy.editingFinished.emit()
+    assert user.proxy == "http://proxy.corp:8080"  # unchanged
+    assert "not a proxy address" in dialog.proxy_note.text()
+    dialog.proxy.setText("")
+    dialog.proxy.editingFinished.emit()
+    assert user.proxy is None
+    assert settings_mod.load().proxy is None
