@@ -95,18 +95,19 @@ Python이나 다른 프로그램을 따로 설치하지 않아도 되며, 한·�
 
 ## 내려받기와 설치
 
-최신 배포판은 [**Notirua 0.4.2 릴리스 페이지**](https://github.com/jerry-leem/notirua/releases/tag/v0.4.2)에
+최신 배포판은 [**Notirua 0.5.0 릴리스 페이지**](https://github.com/jerry-leem/notirua/releases/tag/v0.5.0)에
 있습니다. 릴리스 페이지에 한국어 설치 방법, 사용법, 바뀐 점, 알려진 제한이 함께 적혀
 있습니다. 지난 버전은 [모든 릴리스](https://github.com/jerry-leem/notirua/releases)에서
-볼 수 있습니다. 0.4.2는 Windows 설치 파일만 새로 나왔고, Mac과 Linux는 0.4.0
-파일을 그대로 쓰면 됩니다.
+볼 수 있습니다.
 
 | 컴퓨터 | 내려받기 | 설치 |
 |---|---|---|
-| Windows 10/11 (x64) | [Notirua-0.4.2-windows-x64-setup.exe](https://github.com/jerry-leem/notirua/releases/download/v0.4.2/Notirua-0.4.2-windows-x64-setup.exe) (0.4.2) | 실행해서 안내에 따라 설치(관리자 권한 필요 없음) |
-| Mac (Apple Silicon), macOS 14 이상 | [Notirua-0.4.0-macos-arm64.dmg](https://github.com/jerry-leem/notirua/releases/download/v0.4.0/Notirua-0.4.0-macos-arm64.dmg) (120 MB, 0.4.0) | 열어서 Notirua를 Applications 폴더로 끌어다 놓기 |
-| Linux x86_64 (glibc 2.31 이상) | [Notirua-0.4.0-linux-x86_64.AppImage](https://github.com/jerry-leem/notirua/releases/download/v0.4.0/Notirua-0.4.0-linux-x86_64.AppImage) (176 MB, 0.4.0) | `chmod +x`로 실행 권한을 주고 실행 |
+| Windows 10/11 (x64) | [Notirua-0.5.0-windows-x64-setup.exe](https://github.com/jerry-leem/notirua/releases/download/v0.5.0/Notirua-0.5.0-windows-x64-setup.exe) | 실행해서 안내에 따라 설치(관리자 권한 필요 없음) |
+| Mac (Apple Silicon), macOS 14 이상 | [Notirua-0.5.0-macos-arm64.dmg](https://github.com/jerry-leem/notirua/releases/download/v0.5.0/Notirua-0.5.0-macos-arm64.dmg) | 열어서 Notirua를 Applications 폴더로 끌어다 놓기 |
+| Linux x86_64 (glibc 2.31 이상) | [Notirua-0.5.0-linux-x86_64.AppImage](https://github.com/jerry-leem/notirua/releases/download/v0.5.0/Notirua-0.5.0-linux-x86_64.AppImage) | `chmod +x`로 실행 권한을 주고 실행 |
 | Intel Mac | 준비 중 | 아래 [소스로 실행하기](#소스로-실행하기) |
+
+macOS 14에서는 악보를 그리는 조판기(LilyPond)가 시작되지 않을 수 있습니다. 확인된 환경은 macOS 15 이상입니다.
 
 - 필요 사양: RAM 8GB, 빈 디스크 약 1GB(앱, 구성요소, 중간 결과)
 - macOS 앱은 아직 Apple 서명·공증 전이라 처음 열 때 경고가 나옵니다. macOS 15
@@ -386,17 +387,18 @@ titles (macOS and Windows use their system fonts).
 ### Download and install
 
 The latest release is
-[**Notirua 0.4.2**](https://github.com/jerry-leem/notirua/releases/tag/v0.4.2);
+[**Notirua 0.5.0**](https://github.com/jerry-leem/notirua/releases/tag/v0.5.0);
 its page has installation and usage notes (in Korean), changes, and known
-limits. Earlier versions are on [all releases](https://github.com/jerry-leem/notirua/releases). Version 0.4.2 has
-a new Windows installer only; on Mac and Linux, keep using the 0.4.0 files.
+limits. Earlier versions are on [all releases](https://github.com/jerry-leem/notirua/releases).
 
 | Computer | Download | Install |
 |---|---|---|
-| Windows 10/11 (x64) | [Notirua-0.4.2-windows-x64-setup.exe](https://github.com/jerry-leem/notirua/releases/download/v0.4.2/Notirua-0.4.2-windows-x64-setup.exe) (0.4.2) | Run it and follow the steps (no administrator rights needed) |
-| Mac (Apple Silicon), macOS 14 or later | [Notirua-0.4.0-macos-arm64.dmg](https://github.com/jerry-leem/notirua/releases/download/v0.4.0/Notirua-0.4.0-macos-arm64.dmg) (120 MB, 0.4.0) | Open it and drag Notirua to Applications |
-| Linux x86_64 (glibc 2.31 or later) | [Notirua-0.4.0-linux-x86_64.AppImage](https://github.com/jerry-leem/notirua/releases/download/v0.4.0/Notirua-0.4.0-linux-x86_64.AppImage) (176 MB, 0.4.0) | `chmod +x` it and run it |
+| Windows 10/11 (x64) | [Notirua-0.5.0-windows-x64-setup.exe](https://github.com/jerry-leem/notirua/releases/download/v0.5.0/Notirua-0.5.0-windows-x64-setup.exe) | Run it and follow the steps (no administrator rights needed) |
+| Mac (Apple Silicon), macOS 14 or later | [Notirua-0.5.0-macos-arm64.dmg](https://github.com/jerry-leem/notirua/releases/download/v0.5.0/Notirua-0.5.0-macos-arm64.dmg) | Open it and drag Notirua to Applications |
+| Linux x86_64 (glibc 2.31 or later) | [Notirua-0.5.0-linux-x86_64.AppImage](https://github.com/jerry-leem/notirua/releases/download/v0.5.0/Notirua-0.5.0-linux-x86_64.AppImage) | `chmod +x` it and run it |
 | Intel Mac | Coming | [Run from source](#run-from-source) |
+
+On macOS 14 the sheet-music engraver (LilyPond) may not start. macOS 15 or later is the tested setup.
 
 - Requirements: 8 GB RAM; about 1 GB of free disk space
 - The macOS app is not signed or notarized by Apple yet, so the first launch

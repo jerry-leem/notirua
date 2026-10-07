@@ -8,9 +8,9 @@
 
 | 컴퓨터 | 받을 파일 |
 |---|---|
-| Mac (Apple Silicon: M1 이후), macOS 14 Sonoma 이상 | `Notirua-0.4.0-macos-arm64.dmg` (0.4.0 릴리스) |
+| Mac (Apple Silicon: M1 이후), macOS 15 Sequoia 이상 권장 | `Notirua-{{version}}-macos-arm64.dmg` |
 | Windows 10/11 (x64) | `Notirua-{{version}}-windows-x64-setup.exe` |
-| Linux x86_64 (Ubuntu 20.04 이상 등 glibc 2.31 이상) | `Notirua-0.4.0-linux-x86_64.AppImage` (0.4.0 릴리스) |
+| Linux x86_64 (Ubuntu 20.04 이상 등 glibc 2.31 이상) | `Notirua-{{version}}-linux-x86_64.AppImage` |
 | Intel Mac | 준비 중입니다. 지금은 [소스로 실행](https://github.com/jerry-leem/notirua#소스로-실행하기)할 수 있습니다. |
 
 필요 사양: RAM 8GB, 빈 디스크 약 1GB(앱, 구성요소, 중간 결과).
@@ -37,8 +37,8 @@
 ### Linux
 
 ```bash
-chmod +x Notirua-0.4.0-linux-x86_64.AppImage
-./Notirua-0.4.0-linux-x86_64.AppImage
+chmod +x Notirua-{{version}}-linux-x86_64.AppImage
+./Notirua-{{version}}-linux-x86_64.AppImage
 ```
 
 파일 관리자에서 파일 속성의 "프로그램으로 실행 허용"을 켠 뒤 두 번 클릭해도 됩니다.
@@ -75,7 +75,7 @@ FUSE가 없어 실행되지 않으면 `--appimage-extract-and-run`을 붙여 실
 & "$env:LOCALAPPDATA\Programs\Notirua\notirua-cli.exe" transcribe "곡.m4a" --out "$HOME\Desktop\악보"
 
 # Linux
-./Notirua-0.4.0-linux-x86_64.AppImage transcribe "곡.m4a" --out ./악보
+./Notirua-{{version}}-linux-x86_64.AppImage transcribe "곡.m4a" --out ./악보
 ```
 
 `--transpose +2`(조 바꾸기), `--stems guitar,bass`(악기 고르기), `--start 30 --end 210`(구간), `--musicxml --midi` 같은 옵션이 있습니다. 전체 옵션은 `transcribe --help`로 봅니다(`--lang ko`를 앞에 붙이면 한국어).
@@ -109,7 +109,7 @@ notirua-cli mix "곡.m4a" --out ./음원 --stems drums,bass --format wav
 - 유튜브 링크를 쓸 때만 인터넷을 사용합니다. 소리를 받은 뒤의 모든 처리는 내 컴퓨터에서 이루어집니다.
 - 사용할 권리가 있는 영상만 쓰세요. 유튜브 이용약관과 저작권법이 적용됩니다.
 
-이번 버전은 Windows 설치 파일만 새로 나왔습니다. Mac과 Linux는 0.4.0 파일에 이 기능과 아래 수정이 들어 있지 않습니다.
+이번 버전은 Windows, Mac(Apple Silicon), Linux 설치 파일이 모두 새로 나왔습니다.
 
 0.4.1과 0.4.2의 Windows 수정이 모두 들어 있습니다. 한국어 Windows에서 화면이 영어로 나오던 문제, 악보 만들기가 조 분석 단계에서 멈추던 문제, 옛 버전 위에 덮어 설치하면 옛 버전이 표시되던 문제, 창 제목에 앱 이름이 두 번 나오던 문제를 고쳤습니다.
 
@@ -121,6 +121,7 @@ notirua-cli mix "곡.m4a" --out ./음원 --stems drums,bass --format wav
 
 - macOS와 Windows 앱은 아직 코드 서명 전이라 처음 열 때 위의 허용 과정이 필요합니다.
 - Intel Mac 설치 파일은 준비 중입니다.
+- macOS 14에서는 악보를 그리는 조판기(LilyPond)가 시작되지 않을 수 있습니다. 확인된 환경은 macOS 15 이상입니다.
 - 드럼 채보는 아직 거칩니다. 박자는 항상 4/4로 추정하므로, 다른 박자의 곡은 **세부 설정**에서 박자를 직접 고르세요.
 - 15분이 넘는 파일은 명령줄의 `--start`, `--end`로 구간을 나눠 처리하세요. 유튜브 영상은 15분 이하만 받을 수 있습니다.
 - 유튜브가 바뀌면 링크가 갑자기 안 될 수 있습니다. 이 앱의 유튜브 기능은 그런 변화를 바로 따라가지 못할 수 있으니, 안 되면 새 버전을 설치하세요. 네트워크에 따라 유튜브가 확인을 요구해 받지 못할 때도 있습니다.
