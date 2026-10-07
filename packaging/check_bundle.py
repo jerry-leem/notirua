@@ -85,6 +85,10 @@ def problems(bundle: Path, expected_version: str | None) -> list[str]:
     if codecs and not any(MP3_ENCODER in p.read_bytes() for p in codecs):
         found.append("FFmpeg cannot save MP3 (built without LAME)")
 
+    # YouTube links (0.5.0): yt-dlp's player-check scripts and the CA bundle are data files.
+    for pattern in ("core.min.js", "lib.min.js", "cacert.pem"):
+        if not list(root.rglob(pattern)):
+            found.append(f"missing {pattern} (YouTube support)")
     needed = [
         "notirua/resources/models/basic_pitch_nmp.onnx",
         "docs/LICENSES.md",
@@ -109,6 +113,13 @@ def problems(bundle: Path, expected_version: str | None) -> list[str]:
         found.append(f"notirua-cli --version failed: {run.stderr.strip()[-500:]}")
     elif expected_version and expected_version not in run.stdout:
         found.append(f"notirua-cli --version printed {run.stdout.strip()!r}")
+    run = subprocess.run(
+        [str(cli), "--lang", "en", "youtube", "--check"], capture_output=True, text=True, env=env
+    )
+    if run.returncode != 0:
+        found.append(
+            f"notirua-cli youtube --check failed: {(run.stdout + run.stderr).strip()[-500:]}"
+        )
     run = subprocess.run(
         [str(cli), "--lang", "ko", "languages"], capture_output=True, text=True, env=env
     )

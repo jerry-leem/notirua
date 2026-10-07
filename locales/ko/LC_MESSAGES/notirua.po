@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Notirua VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-10-07 02:26+0900\n"
+"POT-Creation-Date: 2026-10-07 05:45+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: ko\n"
@@ -39,6 +39,9 @@ msgstr "도움말(&H)"
 msgid "5-string"
 msgstr "5현"
 
+msgid "A YouTube link is in the clipboard. Press “Paste”."
+msgstr "클립보드에 유튜브 링크가 있습니다. “붙여넣기”를 누르세요."
+
 #, python-brace-format
 msgid "A required component is not installed: {name}."
 msgstr "필요한 구성요소가 설치되지 않았습니다: {name}."
@@ -55,6 +58,9 @@ msgstr "동의하고 설치"
 
 msgid "Agree to the component licenses without asking."
 msgstr "묻지 않고 구성요소 라이선스에 동의합니다."
+
+msgid "Agree to the license and install? [y/N] "
+msgstr "라이선스에 동의하고 설치할까요? [y/N] "
 
 msgid "Agree to the licenses and install? [y/N] "
 msgstr "라이선스에 동의하고 설치할까요? [y/N] "
@@ -80,8 +86,18 @@ msgstr "오선보와 TAB 악보를 배치하는 중"
 msgid "Ask every time"
 msgstr "매번 묻기"
 
+msgid "Audio from YouTube"
+msgstr "유튜브에서 받은 음원"
+
+msgid "Audio or video file to read, or a YouTube video link."
+msgstr "읽을 오디오·동영상 파일 또는 유튜브 영상 링크."
+
 msgid "Audio or video file to read."
 msgstr "읽을 음악 또는 동영상 파일."
+
+#, python-brace-format
+msgid "Audio saved: {name} — {link}"
+msgstr "음원을 저장했습니다: {name} — {link}"
 
 msgid "Audio track"
 msgstr "오디오 트랙"
@@ -128,17 +144,32 @@ msgstr "설치 위치 변경"
 msgid "Change save folder"
 msgstr "저장 폴더 변경"
 
+msgid "Change the folder for audio saved from YouTube"
+msgstr "유튜브에서 받은 음원을 저장할 폴더 바꾸기"
+
 msgid "Change…"
 msgstr "변경…"
 
 msgid "Check each component to agree to its license."
 msgstr "구성요소마다 체크해서 라이선스에 동의해 주세요."
 
+msgid "Check offline that YouTube support is installed correctly."
+msgstr "유튜브 기능이 제대로 설치되었는지 인터넷 없이 확인합니다."
+
 msgid "Check that the file plays in another app, or convert it to WAV or MP3."
 msgstr "다른 앱에서 재생되는지 확인하거나 WAV 또는 MP3로 변환해 보세요."
 
+msgid "Check that the video plays in your browser, or choose another one."
+msgstr "브라우저에서 영상이 재생되는지 확인하거나 다른 영상을 고르세요."
+
+msgid "Check the link and your internet connection, then try again."
+msgstr "링크와 인터넷 연결을 확인한 뒤 다시 시도하세요."
+
 msgid "Check your internet connection and try again."
 msgstr "인터넷 연결을 확인한 뒤 다시 시도하세요."
+
+msgid "Checking the link"
+msgstr "링크를 확인하는 중"
 
 msgid "Choose a component bundle file"
 msgstr "구성요소 묶음 파일 고르기"
@@ -149,11 +180,17 @@ msgstr "소리가 들어 있는 파일을 선택하세요."
 msgid "Choose a file…"
 msgstr "파일 고르기…"
 
+msgid "Choose a folder for audio saved from YouTube"
+msgstr "유튜브에서 받은 음원을 저장할 폴더 고르기"
+
 msgid "Choose a folder you can write to."
 msgstr "쓰기 권한이 있는 폴더를 선택하세요."
 
 msgid "Choose a music file"
 msgstr "음악 파일 고르기"
+
+msgid "Choose a public video that plays without signing in."
+msgstr "로그인하지 않고 재생되는 공개 영상을 고르세요."
 
 msgid "Choose a save folder"
 msgstr "저장 폴더 고르기"
@@ -210,6 +247,16 @@ msgstr "악보를 만들려면 구성요소가 필요합니다."
 msgid "Components installed in {seconds} s."
 msgstr "구성요소를 {seconds}초 만에 설치했습니다."
 
+msgid ""
+"Copy a video's link, then paste it here. Notirua saves the audio as an "
+"MP3 file named after the video."
+msgstr "영상의 링크를 복사한 뒤 여기에 붙여넣으세요. Notirua가 소리를 영상 제목의 MP3 파일로 저장합니다."
+
+msgid ""
+"Copy the video's address from your browser (or its Share button) and "
+"paste it."
+msgstr "브라우저의 주소 또는 공유 버튼으로 영상 링크를 복사해 붙여넣으세요."
+
 msgid "Delete all saved intermediate results."
 msgstr "저장된 중간 결과를 모두 지웁니다."
 
@@ -251,8 +298,21 @@ msgstr "{seconds}초 만에 완료: {count}."
 msgid "Down a semitone"
 msgstr "반음 내리기"
 
+msgid "Download and continue"
+msgstr "내려받고 계속하기"
+
 msgid "Downloading components needs your permission first."
 msgstr "구성요소를 내려받으려면 먼저 동의가 필요합니다."
+
+msgid "Downloading the audio"
+msgstr "소리를 내려받는 중"
+
+#, python-brace-format
+msgid "Downloading the audio: {received} of {total}"
+msgstr "소리를 내려받는 중: {received} / {total}"
+
+msgid "Downloading the helper program"
+msgstr "도우미 프로그램을 내려받는 중"
 
 #, python-brace-format
 msgid "Downloading {name}"
@@ -320,8 +380,21 @@ msgstr "박자, 빠르기, 조성을 찾는 중"
 msgid "Fitting notes to the beat"
 msgstr "박자에 맞춰 정리하는 중"
 
+msgid "Folder for audio saved from YouTube"
+msgstr "유튜브에서 받은 음원 폴더"
+
+msgid "Folder for the MP3 file (default: Music/Notirua)."
+msgstr "MP3 파일을 저장할 폴더(기본값: 음악/Notirua)."
+
 msgid "Folder for the results."
 msgstr "결과를 저장할 폴더."
+
+#, python-brace-format
+msgid "For a YouTube link: MP3 quality in kbps (default {kbps})."
+msgstr "유튜브 링크일 때: MP3 음질(kbps, 기본값 {kbps})."
+
+msgid "For a YouTube link: folder for the saved MP3 (default: Music/Notirua)."
+msgstr "유튜브 링크일 때: MP3를 저장할 폴더(기본값: 음악/Notirua)."
 
 msgid "For example 4/4 or 3/4."
 msgstr "예: 4/4, 3/4."
@@ -343,6 +416,12 @@ msgstr "{size}를 비웠습니다."
 msgid "General"
 msgstr "일반"
 
+msgid "Getting the helper program"
+msgstr "도우미 프로그램을 준비하는 중"
+
+msgid "Give the link of a YouTube video."
+msgstr "유튜브 영상의 링크를 입력하세요."
+
 msgid "Guitar"
 msgstr "기타"
 
@@ -354,6 +433,9 @@ msgstr "반음 내림"
 
 msgid "Hear each instrument"
 msgstr "악기별 소리 듣기"
+
+msgid "Helper program (Deno)"
+msgstr "도우미 프로그램 (Deno)"
 
 msgid "In progress"
 msgstr "진행 중"
@@ -383,6 +465,12 @@ msgstr "설치 위치: {path}"
 msgid "Install the components Notirua needs."
 msgstr "Notirua에 필요한 구성요소를 설치합니다."
 
+msgid "Install the helper program that reads YouTube links (Deno)."
+msgstr "유튜브 링크를 읽는 도우미 프로그램(Deno)을 설치합니다."
+
+msgid "Install the newest Notirua from the releases page and try again."
+msgstr "릴리스 페이지에서 최신 Notirua를 설치한 뒤 다시 시도하세요."
+
 msgid "Installed"
 msgstr "설치됨"
 
@@ -391,6 +479,9 @@ msgstr "묶음 파일로 설치했습니다."
 
 msgid "Installing components"
 msgstr "구성요소를 설치하는 중"
+
+msgid "Installing the helper program"
+msgstr "도우미 프로그램을 설치하는 중"
 
 #, python-brace-format
 msgid "Installing {name}"
@@ -438,6 +529,11 @@ msgstr "PDF 안 라벨의 언어."
 msgid "Language inside the PDF"
 msgstr "PDF 언어"
 
+msgid ""
+"Lets Notirua read YouTube links. Only needed for saving audio from "
+"YouTube."
+msgstr "Notirua가 유튜브 링크를 읽게 해 줍니다. 유튜브에서 음원을 받을 때만 필요합니다."
+
 msgid "Letter"
 msgstr "레터"
 
@@ -447,6 +543,9 @@ msgstr "라이선스: {license} ({url})"
 
 msgid "Licenses"
 msgstr "라이선스"
+
+msgid "Link of one YouTube video."
+msgstr "유튜브 영상 하나의 링크."
 
 msgid "List available languages."
 msgstr "사용할 수 있는 언어를 보여 줍니다."
@@ -476,6 +575,10 @@ msgstr "MP3 (작은 파일)"
 msgid "MP3 file (*.mp3)"
 msgstr "MP3 파일 (*.mp3)"
 
+#, python-brace-format
+msgid "MP3 quality in kbps (default {kbps})."
+msgstr "MP3 음질(kbps, 기본값 {kbps})."
+
 msgid "MP3, M4A, WAV, FLAC, OGG, MP4 video, and more"
 msgstr "MP3, M4A, WAV, FLAC, OGG, MP4 동영상 등"
 
@@ -496,12 +599,18 @@ msgstr "악보 만들기"
 msgid "Make sheet music from an audio file."
 msgstr "음악 파일로 악보를 만듭니다."
 
+msgid "Make the sheet music right after saving the audio"
+msgstr "음원을 저장한 뒤 바로 악보 만들기"
+
 msgid "Making sheet music failed."
 msgstr "악보를 만들지 못했습니다."
 
 #, python-brace-format
 msgid "Making sheet music for {title}"
 msgstr "{title} 악보를 만드는 중"
+
+msgid "Making the MP3 file"
+msgstr "MP3 파일을 만드는 중"
 
 msgid "Making the audio file"
 msgstr "음원 파일을 만드는 중"
@@ -573,6 +682,9 @@ msgstr "오선보만"
 msgid "Note: {message}"
 msgstr "참고: {message}"
 
+msgid "Nothing was downloaded."
+msgstr "아무것도 내려받지 않았습니다."
+
 msgid "Nothing was downloaded. Run “notirua setup” again any time."
 msgstr "아무것도 내려받지 않았습니다. 언제든 “notirua setup”을 다시 실행하세요."
 
@@ -587,6 +699,14 @@ msgstr[0] "Notirua를 쓰려면 구성요소 {count}개를 내려받아야 합�
 #, python-brace-format
 msgid "Notirua {version}"
 msgstr "Notirua {version}"
+
+msgid "One more helper is needed"
+msgstr "도우미 프로그램이 하나 더 필요합니다"
+
+msgid ""
+"Only use videos you have the right to use. YouTube's terms of service and"
+" copyright law apply."
+msgstr "사용할 권리가 있는 영상만 쓰세요. 유튜브 이용약관과 저작권법이 적용됩니다."
 
 msgid "Open a music file…"
 msgstr "음악 파일 열기…"
@@ -607,8 +727,14 @@ msgstr "설정 화면 열기…"
 msgid "Open the Notirua window (the default with no command)."
 msgstr "Notirua 창을 엽니다 (명령 없이 실행할 때의 기본값)."
 
+msgid "Open the folder"
+msgstr "폴더 열기"
+
 msgid "Open the log folder for details and report the problem."
 msgstr "로그 폴더에서 자세한 내용을 확인하고 문제를 알려 주세요."
+
+msgid "Or use a YouTube link"
+msgstr "또는 유튜브 링크 사용"
 
 msgid "Other"
 msgstr "다른 악기"
@@ -626,6 +752,15 @@ msgstr "용지"
 msgid "Paper size."
 msgstr "용지 크기."
 
+msgid "Paste"
+msgstr "붙여넣기"
+
+msgid "Paste a YouTube link"
+msgstr "유튜브 링크를 붙여넣으세요"
+
+msgid "Paste the link from the clipboard"
+msgstr "클립보드의 링크 붙여넣기"
+
 msgid "Pause"
 msgstr "일시정지"
 
@@ -638,9 +773,21 @@ msgstr "구성요소 라이선스를 확인해 주세요"
 msgid "Previous page"
 msgstr "이전 쪽"
 
+msgid "Quality"
+msgstr "음질"
+
+msgid "Quality of the MP3 file"
+msgstr "MP3 파일의 음질"
+
 #, python-brace-format
 msgid "Quit {name}"
 msgstr "{name} 종료"
+
+msgid "Reading YouTube links needs a small helper program."
+msgstr "유튜브 링크를 읽으려면 작은 도우미 프로그램이 필요합니다."
+
+msgid "Reading YouTube links needs a small helper program:"
+msgstr "유튜브 링크를 읽으려면 작은 도우미 프로그램이 필요합니다:"
 
 msgid "Reading the audio file"
 msgstr "음악 파일을 읽는 중"
@@ -687,6 +834,9 @@ msgstr "구성요소를 확인하고 “동의하고 설치”를 누르세요."
 msgid "Run again with --accept-licenses to agree without a prompt."
 msgstr "묻지 않고 동의하려면 --accept-licenses를 붙여 다시 실행하세요."
 
+msgid "Run “notirua setup --youtube” first."
+msgstr "먼저 “notirua setup --youtube”를 실행하세요."
+
 msgid "Run “notirua setup” first."
 msgstr "먼저 “notirua setup”을 실행하세요."
 
@@ -711,11 +861,25 @@ msgstr "MusicXML로 저장"
 msgid "Save as WAV"
 msgstr "WAV로 저장"
 
+msgid "Save audio"
+msgstr "음원 저장"
+
+msgid "Save audio and make sheet music"
+msgstr "음원 저장 후 악보 만들기"
+
 msgid "Save folder"
 msgstr "저장 폴더"
 
 msgid "Save only the instruments you choose as one audio file (MP3, M4A, WAV)."
 msgstr "고른 악기만 합쳐 음원 파일 하나(MP3, M4A, WAV)로 저장합니다."
+
+msgid ""
+"Save the audio of a YouTube video as an MP3 file named after the video. "
+"Only use videos you have the right to use."
+msgstr "유튜브 영상의 소리를 영상 제목의 MP3 파일로 저장합니다. 사용할 권리가 있는 영상만 쓰세요."
+
+msgid "Save the audio of a YouTube video as an MP3 file."
+msgstr "유튜브 영상의 소리를 MP3 파일로 저장합니다."
 
 msgid "Saved intermediate results"
 msgstr "저장된 중간 결과"
@@ -738,11 +902,21 @@ msgid "Saved {n} file."
 msgid_plural "Saved {n} files."
 msgstr[0] "파일 {n}개를 저장했습니다."
 
+#, python-brace-format
+msgid "Saved: {path}"
+msgstr "저장했습니다: {path}"
+
 msgid "Save…"
 msgstr "저장…"
 
 msgid "Saving files"
 msgstr "파일을 저장하는 중"
+
+msgid "Saving the audio failed."
+msgstr "음원 저장에 실패했습니다."
+
+msgid "Saving the audio from YouTube"
+msgstr "유튜브에서 음원을 저장하는 중"
 
 msgid "Score engraver (LilyPond)"
 msgstr "악보 조판기 (LilyPond)"
@@ -861,9 +1035,15 @@ msgstr "TAB만"
 msgid "Tempo"
 msgstr "빠르기"
 
+msgid "The audio from YouTube could not be saved."
+msgstr "유튜브의 음원을 저장하지 못했습니다."
+
 #, python-brace-format
 msgid "The audio is longer than {limit} minutes."
 msgstr "음악 길이가 {limit}분을 넘습니다."
+
+msgid "The audio is saved."
+msgstr "음원을 저장했습니다."
 
 msgid "The audio keeps its original key, even if you transposed the music."
 msgstr "악보의 조를 바꿨어도 음원은 원래 음높이 그대로입니다."
@@ -890,6 +1070,12 @@ msgstr "파일에 오디오 트랙이 {count}개 있습니다."
 msgid "The file is copy-protected (DRM) and cannot be opened."
 msgstr "복제 방지(DRM)가 걸린 파일이라 열 수 없습니다."
 
+msgid "The helper program for YouTube links is installed."
+msgstr "유튜브 링크용 도우미 프로그램이 설치되어 있습니다."
+
+msgid "The helper program is installed."
+msgstr "도우미 프로그램을 설치했습니다."
+
 msgid ""
 "The internet is used only for this download. Notirua works offline "
 "afterwards."
@@ -910,6 +1096,9 @@ msgstr "악보가 완성되었습니다."
 msgid "The task was cancelled."
 msgstr "작업을 취소했습니다."
 
+msgid "There is no YouTube link in the clipboard."
+msgstr "클립보드에 유튜브 링크가 없습니다."
+
 msgid "There is not enough disk space."
 msgstr "디스크 공간이 부족합니다."
 
@@ -919,6 +1108,25 @@ msgstr "디스크 공간이 부족합니다. 공간을 비우거나 다른 위�
 #, python-brace-format
 msgid "This copy of Notirua cannot save {format} files."
 msgstr "이 Notirua에서는 {format} 파일을 저장할 수 없습니다."
+
+msgid "This is a live stream or a video that has not started yet."
+msgstr "실시간 방송이거나 아직 시작하지 않은 영상입니다."
+
+msgid "This is not a link to a single YouTube video."
+msgstr "유튜브 영상 하나의 링크가 아닙니다."
+
+msgid "This looks like a YouTube video link."
+msgstr "유튜브 영상 링크로 보입니다."
+
+msgid ""
+"This video is not available (removed, blocked, or not shown in your "
+"country)."
+msgstr "이 영상을 쓸 수 없습니다(삭제되었거나 차단되었거나 이 나라에서 볼 수 없음)."
+
+msgid ""
+"This video needs you to sign in (private, members-only, or age-"
+"restricted)."
+msgstr "이 영상은 로그인이 필요합니다(비공개, 멤버십 전용 또는 연령 제한)."
 
 msgid "Time signature"
 msgstr "박자"
@@ -955,6 +1163,9 @@ msgstr "다른 사본 파일로 시도해 보세요."
 
 msgid "Try again"
 msgstr "다시 시도"
+
+msgid "Try again after the broadcast has ended and the recording is available."
+msgstr "방송이 끝나고 다시보기가 생긴 뒤에 다시 시도하세요."
 
 msgid "Try again. If the problem continues, open the log folder and report it."
 msgstr "다시 시도하세요. 문제가 계속되면 로그 폴더를 열어 알려 주세요."
@@ -993,6 +1204,9 @@ msgstr "WAV (압축 없음)"
 msgid "WAV file (*.wav)"
 msgstr "WAV 파일 (*.wav)"
 
+msgid "Wait a while, then try again. Another network or video can also help."
+msgstr "잠시 기다렸다가 다시 시도하세요. 다른 네트워크나 다른 영상으로 해 보는 방법도 있습니다."
+
 msgid "Waiting"
 msgstr "대기"
 
@@ -1002,6 +1216,18 @@ msgstr "해결 방법: {hint}"
 
 msgid "Work is still in progress. Stop it and quit?"
 msgstr "아직 작업 중입니다. 멈추고 끝낼까요?"
+
+msgid "YouTube could not be reached."
+msgstr "유튜브에 연결하지 못했습니다."
+
+msgid "YouTube has changed in a way this version of Notirua cannot follow."
+msgstr "유튜브가 바뀌어서 이 버전의 Notirua로는 처리할 수 없습니다."
+
+msgid "YouTube is asking for a check or has limited your requests for now."
+msgstr "유튜브가 확인을 요구하거나 한동안 요청을 제한했습니다."
+
+msgid "YouTube link"
+msgstr "유튜브 링크"
 
 #, python-brace-format
 msgid "about {time} left"
@@ -1122,8 +1348,40 @@ msgid "{instrument} ({reason})"
 msgstr "{instrument}({reason})"
 
 #, python-brace-format
+msgid "{kbps} kbps"
+msgstr "{kbps} kbps"
+
+#, python-brace-format
+msgid "{kbps} kbps (best sound)"
+msgstr "{kbps} kbps (최고 음질)"
+
+#, python-brace-format
+msgid "{kbps} kbps (recommended)"
+msgstr "{kbps} kbps (권장)"
+
+#, python-brace-format
+msgid "{kbps} kbps (smaller file)"
+msgstr "{kbps} kbps (작은 파일)"
+
+#, python-brace-format
 msgid "{message} · {speed}/s"
 msgstr "{message} · 초당 {speed}"
+
+#, python-brace-format
+msgid ""
+"{name}: {purpose}\n"
+"\n"
+"Download: {size} (about {installed} on disk) from {source}.\n"
+"License: {license}.\n"
+"\n"
+"It is downloaded once and kept. Nothing else is downloaded."
+msgstr ""
+"{name}: {purpose}\n"
+"\n"
+"내려받기: {size} (디스크에서 약 {installed}), 출처 {source}.\n"
+"라이선스: {license}.\n"
+"\n"
+"한 번만 내려받아 보관합니다. 그 밖의 것은 내려받지 않습니다."
 
 #, python-brace-format
 msgid "{n} file"
@@ -1170,4 +1428,7 @@ msgstr "{value}은(는) 정수가 아닙니다."
 #, python-brace-format
 msgid "♩ = {bpm} · {key}"
 msgstr "♩ = {bpm} · {key}"
+
+#~ msgid "JavaScript runtime (Deno)"
+#~ msgstr ""
 

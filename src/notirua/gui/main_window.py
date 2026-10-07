@@ -16,7 +16,7 @@ from pathlib import Path
 from typing import Any
 
 from PySide6.QtCore import QByteArray, QTimer
-from PySide6.QtGui import QAction, QCloseEvent, QDragEnterEvent, QDropEvent, QKeySequence
+from PySide6.QtGui import QAction, QCloseEvent, QDragEnterEvent, QDropEvent, QKeySequence, QShortcut
 from PySide6.QtWidgets import (
     QApplication,
     QFileDialog,
@@ -35,7 +35,14 @@ from PySide6.QtWidgets import (
 
 from notirua import APP_NAME, APP_TITLE
 from notirua import settings as settings_mod
-from notirua.core.errors import NotiruaError
+from notirua.components.manager import (
+    ComponentManager,
+    human_size,
+    optional_manager_from_settings,
+)
+from notirua.components.manifest import JS_RUNTIME
+from notirua.core import youtube as yt
+from notirua.core.errors import ComponentMissingError, InvalidYoutubeLinkError, NotiruaError
 from notirua.core.pipeline import (
     INSTRUMENT_NAMES,
     SKIP_SILENT,
@@ -57,11 +64,17 @@ from notirua.gui.settings_dialog import SettingsDialog
 from notirua.gui.setup_page import ManagerFactory, SetupPage, default_manager_factory
 from notirua.gui.tasks import Task, Work
 from notirua.gui.widgets import open_path
-from notirua.i18n import _, ngettext
+from notirua.i18n import N_, _, ngettext
 
 log = logging.getLogger(__name__)
 
 TRANSPOSE_DEBOUNCE_MS = 250
+RuntimeManagerFactory = Callable[[settings_mod.Settings], ComponentManager]
+YoutubeClientFactory = Callable[[Path | None], yt.YoutubeClient]
+RUNTIME_STAGES = (
+    ("download:deno", N_("Downloading the helper program")),
+    ("install:deno", N_("Installing the helper program")),
+)
 
 
 def default_pipeline(user: settings_mod.Settings) -> Pipeline:
@@ -78,11 +91,18 @@ class MainWindow(QMainWindow):
         user: settings_mod.Settings,
         pipeline: Pipeline | None = None,
         manager_factory: ManagerFactory = default_manager_factory,
+        runtime_manager_factory: RuntimeManagerFactory = optional_manager_from_settings,
+        youtube_client_factory: YoutubeClientFactory = lambda runtime: yt.YoutubeClient(runtime),
     ) -> None:
         super().__init__()
         self.user = user
         self._pipeline = pipeline
         self.manager_factory = manager_factory
+        self.runtime_manager_factory = runtime_manager_factory
+        self.youtube_client_factory = youtube_client_factory
+        self._youtube_request: tuple[yt.YoutubeLink, int, bool] | None = None
+        self._retry_kind = "score"  # what "Try again" repeats: "score" or "youtube"
+        self.saved_audio: yt.SavedAudio | None = None
         self.setWindowTitle(APP_TITLE)
         self.setAcceptDrops(True)
         self.job_task: Task | None = None
@@ -126,6 +146,8 @@ class MainWindow(QMainWindow):
         self.setup_page.postponed.connect(self._setup_postponed)
         self.file_page = FilePage()
         self.file_page.file_chosen.connect(self.open_file)
+        self.file_page.youtube_requested.connect(self.start_youtube)
+        self.file_page.youtube.load_settings(user)
         self.file_page.set_recent(user.recent_files)
         self.options_page = OptionsPage(user)
         self.options_page.start_requested.connect(self.start_job)
@@ -201,6 +223,7 @@ class MainWindow(QMainWindow):
 
     def show_file_page(self) -> None:
         self.file_page.set_recent(self.user.recent_files)
+        self.file_page.youtube.refresh_clipboard()
         self.stack.setCurrentWidget(self.file_page)
         self.file_page.pick_button.setFocus()
 
@@ -244,16 +267,178 @@ class MainWindow(QMainWindow):
     # -- drag and drop anywhere in the window (FR-8) -------------------------
     def dragEnterEvent(self, event: QDragEnterEvent) -> None:
         urls = event.mimeData().urls()
-        if not self.busy() and urls and urls[0].isLocalFile():
+        if self.busy() or not urls:
+            return
+        if urls[0].isLocalFile() or yt.find_link(urls[0].toString()) is not None:
             event.acceptProposedAction()
 
     def dropEvent(self, event: QDropEvent) -> None:
         urls = event.mimeData().urls()
-        if urls and urls[0].isLocalFile():
+        if not urls:
+            return
+        if urls[0].isLocalFile():
             path = Path(urls[0].toLocalFile())
             if path.is_file():
                 event.acceptProposedAction()
                 self.open_file(path)
+        elif (link := yt.find_link(urls[0].toString())) is not None:
+            # A link dragged from the browser: fill the box, the user presses the button.
+            event.acceptProposedAction()
+            self.show_file_page()
+            self.file_page.youtube.set_link(link.url)
+
+    # -- saving audio from a YouTube link (0.5.0) --------------------------------
+    def _shortcut_paste(self) -> None:
+        if self.stack.currentWidget() is self.file_page and not self.busy():
+            self.file_page.paste_link()
+
+    def js_runtime_path(self) -> Path | None:
+        """A Deno to run YouTube's player scripts: the downloaded one, or one on the PATH."""
+        manager = self.runtime_manager_factory(self.user)
+        try:
+            entry: Path | None = manager.require(JS_RUNTIME.id)
+        except ComponentMissingError:
+            entry = None
+        return yt.find_js_runtime(entry)
+
+    def confirm_runtime_download(self) -> bool:
+        """Ask before downloading Deno (consent first, like every other component)."""
+        manager = self.runtime_manager_factory(self.user)
+        plan = manager.plan([JS_RUNTIME])
+        file = JS_RUNTIME.file_for(manager.platform_key)
+        box = QMessageBox(self)
+        box.setIcon(QMessageBox.Icon.Question)
+        box.setWindowTitle(_("One more helper is needed"))
+        box.setText(_("Reading YouTube links needs a small helper program."))
+        box.setInformativeText(
+            _(
+                "{name}: {purpose}\n\nDownload: {size} (about {installed} on disk) from {source}.\n"
+                "License: {license}.\n\nIt is downloaded once and kept. Nothing else is downloaded."
+            ).format(
+                name=_(JS_RUNTIME.name_id),
+                purpose=_(JS_RUNTIME.purpose_id),
+                size=human_size(plan.download_bytes),
+                installed=human_size(plan.install_bytes),
+                source=file.domain if file else "github.com",
+                license=JS_RUNTIME.license_id,
+            )
+        )
+        download = box.addButton(_("Download and continue"), QMessageBox.ButtonRole.AcceptRole)
+        box.addButton(QMessageBox.StandardButton.Cancel)
+        box.setDefaultButton(download)
+        box.exec()
+        return box.clickedButton() is download
+
+    def start_youtube(self, text: str, kbps: int, make_score: bool) -> None:
+        """Check the link, make sure the helper is there, save the audio, and go on."""
+        if self.busy():
+            return
+        try:
+            link = yt.parse_link(text)
+            yt.check_bitrate(kbps)
+        except (InvalidYoutubeLinkError, ValueError) as exc:
+            self.show_file_page()
+            if isinstance(exc, NotiruaError):
+                QMessageBox.warning(
+                    self, _("YouTube link"), f"{exc.user_message()}\n\n{exc.user_hint()}"
+                )
+            return
+        self.user.youtube_bitrate = kbps
+        self.user.youtube_make_score = make_score
+        settings_mod.save(self.user)
+        self._youtube_request = (link, kbps, make_score)
+        self._retry_kind = "youtube"
+        runtime = self.js_runtime_path()
+        if runtime is None:
+            if not self.confirm_runtime_download():
+                self.show_file_page()
+                return
+            self._install_runtime()
+            return
+        self._run_youtube(runtime)
+
+    def _install_runtime(self) -> None:
+        manager = self.runtime_manager_factory(self.user)
+        consent = manager.make_consent([JS_RUNTIME])
+
+        def work(progress: ProgressCallback, cancel: CancelToken) -> None:
+            manager.install([JS_RUNTIME], consent, progress=progress, cancel=cancel)
+
+        self.progress_page.begin_stages(_("Getting the helper program"), RUNTIME_STAGES)
+        self.stack.setCurrentWidget(self.progress_page)
+        self.progress_page.cancel_button.setFocus()
+        self._start_task(work, "runtime", self._runtime_installed, self._youtube_failed)
+
+    def _runtime_installed(self, _result: object) -> None:
+        self.job_task = None
+        runtime = self.js_runtime_path()
+        if runtime is None:  # the install said done but the file is not there
+            self._youtube_failed(ComponentMissingError(name=JS_RUNTIME.id))
+            return
+        self._run_youtube(runtime)
+
+    def _run_youtube(self, runtime: Path | None) -> None:
+        assert self._youtube_request is not None
+        link, kbps, _make_score = self._youtube_request
+        out_dir = yt.default_folder(self.user.youtube_dir)
+        client = self.youtube_client_factory(runtime)
+
+        def work(progress: ProgressCallback, cancel: CancelToken) -> yt.SavedAudio:
+            return yt.save_as_mp3(
+                link, out_dir, kbps, client=client, progress=progress, cancel=cancel
+            )
+
+        self.progress_page.begin_stages(
+            _("Saving the audio from YouTube"),
+            [(spec.name, spec.message_id) for spec in yt.STAGES],
+        )
+        self.stack.setCurrentWidget(self.progress_page)
+        self.progress_page.cancel_button.setFocus()
+        self._start_task(work, "youtube", self._youtube_done, self._youtube_failed)
+
+    def _start_task(
+        self,
+        work: Work,
+        name: str,
+        on_done: Callable[[Any], None],
+        on_failed: Callable[[BaseException], None],
+    ) -> None:
+        task = Task(work, name, self)
+        task.progress.connect(self._job_progress)
+        task.succeeded.connect(on_done)
+        task.failed.connect(on_failed)
+        task.cancelled.connect(self._youtube_cancelled)
+        self.job_task = task
+        task.start()
+
+    def _youtube_done(self, saved: yt.SavedAudio) -> None:
+        self.job_task = None
+        self.progress_page.panel.finish()
+        self.progress_page.running = False
+        self.saved_audio = saved
+        self.setWindowTitle(APP_TITLE)
+        assert self._youtube_request is not None
+        make_score = self._youtube_request[2]
+        self.open_file(saved.path)
+        self.options_page.show_saved_audio(saved.path)
+        if make_score:
+            # The audio is saved: carry on to the sheet music with the usual defaults.
+            self.options_page.start_button.click()
+        else:
+            self._notify(_("The audio is saved."), saved.title)
+
+    def _youtube_failed(self, error: BaseException) -> None:
+        self.job_task = None
+        self.setWindowTitle(APP_TITLE)
+        self.progress_page.show_error(error)
+        message = error.user_message() if isinstance(error, NotiruaError) else str(error)
+        self._notify(_("Saving the audio failed."), message)
+
+    def _youtube_cancelled(self) -> None:
+        self.job_task = None
+        self.setWindowTitle(APP_TITLE)
+        self.progress_page.running = False
+        self.show_file_page()
 
     # -- the job -----------------------------------------------------------
     def _next_out_dir(self) -> Path:
@@ -267,6 +452,7 @@ class MainWindow(QMainWindow):
             self.options = options
             self.show_setup()
             return
+        self._retry_kind = "score"
         self.options = options
         self.user.paper = options.paper
         self.user.guitar_tuning = options.guitar_tuning
@@ -294,7 +480,10 @@ class MainWindow(QMainWindow):
         task.start()
 
     def retry_job(self) -> None:
-        if self.options is not None:
+        if self._retry_kind == "youtube" and self._youtube_request is not None:
+            link, kbps, make_score = self._youtube_request
+            self.start_youtube(link.url, kbps, make_score)
+        elif self.options is not None:
             self.start_job(self.options)
 
     def cancel_job(self) -> None:
@@ -513,6 +702,10 @@ class MainWindow(QMainWindow):
         self.about_action = QAction(_("About {name}").format(name=APP_NAME), self)
         self.about_action.setMenuRole(QAction.MenuRole.AboutRole)
         self.about_action.triggered.connect(lambda: self.open_settings(about=True))
+
+        # Ctrl+V (⌘V) on the first screen pastes a YouTube link from the clipboard.
+        self.paste_shortcut = QShortcut(QKeySequence.StandardKey.Paste, self)
+        self.paste_shortcut.activated.connect(self._shortcut_paste)
 
         bar = self.menuBar()
         # Kept as attributes: PySide may otherwise drop the wrappers of native menus.

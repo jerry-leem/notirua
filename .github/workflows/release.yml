@@ -1,7 +1,10 @@
 name: Release build
 
-# Windows installer (M6). macOS and Linux are built locally for now
-# (packaging/build_app.py, packaging/linux/build.sh); README "릴리스를 만드는 방법".
+# Installers for the three systems (M6): Windows (.exe), macOS Apple Silicon (.dmg),
+# and Linux x86_64 (.AppImage). Each job builds, checks the bundle, and tries the result;
+# `publish` attaches whatever was built to the release (README "릴리스를 만드는 방법").
+# A pull request that changes the packaging runs the same builds, so a change cannot break
+# a release unnoticed; it never publishes.
 on:
   workflow_dispatch:
     inputs:
@@ -11,6 +14,12 @@ on:
         default: ""
   push:
     tags: ["v*"]
+  pull_request:
+    paths:
+      - ".github/workflows/release.yml"
+      - "packaging/**"
+      - "pyproject.toml"
+      - "uv.lock"
 
 permissions:
   contents: read
@@ -132,11 +141,104 @@ jobs:
             dist/*.exe
             dist/lgpl-av/*.whl
 
+  linux:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 150
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+      - name: Tag matches the version in pyproject.toml
+        if: github.ref_type == 'tag' || inputs.release_tag != ''
+        env:
+          RELEASE_TAG: ${{ inputs.release_tag || github.ref_name }}
+        run: uv run --no-project --python 3.11 python packaging/versioning.py --tag "$RELEASE_TAG"
+      # The LGPL FFmpeg wheel takes the longest; packaging/linux/build.sh skips it when the
+      # wheel is already in dist/lgpl-av.
+      - name: LGPL FFmpeg cache
+        uses: actions/cache@v4
+        with:
+          path: dist/lgpl-av
+          key: lgpl-av-linux-${{ hashFiles('packaging/build_lgpl_av.py', 'packaging/linux/Dockerfile') }}
+      - name: Install
+        run: uv sync --locked
+      # Ubuntu 20.04 image (glibc 2.31): FFmpeg wheel, bundle, bundle check, AppImage.
+      - name: Bundle, check, and AppImage
+        run: packaging/linux/build.sh
+      # The window needs Qt's system libraries, which a desktop Linux has (README "Run from source").
+      - name: Qt system libraries
+        run: sudo apt-get update && sudo apt-get install -y libegl1 libgl1 libxkbcommon0 libfontconfig1 libdbus-1-3
+      # Run it like a user (FUSE is not needed): components, sheet music, MP3/M4A mixes, window.
+      - name: Try the AppImage
+        env:
+          APPIMAGE_EXTRACT_AND_RUN: "1"
+          QT_QPA_PLATFORM: offscreen
+        run: |
+          APPIMAGE="$(ls "$PWD"/dist/Notirua-*-linux-x86_64.AppImage | head -1)"
+          # Not build/: the Docker build made that folder as root.
+          uv run python packaging/smoke_test.py --cli "$APPIMAGE" --gui "$APPIMAGE" --work "$RUNNER_TEMP/smoke"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: notirua-linux
+          path: |
+            dist/*.AppImage
+            dist/lgpl-av/*.whl
+
+  macos:
+    # macOS 15 or newer: the LilyPond build the app downloads needs a newer system than 14
+    # to start (its "Try the app" step). The app itself is built for macOS 14 and later
+    # (MACOSX_DEPLOYMENT_TARGET in build_lgpl_av.py).
+    runs-on: macos-15
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+      - name: Tag matches the version in pyproject.toml
+        if: github.ref_type == 'tag' || inputs.release_tag != ''
+        env:
+          RELEASE_TAG: ${{ inputs.release_tag || github.ref_name }}
+        run: uv run --no-project --python 3.11 python packaging/versioning.py --tag "$RELEASE_TAG"
+      - name: LGPL FFmpeg cache
+        id: av-cache
+        uses: actions/cache@v4
+        with:
+          path: dist/lgpl-av
+          key: lgpl-av-macos-arm64-${{ hashFiles('packaging/build_lgpl_av.py') }}
+      - name: pkg-config
+        run: command -v pkg-config >/dev/null || brew install pkgconf
+      - name: Install
+        run: uv sync --locked
+      - name: LGPL FFmpeg and PyAV wheel
+        if: steps.av-cache.outputs.cache-hit != 'true'
+        run: uv run python packaging/build_lgpl_av.py
+      - name: Bundle and check
+        run: uv run python packaging/build_app.py
+      # Not signed or notarized (no secrets here): the disk image is for people who accept
+      # the first-start warning described in the release notes.
+      - name: Disk image
+        run: uv run python packaging/make_dmg.py
+      - name: Try the app
+        env:
+          QT_QPA_PLATFORM: offscreen
+        run: |
+          APP="$PWD/dist/app/Notirua.app/Contents/MacOS"
+          uv run python packaging/smoke_test.py --cli "$APP/notirua-cli" --gui "$APP/Notirua"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: notirua-macos
+          path: |
+            dist/*.dmg
+            dist/lgpl-av/*.whl
+
   # The installer goes from the build job to the release inside GitHub, so nobody
   # has to download and re-upload it. Needs the release to exist (a draft is fine).
   publish:
-    needs: windows
-    if: github.ref_type == 'tag' || inputs.release_tag != ''
+    needs: [windows, linux, macos]
+    # Runs even when one system failed, so the others are not held back; the warning lists it.
+    if: ${{ !cancelled() && (github.ref_type == 'tag' || inputs.release_tag != '') }}
     runs-on: ubuntu-latest
     timeout-minutes: 15
     permissions:
@@ -147,14 +249,27 @@ jobs:
       TAG: ${{ inputs.release_tag || github.ref_name }}
     steps:
       - uses: actions/download-artifact@v4
+        continue-on-error: true  # a system that failed has no artifact
         with:
-          name: notirua-windows
+          pattern: notirua-*
+          merge-multiple: true
           path: dist
-      - name: Attach the installer to the release
+      - name: Attach the installers to the release
+        env:
+          RESULTS: "Windows=${{ needs.windows.result }} Linux=${{ needs.linux.result }} macOS=${{ needs.macos.result }}"
         run: |
+          for r in $RESULTS; do
+            case "$r" in *=success) ;; *) echo "::warning::Not attached, build did not succeed: $r" ;; esac
+          done
+          shopt -s nullglob
+          files=(dist/Notirua-*-setup.exe dist/Notirua-*.dmg dist/Notirua-*.AppImage)
+          if [ ${#files[@]} -eq 0 ]; then
+            echo "::error::No installer was built, nothing to attach"
+            exit 1
+          fi
           if ! gh release view "$TAG" >/dev/null 2>&1; then
             echo "::warning::No release named $TAG yet; create it, then run this workflow again with release_tag=$TAG"
             exit 0
           fi
-          gh release upload "$TAG" dist/Notirua-*-setup.exe --clobber
+          gh release upload "$TAG" "${files[@]}" --clobber
           gh release view "$TAG" --json assets --jq '.assets[].name'

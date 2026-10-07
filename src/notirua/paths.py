@@ -36,3 +36,15 @@ def log_dir() -> Path:
 
 def default_components_dir() -> Path:
     return data_dir() / "components"
+
+
+def music_dir() -> Path:
+    """Where audio saved from YouTube goes by default (``<Music>/Notirua``)."""
+    env = os.environ.get("NOTIRUA_MUSIC_DIR")
+    if env:
+        return Path(env)
+    try:
+        base = Path(_dirs.user_music_dir)
+    except Exception:  # platformdirs cannot find a Music folder on some Linux setups
+        base = Path.home() / "Music"
+    return base / "Notirua"

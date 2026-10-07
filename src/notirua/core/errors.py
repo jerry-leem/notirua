@@ -122,3 +122,51 @@ class ConsentRequiredError(NotiruaError):
     code = "E-CONSENT"
     message_id = N_("Downloading components needs your permission first.")
     hint_id = N_("Review the components and choose “Agree and install”.")
+
+
+class YoutubeError(NotiruaError):
+    code = "E-YT"
+    message_id = N_("The audio from YouTube could not be saved.")
+    hint_id = N_("Check the link and your internet connection, then try again.")
+
+
+class InvalidYoutubeLinkError(YoutubeError):
+    code = "E-YT-LINK"
+    message_id = N_("This is not a link to a single YouTube video.")
+    hint_id = N_("Copy the video's address from your browser (or its Share button) and paste it.")
+
+
+class YoutubeSignInError(YoutubeError):
+    code = "E-YT-SIGN-IN"
+    message_id = N_("This video needs you to sign in (private, members-only, or age-restricted).")
+    hint_id = N_("Choose a public video that plays without signing in.")
+
+
+class YoutubeUnavailableError(YoutubeError):
+    code = "E-YT-UNAVAILABLE"
+    message_id = N_("This video is not available (removed, blocked, or not shown in your country).")
+    hint_id = N_("Check that the video plays in your browser, or choose another one.")
+
+
+class YoutubeLiveError(YoutubeError):
+    code = "E-YT-LIVE"
+    message_id = N_("This is a live stream or a video that has not started yet.")
+    hint_id = N_("Try again after the broadcast has ended and the recording is available.")
+
+
+class YoutubeBotCheckError(YoutubeError):
+    code = "E-YT-BOT-CHECK"
+    message_id = N_("YouTube is asking for a check or has limited your requests for now.")
+    hint_id = N_("Wait a while, then try again. Another network or video can also help.")
+
+
+class YoutubeNetworkError(YoutubeError):
+    code = "E-YT-NETWORK"
+    message_id = N_("YouTube could not be reached.")
+    hint_id = N_("Check your internet connection and try again.")
+
+
+class YoutubeChangedError(YoutubeError):
+    code = "E-YT-CHANGED"
+    message_id = N_("YouTube has changed in a way this version of Notirua cannot follow.")
+    hint_id = N_("Install the newest Notirua from the releases page and try again.")

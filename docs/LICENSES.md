@@ -23,6 +23,9 @@ unlicensed components are never included (SPEC 7.4).
 | platformdirs | 4.x | MIT | https://github.com/tox-dev/platformdirs |
 | Babel | 2.18 | BSD-3-Clause | https://babel.pocoo.org |
 | music21 | 10.x | BSD-3-Clause | https://github.com/cuthbertLab/music21 |
+| yt-dlp (reads YouTube links; 0.5.0) | 2026.8.19 | Unlicense (`licenses/yt-dlp/`) | https://github.com/yt-dlp/yt-dlp |
+| yt-dlp-ejs (scripts that answer YouTube's player check) | 0.8.0 | Unlicense, MIT, and ISC (`licenses/yt-dlp-ejs/`) | https://github.com/yt-dlp/ejs |
+| certifi (CA certificates for HTTPS) | 2026.7 | MPL-2.0 (`licenses/certifi/`) | https://github.com/certifi/python-certifi |
 | PySide6 / Qt 6 (Essentials + QtPdf from Addons) | 6.9 | LGPL-3.0 (dynamically linked) | https://www.qt.io/qt-for-python |
 | Noto Sans CJK KR (Linux build only) | Sans2.004 | OFL-1.1 (`licenses/noto-cjk/`) | https://github.com/notofonts/noto-cjk |
 | PDFium (inside QtPdf) | Qt 6.9 | BSD-3-Clause | https://pdfium.googlesource.com/pdfium |
@@ -34,6 +37,12 @@ unlicensed components are never included (SPEC 7.4).
 | HT-Demucs 6-stem ONNX (`htdemucs_6s.onnx`) | HF rev `49df9b6` | MIT | https://huggingface.co/StemSplitio/htdemucs-6s-onnx |
 | LilyPond (separate process) | 2.26.0 | GPL-3.0-or-later | https://lilypond.org |
 | URW base35 fonts (inside LilyPond) | — | AGPL-3.0 with font exception | https://github.com/ArtifexSoftware/urw-base35-fonts |
+
+### Optional, only if you use YouTube links (asked for first, with consent)
+
+| Component | Version | License | Source |
+|---|---|---|---|
+| Deno (a JavaScript runtime that yt-dlp starts as a separate process) | 2.9.7 | MIT (`licenses/deno/`) | https://github.com/denoland/deno |
 
 ## Build and test only (not distributed)
 

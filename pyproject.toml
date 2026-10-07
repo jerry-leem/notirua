@@ -1,6 +1,6 @@
 [project]
 name = "notirua"
-version = "0.4.2"
+version = "0.5.0"
 description = "Convert audio into per-instrument scores, TAB, and PDFs."
 readme = "README.md"
 requires-python = "==3.11.*"
@@ -19,6 +19,12 @@ dependencies = [
     "platformdirs>=4.2",
     "babel>=2.15",
     "music21>=10,<11",
+    # YouTube links (0.5.0): yt-dlp reads the page, yt-dlp-ejs holds the scripts that solve
+    # YouTube's player challenge (run by a JavaScript runtime, see components/manifest.py),
+    # and certifi gives frozen apps a CA bundle for HTTPS.
+    "yt-dlp>=2026.8.19",
+    "yt-dlp-ejs>=0.8,<0.9",
+    "certifi>=2024.8.30",
     # PySide6 6.10+ Linux wheels need glibc 2.34; 6.9 is the last line on manylinux_2_28,
     # which keeps glibc 2.31 supported (DECISIONS D14). Same Qt on every platform.
     "PySide6-Essentials>=6.9,<6.10",
@@ -76,7 +82,7 @@ mypy_path = "src"
 packages = ["notirua"]
 
 [[tool.mypy.overrides]]
-module = ["av.*", "soxr.*", "onnxruntime.*", "pypdf.*"]
+module = ["av.*", "soxr.*", "onnxruntime.*", "pypdf.*", "yt_dlp", "yt_dlp.*", "yt_dlp_ejs", "yt_dlp_ejs.*"]
 ignore_missing_imports = true
 
 [[tool.mypy.overrides]]

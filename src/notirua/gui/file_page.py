@@ -16,6 +16,7 @@ from PySide6.QtWidgets import (
 )
 
 from notirua.gui.widgets import heading, primary_button
+from notirua.gui.youtube_box import YoutubeBox
 from notirua.i18n import _
 
 AUDIO_PATTERNS = (
@@ -26,6 +27,7 @@ MAX_RECENT = 5
 
 class FilePage(QWidget):
     file_chosen = Signal(Path)
+    youtube_requested = Signal(str, int, bool)  # link, kbps, also make the sheet music
 
     def __init__(self, parent: QWidget | None = None) -> None:
         super().__init__(parent)
@@ -60,6 +62,9 @@ class FilePage(QWidget):
         formats.setWordWrap(True)
         dl.addWidget(formats)
         layout.addWidget(drop)
+        self.youtube = YoutubeBox()
+        self.youtube.requested.connect(self.youtube_requested)
+        layout.addWidget(self.youtube)
         self.recent_row = QHBoxLayout()
         layout.addLayout(self.recent_row)
         layout.addStretch(1)
@@ -83,6 +88,10 @@ class FilePage(QWidget):
             button.clicked.connect(lambda _c=False, p=path: self.file_chosen.emit(p))
             self.recent_row.addWidget(button)
         self.recent_row.addStretch(1)
+
+    def paste_link(self) -> None:
+        """Ctrl+V on this screen: take a YouTube link from the clipboard."""
+        self.youtube.paste_from_clipboard()
 
     def choose_file(self) -> None:
         path, _filter = QFileDialog.getOpenFileName(

@@ -138,14 +138,69 @@ LILYPOND = Component(
 
 COMPONENTS: tuple[Component, ...] = (SEPARATION_MODEL, LILYPOND)
 
+# Deno runs the scripts that solve YouTube's player challenge (yt-dlp needs a JavaScript
+# runtime for that). It is optional: only people who paste YouTube links need it, so it is
+# not part of the first-run setup and is asked for (with consent) the first time it is used.
+_DENO_VERSION = "2.9.7"
+_DENO_BASE = f"https://github.com/denoland/deno/releases/download/v{_DENO_VERSION}/"
+
+JS_RUNTIME = Component(
+    id="deno",
+    name_id=N_("Helper program (Deno)"),
+    purpose_id=N_("Lets Notirua read YouTube links. Only needed for saving audio from YouTube."),
+    version=_DENO_VERSION,
+    required=False,
+    license_id="MIT",
+    license_url="https://github.com/denoland/deno/blob/main/LICENSE.md",
+    installed_size=97_830_000,
+    files={
+        "darwin-arm64": ComponentFile(
+            url=_DENO_BASE + "deno-aarch64-apple-darwin.zip",
+            sha256="5cd46d6268f6f78f5d88bdc7159d20bd44cdaa4b3303474839f87ec6fe7ae25c",
+            size=38_469_316,
+            archive="zip",
+            filename=f"deno-{_DENO_VERSION}-aarch64-apple-darwin.zip",
+        ),
+        "darwin-x86_64": ComponentFile(
+            url=_DENO_BASE + "deno-x86_64-apple-darwin.zip",
+            sha256="95daaff11c116a52ad54785e7914c8e9c9cdcaba793c5ed929c74ca2d8e6259a",
+            size=42_295_422,
+            archive="zip",
+            filename=f"deno-{_DENO_VERSION}-x86_64-apple-darwin.zip",
+        ),
+        "linux-x86_64": ComponentFile(
+            url=_DENO_BASE + "deno-x86_64-unknown-linux-gnu.zip",
+            sha256="c6527f24f4b16031d3ae4fa9f658d5f11534c8d84ce7dc8502420280919c3490",
+            size=41_596_794,
+            archive="zip",
+            filename=f"deno-{_DENO_VERSION}-x86_64-unknown-linux-gnu.zip",
+        ),
+        "windows-x86_64": ComponentFile(
+            url=_DENO_BASE + "deno-x86_64-pc-windows-msvc.zip",
+            sha256="a0c3101b4158d1dfb7d6a78a7bf0f3de80c96bb423c152beec8beb22786f2238",
+            size=42_630_221,
+            archive="zip",
+            filename=f"deno-{_DENO_VERSION}-x86_64-pc-windows-msvc.zip",
+        ),
+    },
+    entry="deno{exe}",
+)
+
+OPTIONAL_COMPONENTS: tuple[Component, ...] = (JS_RUNTIME,)
+
 
 def components_for_platform(platform_key: str | None = None) -> list[Component]:
     key = platform_key or current_platform()
     return [c for c in COMPONENTS if c.file_for(key) is not None]
 
 
+def optional_components_for_platform(platform_key: str | None = None) -> list[Component]:
+    key = platform_key or current_platform()
+    return [c for c in OPTIONAL_COMPONENTS if c.file_for(key) is not None]
+
+
 def by_id(component_id: str) -> Component:
-    for c in COMPONENTS:
+    for c in (*COMPONENTS, *OPTIONAL_COMPONENTS):
         if c.id == component_id:
             return c
     raise KeyError(component_id)

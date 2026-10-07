@@ -12,7 +12,7 @@ import sys
 from importlib.metadata import version
 from pathlib import Path
 
-from PyInstaller.utils.hooks import copy_metadata
+from PyInstaller.utils.hooks import collect_data_files, collect_submodules, copy_metadata
 
 ROOT = Path(SPECPATH).resolve().parent
 PACKAGING = ROOT / "packaging"
@@ -29,6 +29,9 @@ datas = [
     (str(ROOT / "LICENSE"), "."),
     (str(ROOT / "licenses"), "licenses"),
     *copy_metadata("notirua"),  # notirua.__version__ reads it
+    # YouTube links (0.5.0): the scripts that answer YouTube's player check, and the CA bundle.
+    *collect_data_files("yt_dlp_ejs"),
+    *collect_data_files("certifi"),
 ]
 for mo in sorted((ROOT / "locales").glob("*/LC_MESSAGES/notirua.mo")):
     lang = mo.parent.parent.name
@@ -91,7 +94,8 @@ def analysis(script):
         [str(PACKAGING / script)],
         pathex=[str(ROOT / "src")],
         datas=datas,
-        hiddenimports=["notirua.resources.models"],
+        # yt-dlp loads its site extractors by name, so PyInstaller cannot see them.
+        hiddenimports=["notirua.resources.models", *collect_submodules("yt_dlp")],
         excludes=EXCLUDES,
         noarchive=False,
     )

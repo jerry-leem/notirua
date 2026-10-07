@@ -15,7 +15,7 @@ os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 @pytest.fixture(autouse=True)
 def isolated_dirs(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Iterator[None]:
     """Keep every test away from the real user folders."""
-    for var in ("DATA", "CONFIG", "CACHE", "LOG"):
+    for var in ("DATA", "CONFIG", "CACHE", "LOG", "MUSIC"):
         monkeypatch.setenv(f"NOTIRUA_{var}_DIR", str(tmp_path / f"user-{var.lower()}"))
     i18n.set_language("en")
     yield

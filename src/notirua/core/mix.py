@@ -132,8 +132,14 @@ def write_audio(
     fmt: str,
     progress: Callable[[float], None] | None = None,
     cancel: CancelToken | None = None,
+    bit_rate: int | None = None,
+    tags: Mapping[str, str] | None = None,
 ) -> Path:
-    """Encode ``audio`` (float, ``(2, n)`` at 44.1 kHz) as ``fmt`` to ``path``."""
+    """Encode ``audio`` (float, ``(2, n)`` at 44.1 kHz) as ``fmt`` to ``path``.
+
+    ``bit_rate`` (bits per second) replaces the format's default for lossy formats;
+    ``tags`` (for example ``{"title": ...}``) go into the file's metadata.
+    """
     if fmt not in FORMATS:
         raise ValueError(f"unknown format: {fmt}")
     path.parent.mkdir(parents=True, exist_ok=True)
@@ -144,7 +150,8 @@ def write_audio(
         return path
     import av
 
-    _suffix, container_name, encoder, bit_rate = FORMATS[fmt]
+    _suffix, container_name, encoder, default_rate = FORMATS[fmt]
+    bit_rate = bit_rate or default_rate
     tmp = path.with_name(f".{path.name}.part")
     total = audio.shape[1]
     try:
@@ -153,6 +160,8 @@ def write_audio(
             assert isinstance(stream, av.audio.stream.AudioStream)
             stream.layout = "stereo"
             stream.bit_rate = bit_rate
+            for key, value in (tags or {}).items():
+                out.metadata[key] = value
             for start in range(0, total, ENCODE_BLOCK):
                 if cancel is not None:
                     cancel.raise_if_cancelled()
