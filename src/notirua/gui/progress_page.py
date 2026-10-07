@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from collections.abc import Sequence
+
 from PySide6.QtCore import Signal
 from PySide6.QtWidgets import QHBoxLayout, QMessageBox, QPushButton, QVBoxLayout, QWidget
 
@@ -44,6 +46,14 @@ class ProgressPage(QWidget):
     def begin(self, title: str) -> None:
         self.title.setText(_("Making sheet music for {title}").format(title=title))
         stages = [(name, _(message)) for name, message in STAGE_MESSAGES.items()]
+        self._begin(stages)
+
+    def begin_stages(self, title: str, stages: Sequence[tuple[str, str]]) -> None:
+        """Another kind of job (saving audio from YouTube, installing a helper)."""
+        self.title.setText(title)
+        self._begin([(name, _(message)) for name, message in stages])
+
+    def _begin(self, stages: Sequence[tuple[str, str]]) -> None:
         new_panel = ProgressPanel(stages)
         self.layout_.replaceWidget(self.panel, new_panel)
         self.panel.deleteLater()

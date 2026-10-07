@@ -14,7 +14,8 @@ from typing import TextIO
 
 from notirua import __version__
 from notirua import settings as settings_mod
-from notirua.core.errors import Cancelled, NotiruaError
+from notirua.core import youtube as yt
+from notirua.core.errors import Cancelled, InvalidYoutubeLinkError, NotiruaError
 from notirua.core.model import STEMS
 from notirua.core.progress import CancelToken, ProgressEvent
 from notirua.i18n import (
@@ -123,9 +124,22 @@ def build_parser() -> argparse.ArgumentParser:
     sub = parser.add_subparsers(dest="command", metavar=_("command"))
 
     t = sub.add_parser("transcribe", help=_("Make sheet music from an audio file."))
-    t.add_argument("file", type=Path, help=_("Audio or video file to read."))
+    t.add_argument("file", help=_("Audio or video file to read, or a YouTube video link."))
     t.add_argument("--out", type=Path, default=Path("."), help=_("Folder for the results."))
     t.add_argument("--title", help=_("Song title printed on every page."))
+    t.add_argument(
+        "--bitrate",
+        type=_whole_number,
+        choices=list(yt.BITRATES),
+        help=_("For a YouTube link: MP3 quality in kbps (default {kbps}).").format(
+            kbps=yt.DEFAULT_BITRATE
+        ),
+    )
+    t.add_argument(
+        "--audio-out",
+        type=Path,
+        help=_("For a YouTube link: folder for the saved MP3 (default: Music/Notirua)."),
+    )
     t.add_argument(
         "--stems",
         help=_("Instruments to include, comma separated: {choices}.").format(
@@ -211,6 +225,28 @@ def build_parser() -> argparse.ArgumentParser:
     m.add_argument("--start", type=_number, help=_("Start time in seconds."))
     m.add_argument("--end", type=_number, help=_("End time in seconds."))
 
+    y = sub.add_parser(
+        "youtube",
+        help=_("Save the audio of a YouTube video as an MP3 file."),
+        description=_(
+            "Save the audio of a YouTube video as an MP3 file named after the video. "
+            "Only use videos you have the right to use."
+        ),
+    )
+    y.add_argument("link", nargs="?", help=_("Link of one YouTube video."))
+    y.add_argument(
+        "--check",
+        action="store_true",
+        help=_("Check offline that YouTube support is installed correctly."),
+    )
+    y.add_argument("--out", type=Path, help=_("Folder for the MP3 file (default: Music/Notirua)."))
+    y.add_argument(
+        "--bitrate",
+        type=_whole_number,
+        choices=list(yt.BITRATES),
+        help=_("MP3 quality in kbps (default {kbps}).").format(kbps=yt.DEFAULT_BITRATE),
+    )
+
     s = sub.add_parser("setup", help=_("Install the components Notirua needs."))
     s.add_argument(
         "--accept-licenses",
@@ -222,6 +258,11 @@ def build_parser() -> argparse.ArgumentParser:
     )
     s.add_argument("--dir", type=Path, help=_("Install location."))
     s.add_argument("--remove", metavar="ID", help=_("Remove an installed component."))
+    s.add_argument(
+        "--youtube",
+        action="store_true",
+        help=_("Install the helper program that reads YouTube links (Deno)."),
+    )
 
     sub.add_parser("components", help=_("Show installed components."))
     c = sub.add_parser("cache", help=_("Show or clear saved intermediate results."))
@@ -275,6 +316,8 @@ def main(argv: Sequence[str] | None = None) -> int:
             return cmd_transcribe(args, user)
         if args.command == "mix":
             return cmd_mix(args, user)
+        if args.command == "youtube":
+            return cmd_youtube(args, user)
         if args.command == "setup":
             return cmd_setup(args, user)
         if args.command == "components":
@@ -295,6 +338,97 @@ def main(argv: Sequence[str] | None = None) -> int:
     return EXIT_USAGE
 
 
+def _youtube_runtime(user: settings_mod.Settings) -> Path | None:
+    """The Deno that reads YouTube's player scripts: the installed helper, or one on the PATH."""
+    from notirua.components.manager import optional_manager_from_settings
+    from notirua.components.manifest import JS_RUNTIME
+    from notirua.core.errors import ComponentMissingError
+
+    try:
+        entry: Path | None = optional_manager_from_settings(user).require(JS_RUNTIME.id)
+    except ComponentMissingError:
+        entry = None
+    return yt.find_js_runtime(entry)
+
+
+def _save_youtube_audio(
+    link: yt.YoutubeLink, out_dir: Path, kbps: int, user: settings_mod.Settings
+) -> yt.SavedAudio | int:
+    """Save the MP3, or return the exit code to stop with."""
+    runtime = _youtube_runtime(user)
+    if runtime is None:
+        print(_("Reading YouTube links needs a small helper program."), file=sys.stderr)
+        print(_("Run “notirua setup --youtube” first."), file=sys.stderr)
+        return EXIT_SETUP
+    cancel = CancelToken()
+    try:
+        saved = yt.save_as_mp3(
+            link,
+            out_dir,
+            kbps,
+            client=yt.YoutubeClient(runtime),
+            progress=ProgressPrinter(),
+            cancel=cancel,
+        )
+    except KeyboardInterrupt:
+        cancel.cancel()
+        raise Cancelled() from None
+    print(_("Saved: {path}").format(path=saved.path))
+    return saved
+
+
+def _parse_youtube_link(text: str) -> yt.YoutubeLink | None:
+    try:
+        return yt.parse_link(text)
+    except InvalidYoutubeLinkError as exc:
+        print(_("Error: {message}").format(message=exc.user_message()), file=sys.stderr)
+        print(_("What to do: {hint}").format(hint=exc.user_hint()), file=sys.stderr)
+        return None
+
+
+def _check_youtube_install(user: settings_mod.Settings) -> int:
+    checks = yt.installation_check(_youtube_runtime(user))
+    for check in checks:
+        optional = check.name == "deno"
+        mark = "✓" if check.ok else ("–" if optional else "✗")
+        print(f"{mark} {check.name}: {check.detail}")
+    return EXIT_OK if all(c.ok for c in checks if c.name != "deno") else EXIT_ERROR
+
+
+def cmd_youtube(args: argparse.Namespace, user: settings_mod.Settings) -> int:
+    if args.check:
+        return _check_youtube_install(user)
+    if not args.link:
+        print(_("Give the link of a YouTube video."), file=sys.stderr)
+        return EXIT_USAGE
+    link = _parse_youtube_link(args.link)
+    if link is None:
+        return EXIT_USAGE
+    out_dir = args.out or yt.default_folder(user.youtube_dir)
+    saved = _save_youtube_audio(link, out_dir, args.bitrate or user.youtube_bitrate, user)
+    return saved if isinstance(saved, int) else EXIT_OK
+
+
+def _use_youtube_source(args: argparse.Namespace, user: settings_mod.Settings) -> int | None:
+    """When ``transcribe`` got a YouTube link instead of a file: save the MP3 and use it.
+
+    Returns an exit code to stop with, or ``None`` to go on with ``args.file``.
+    """
+    if Path(args.file).exists():
+        return None
+    try:
+        link = yt.parse_link(args.file)
+    except InvalidYoutubeLinkError:
+        return None  # not a link either: the usual "File not found" follows
+    out_dir = args.audio_out or yt.default_folder(user.youtube_dir)
+    saved = _save_youtube_audio(link, out_dir, args.bitrate or user.youtube_bitrate, user)
+    if isinstance(saved, int):
+        return saved
+    args.file = saved.path
+    args.title = args.title or saved.title
+    return None
+
+
 def cmd_transcribe(args: argparse.Namespace, user: settings_mod.Settings) -> int:
     from notirua.components.manager import manager_from_settings
     from notirua.core.pipeline import INSTRUMENT_NAMES, JobOptions, Pipeline
@@ -308,6 +442,10 @@ def cmd_transcribe(args: argparse.Namespace, user: settings_mod.Settings) -> int
         )
         print(_("Run “notirua setup” first."), file=sys.stderr)
         return EXIT_SETUP
+    code = _use_youtube_source(args, user)
+    if code is not None:
+        return code
+    args.file = Path(args.file)
     if not args.file.is_file():
         print(_("File not found: {path}").format(path=args.file), file=sys.stderr)
         return EXIT_USAGE
@@ -483,6 +621,8 @@ def cmd_setup(args: argparse.Namespace, user: settings_mod.Settings) -> int:
 
     if args.dir:
         user.components_dir = str(args.dir.expanduser().resolve())
+    if args.youtube:
+        return _setup_youtube_helper(args, user)
     manager = ComponentManager(user.components_path) if args.dir else manager_from_settings(user)
     printer = ProgressPrinter()
     if args.remove:
@@ -545,11 +685,64 @@ def cmd_setup(args: argparse.Namespace, user: settings_mod.Settings) -> int:
     return EXIT_OK
 
 
-def cmd_components(user: settings_mod.Settings) -> int:
-    from notirua.components.manager import human_size, manager_from_settings
+def _setup_youtube_helper(args: argparse.Namespace, user: settings_mod.Settings) -> int:
+    """Install Deno (optional): same consent rules as the other components."""
+    from notirua.components.manager import human_size, optional_manager_from_settings
+    from notirua.components.manifest import JS_RUNTIME
 
-    manager = manager_from_settings(user)
-    for st in manager.status():
+    manager = optional_manager_from_settings(user)
+    if not manager.missing(required_only=False):
+        print(_("The helper program for YouTube links is installed."))
+        return EXIT_OK
+    plan = manager.plan([JS_RUNTIME])
+    f = JS_RUNTIME.file_for(manager.platform_key)
+    print(_("Reading YouTube links needs a small helper program:"))
+    print(f"\n  • {_(JS_RUNTIME.name_id)} {JS_RUNTIME.version}")
+    print(f"    {_(JS_RUNTIME.purpose_id)}")
+    print("    " + _("Size: {size}").format(size=human_size(f.size if f else 0)))
+    print("    " + _("Source: {domain}").format(domain=f.domain if f else "-"))
+    print(
+        "    "
+        + _("License: {license} ({url})").format(
+            license=JS_RUNTIME.license_id, url=JS_RUNTIME.license_url
+        )
+    )
+    print()
+    print(_("Disk space needed: {size}").format(size=human_size(plan.install_bytes)))
+    print(_("Install location: {path}").format(path=plan.install_dir))
+    if not plan.enough_space:
+        print(_("There is not enough disk space."), file=sys.stderr)
+        return EXIT_ERROR
+    if not args.accept_licenses:
+        if not sys.stdin.isatty():
+            print(_("Run again with --accept-licenses to agree without a prompt."), file=sys.stderr)
+            return EXIT_USAGE
+        answer = input(_("Agree to the license and install? [y/N] ")).strip().lower()
+        if answer not in ("y", "yes", _("y"), _("yes")):
+            print(_("Nothing was downloaded."))
+            return EXIT_SETUP
+    try:
+        manager.install(
+            [JS_RUNTIME], manager.make_consent([JS_RUNTIME]), progress=ProgressPrinter()
+        )
+    except KeyboardInterrupt:
+        raise Cancelled() from None
+    print(_("The helper program is installed."))
+    return EXIT_OK
+
+
+def cmd_components(user: settings_mod.Settings) -> int:
+    from notirua.components.manager import (
+        human_size,
+        manager_from_settings,
+        optional_manager_from_settings,
+    )
+
+    statuses = [
+        *manager_from_settings(user).status(),
+        *optional_manager_from_settings(user).status(),
+    ]
+    for st in statuses:
         state = _("installed") if st.installed else _("not installed")
         size = human_size(st.size_on_disk) if st.installed else "-"
         print(f"{st.component.id:14s} {st.component.version:28s} {state:14s} {size}")

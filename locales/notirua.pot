@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-10-07 02:26+0900\n"
+"POT-Creation-Date: 2026-10-07 05:45+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -38,6 +38,9 @@ msgstr ""
 msgid "5-string"
 msgstr ""
 
+msgid "A YouTube link is in the clipboard. Press “Paste”."
+msgstr ""
+
 #, python-brace-format
 msgid "A required component is not installed: {name}."
 msgstr ""
@@ -53,6 +56,9 @@ msgid "Agree and install"
 msgstr ""
 
 msgid "Agree to the component licenses without asking."
+msgstr ""
+
+msgid "Agree to the license and install? [y/N] "
 msgstr ""
 
 msgid "Agree to the licenses and install? [y/N] "
@@ -79,7 +85,17 @@ msgstr ""
 msgid "Ask every time"
 msgstr ""
 
+msgid "Audio from YouTube"
+msgstr ""
+
+msgid "Audio or video file to read, or a YouTube video link."
+msgstr ""
+
 msgid "Audio or video file to read."
+msgstr ""
+
+#, python-brace-format
+msgid "Audio saved: {name} — {link}"
 msgstr ""
 
 msgid "Audio track"
@@ -127,16 +143,31 @@ msgstr ""
 msgid "Change save folder"
 msgstr ""
 
+msgid "Change the folder for audio saved from YouTube"
+msgstr ""
+
 msgid "Change…"
 msgstr ""
 
 msgid "Check each component to agree to its license."
 msgstr ""
 
+msgid "Check offline that YouTube support is installed correctly."
+msgstr ""
+
 msgid "Check that the file plays in another app, or convert it to WAV or MP3."
 msgstr ""
 
+msgid "Check that the video plays in your browser, or choose another one."
+msgstr ""
+
+msgid "Check the link and your internet connection, then try again."
+msgstr ""
+
 msgid "Check your internet connection and try again."
+msgstr ""
+
+msgid "Checking the link"
 msgstr ""
 
 msgid "Choose a component bundle file"
@@ -148,10 +179,16 @@ msgstr ""
 msgid "Choose a file…"
 msgstr ""
 
+msgid "Choose a folder for audio saved from YouTube"
+msgstr ""
+
 msgid "Choose a folder you can write to."
 msgstr ""
 
 msgid "Choose a music file"
+msgstr ""
+
+msgid "Choose a public video that plays without signing in."
 msgstr ""
 
 msgid "Choose a save folder"
@@ -209,6 +246,16 @@ msgstr ""
 msgid "Components installed in {seconds} s."
 msgstr ""
 
+msgid ""
+"Copy a video's link, then paste it here. Notirua saves the audio as an "
+"MP3 file named after the video."
+msgstr ""
+
+msgid ""
+"Copy the video's address from your browser (or its Share button) and "
+"paste it."
+msgstr ""
+
 msgid "Delete all saved intermediate results."
 msgstr ""
 
@@ -250,7 +297,20 @@ msgstr ""
 msgid "Down a semitone"
 msgstr ""
 
+msgid "Download and continue"
+msgstr ""
+
 msgid "Downloading components needs your permission first."
+msgstr ""
+
+msgid "Downloading the audio"
+msgstr ""
+
+#, python-brace-format
+msgid "Downloading the audio: {received} of {total}"
+msgstr ""
+
+msgid "Downloading the helper program"
 msgstr ""
 
 #, python-brace-format
@@ -319,7 +379,20 @@ msgstr ""
 msgid "Fitting notes to the beat"
 msgstr ""
 
+msgid "Folder for audio saved from YouTube"
+msgstr ""
+
+msgid "Folder for the MP3 file (default: Music/Notirua)."
+msgstr ""
+
 msgid "Folder for the results."
+msgstr ""
+
+#, python-brace-format
+msgid "For a YouTube link: MP3 quality in kbps (default {kbps})."
+msgstr ""
+
+msgid "For a YouTube link: folder for the saved MP3 (default: Music/Notirua)."
 msgstr ""
 
 msgid "For example 4/4 or 3/4."
@@ -342,6 +415,12 @@ msgstr ""
 msgid "General"
 msgstr ""
 
+msgid "Getting the helper program"
+msgstr ""
+
+msgid "Give the link of a YouTube video."
+msgstr ""
+
 msgid "Guitar"
 msgstr ""
 
@@ -352,6 +431,9 @@ msgid "Half step down"
 msgstr ""
 
 msgid "Hear each instrument"
+msgstr ""
+
+msgid "Helper program (Deno)"
 msgstr ""
 
 msgid "In progress"
@@ -382,6 +464,12 @@ msgstr ""
 msgid "Install the components Notirua needs."
 msgstr ""
 
+msgid "Install the helper program that reads YouTube links (Deno)."
+msgstr ""
+
+msgid "Install the newest Notirua from the releases page and try again."
+msgstr ""
+
 msgid "Installed"
 msgstr ""
 
@@ -389,6 +477,9 @@ msgid "Installed from the bundle file."
 msgstr ""
 
 msgid "Installing components"
+msgstr ""
+
+msgid "Installing the helper program"
 msgstr ""
 
 #, python-brace-format
@@ -437,6 +528,11 @@ msgstr ""
 msgid "Language inside the PDF"
 msgstr ""
 
+msgid ""
+"Lets Notirua read YouTube links. Only needed for saving audio from "
+"YouTube."
+msgstr ""
+
 msgid "Letter"
 msgstr ""
 
@@ -445,6 +541,9 @@ msgid "License: {license} ({url})"
 msgstr ""
 
 msgid "Licenses"
+msgstr ""
+
+msgid "Link of one YouTube video."
 msgstr ""
 
 msgid "List available languages."
@@ -475,6 +574,10 @@ msgstr ""
 msgid "MP3 file (*.mp3)"
 msgstr ""
 
+#, python-brace-format
+msgid "MP3 quality in kbps (default {kbps})."
+msgstr ""
+
 msgid "MP3, M4A, WAV, FLAC, OGG, MP4 video, and more"
 msgstr ""
 
@@ -495,11 +598,17 @@ msgstr ""
 msgid "Make sheet music from an audio file."
 msgstr ""
 
+msgid "Make the sheet music right after saving the audio"
+msgstr ""
+
 msgid "Making sheet music failed."
 msgstr ""
 
 #, python-brace-format
 msgid "Making sheet music for {title}"
+msgstr ""
+
+msgid "Making the MP3 file"
 msgstr ""
 
 msgid "Making the audio file"
@@ -572,6 +681,9 @@ msgstr ""
 msgid "Note: {message}"
 msgstr ""
 
+msgid "Nothing was downloaded."
+msgstr ""
+
 msgid "Nothing was downloaded. Run “notirua setup” again any time."
 msgstr ""
 
@@ -586,6 +698,14 @@ msgstr[1] ""
 
 #, python-brace-format
 msgid "Notirua {version}"
+msgstr ""
+
+msgid "One more helper is needed"
+msgstr ""
+
+msgid ""
+"Only use videos you have the right to use. YouTube's terms of service and"
+" copyright law apply."
 msgstr ""
 
 msgid "Open a music file…"
@@ -607,7 +727,13 @@ msgstr ""
 msgid "Open the Notirua window (the default with no command)."
 msgstr ""
 
+msgid "Open the folder"
+msgstr ""
+
 msgid "Open the log folder for details and report the problem."
+msgstr ""
+
+msgid "Or use a YouTube link"
 msgstr ""
 
 msgid "Other"
@@ -626,6 +752,15 @@ msgstr ""
 msgid "Paper size."
 msgstr ""
 
+msgid "Paste"
+msgstr ""
+
+msgid "Paste a YouTube link"
+msgstr ""
+
+msgid "Paste the link from the clipboard"
+msgstr ""
+
 msgid "Pause"
 msgstr ""
 
@@ -638,8 +773,20 @@ msgstr ""
 msgid "Previous page"
 msgstr ""
 
+msgid "Quality"
+msgstr ""
+
+msgid "Quality of the MP3 file"
+msgstr ""
+
 #, python-brace-format
 msgid "Quit {name}"
+msgstr ""
+
+msgid "Reading YouTube links needs a small helper program."
+msgstr ""
+
+msgid "Reading YouTube links needs a small helper program:"
 msgstr ""
 
 msgid "Reading the audio file"
@@ -687,6 +834,9 @@ msgstr ""
 msgid "Run again with --accept-licenses to agree without a prompt."
 msgstr ""
 
+msgid "Run “notirua setup --youtube” first."
+msgstr ""
+
 msgid "Run “notirua setup” first."
 msgstr ""
 
@@ -711,10 +861,24 @@ msgstr ""
 msgid "Save as WAV"
 msgstr ""
 
+msgid "Save audio"
+msgstr ""
+
+msgid "Save audio and make sheet music"
+msgstr ""
+
 msgid "Save folder"
 msgstr ""
 
 msgid "Save only the instruments you choose as one audio file (MP3, M4A, WAV)."
+msgstr ""
+
+msgid ""
+"Save the audio of a YouTube video as an MP3 file named after the video. "
+"Only use videos you have the right to use."
+msgstr ""
+
+msgid "Save the audio of a YouTube video as an MP3 file."
 msgstr ""
 
 msgid "Saved intermediate results"
@@ -739,10 +903,20 @@ msgid_plural "Saved {n} files."
 msgstr[0] ""
 msgstr[1] ""
 
+#, python-brace-format
+msgid "Saved: {path}"
+msgstr ""
+
 msgid "Save…"
 msgstr ""
 
 msgid "Saving files"
+msgstr ""
+
+msgid "Saving the audio failed."
+msgstr ""
+
+msgid "Saving the audio from YouTube"
 msgstr ""
 
 msgid "Score engraver (LilyPond)"
@@ -862,8 +1036,14 @@ msgstr ""
 msgid "Tempo"
 msgstr ""
 
+msgid "The audio from YouTube could not be saved."
+msgstr ""
+
 #, python-brace-format
 msgid "The audio is longer than {limit} minutes."
+msgstr ""
+
+msgid "The audio is saved."
 msgstr ""
 
 msgid "The audio keeps its original key, even if you transposed the music."
@@ -891,6 +1071,12 @@ msgstr ""
 msgid "The file is copy-protected (DRM) and cannot be opened."
 msgstr ""
 
+msgid "The helper program for YouTube links is installed."
+msgstr ""
+
+msgid "The helper program is installed."
+msgstr ""
+
 msgid ""
 "The internet is used only for this download. Notirua works offline "
 "afterwards."
@@ -911,6 +1097,9 @@ msgstr ""
 msgid "The task was cancelled."
 msgstr ""
 
+msgid "There is no YouTube link in the clipboard."
+msgstr ""
+
 msgid "There is not enough disk space."
 msgstr ""
 
@@ -919,6 +1108,25 @@ msgstr ""
 
 #, python-brace-format
 msgid "This copy of Notirua cannot save {format} files."
+msgstr ""
+
+msgid "This is a live stream or a video that has not started yet."
+msgstr ""
+
+msgid "This is not a link to a single YouTube video."
+msgstr ""
+
+msgid "This looks like a YouTube video link."
+msgstr ""
+
+msgid ""
+"This video is not available (removed, blocked, or not shown in your "
+"country)."
+msgstr ""
+
+msgid ""
+"This video needs you to sign in (private, members-only, or age-"
+"restricted)."
 msgstr ""
 
 msgid "Time signature"
@@ -955,6 +1163,9 @@ msgid "Try a different copy of the file."
 msgstr ""
 
 msgid "Try again"
+msgstr ""
+
+msgid "Try again after the broadcast has ended and the recording is available."
 msgstr ""
 
 msgid "Try again. If the problem continues, open the log folder and report it."
@@ -994,6 +1205,9 @@ msgstr ""
 msgid "WAV file (*.wav)"
 msgstr ""
 
+msgid "Wait a while, then try again. Another network or video can also help."
+msgstr ""
+
 msgid "Waiting"
 msgstr ""
 
@@ -1002,6 +1216,18 @@ msgid "What to do: {hint}"
 msgstr ""
 
 msgid "Work is still in progress. Stop it and quit?"
+msgstr ""
+
+msgid "YouTube could not be reached."
+msgstr ""
+
+msgid "YouTube has changed in a way this version of Notirua cannot follow."
+msgstr ""
+
+msgid "YouTube is asking for a check or has limited your requests for now."
+msgstr ""
+
+msgid "YouTube link"
 msgstr ""
 
 #, python-brace-format
@@ -1124,7 +1350,33 @@ msgid "{instrument} ({reason})"
 msgstr ""
 
 #, python-brace-format
+msgid "{kbps} kbps"
+msgstr ""
+
+#, python-brace-format
+msgid "{kbps} kbps (best sound)"
+msgstr ""
+
+#, python-brace-format
+msgid "{kbps} kbps (recommended)"
+msgstr ""
+
+#, python-brace-format
+msgid "{kbps} kbps (smaller file)"
+msgstr ""
+
+#, python-brace-format
 msgid "{message} · {speed}/s"
+msgstr ""
+
+#, python-brace-format
+msgid ""
+"{name}: {purpose}\n"
+"\n"
+"Download: {size} (about {installed} on disk) from {source}.\n"
+"License: {license}.\n"
+"\n"
+"It is downloaded once and kept. Nothing else is downloaded."
 msgstr ""
 
 #, python-brace-format

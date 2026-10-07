@@ -53,6 +53,9 @@ class Settings:
     tab_weights: dict[str, float] = field(default_factory=dict)
     transcription: dict[str, float] = field(default_factory=dict)
     mix_format: str = "mp3"  # last format chosen in "Make audio file"
+    youtube_bitrate: int = 160  # kbps of the MP3 saved from a YouTube link
+    youtube_dir: str | None = None  # None = <Music>/Notirua
+    youtube_make_score: bool = True  # go on to the sheet music right after saving the audio
 
     @property
     def components_path(self) -> Path:

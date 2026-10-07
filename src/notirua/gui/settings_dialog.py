@@ -32,7 +32,7 @@ from PySide6.QtWidgets import (
 from notirua import paths
 from notirua import settings as settings_mod
 from notirua.components.manager import ComponentManager, human_size
-from notirua.core import cache
+from notirua.core import cache, youtube
 from notirua.gui.widgets import language_name
 from notirua.i18n import _, available_languages, current_language
 
@@ -108,6 +108,17 @@ class SettingsDialog(QDialog):
         folder_row.addWidget(self.output_dir, 1)
         folder_row.addWidget(choose)
         form.addRow(_("Save folder"), folder_row)
+        youtube_row = QHBoxLayout()
+        self.youtube_dir = QLineEdit(self.user.youtube_dir or "")
+        self.youtube_dir.setReadOnly(True)
+        self.youtube_dir.setAccessibleName(_("Folder for audio saved from YouTube"))
+        self.youtube_dir.setPlaceholderText(str(youtube.default_folder(None)))
+        choose_youtube = QPushButton(_("Change…"))
+        choose_youtube.setAccessibleName(_("Change the folder for audio saved from YouTube"))
+        choose_youtube.clicked.connect(self._choose_youtube_dir)
+        youtube_row.addWidget(self.youtube_dir, 1)
+        youtube_row.addWidget(choose_youtube)
+        form.addRow(_("Audio from YouTube"), youtube_row)
         return page
 
     def _language_changed(self) -> None:
@@ -126,6 +137,17 @@ class SettingsDialog(QDialog):
         if folder:
             self.user.output_dir = folder
             self.output_dir.setText(folder)
+            settings_mod.save(self.user)
+
+    def _choose_youtube_dir(self) -> None:
+        folder = QFileDialog.getExistingDirectory(
+            self,
+            _("Choose a folder for audio saved from YouTube"),
+            self.user.youtube_dir or str(youtube.default_folder(None).parent),
+        )
+        if folder:
+            self.user.youtube_dir = folder
+            self.youtube_dir.setText(folder)
             settings_mod.save(self.user)
 
     # -- components --------------------------------------------------------

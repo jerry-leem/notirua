@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import html
 from pathlib import Path
 
 from PySide6.QtCore import Qt, Signal
@@ -29,7 +30,7 @@ from notirua.core.pipeline import (
     JobOptions,
     key_label,
 )
-from notirua.gui.widgets import format_duration, language_name, primary_button
+from notirua.gui.widgets import format_duration, language_name, open_path, primary_button
 from notirua.i18n import N_, _, available_languages
 
 TIME_SIGNATURES = [(4, 4), (3, 4), (2, 4), (6, 8), (12, 8)]
@@ -57,6 +58,11 @@ class OptionsPage(QWidget):
         header.addWidget(self.back_button)
         header.addWidget(self.file_label, 1)
         layout.addLayout(header)
+        self.saved_note = QLabel()
+        self.saved_note.setWordWrap(True)
+        self.saved_note.setVisible(False)
+        self.saved_note.linkActivated.connect(lambda folder: open_path(Path(folder)))
+        layout.addWidget(self.saved_note)
         layout.addSpacing(8)
 
         form = QFormLayout()
@@ -176,12 +182,24 @@ class OptionsPage(QWidget):
         self._form.setRowVisible(self.track, several)
         length = f" · {format_duration(duration_s)}" if duration_s else ""
         self.file_label.setText(f"{path.name}{length}")
+        self.saved_note.setVisible(False)
         self.title_edit.setText(title or path.stem)
         self.paper.setCurrentIndex(max(0, self.paper.findData(paper)))
         pdf_lang = self.pdf_language.findData(self.user.pdf_language)
         self.pdf_language.setCurrentIndex(max(0, pdf_lang))
         self.fresh.setChecked(False)
         self.start_button.setFocus()
+
+    def show_saved_audio(self, path: Path) -> None:
+        """After saving audio from a YouTube link: say where the MP3 is (with a link to open it)."""
+        folder = html.escape(str(path.parent), quote=True)
+        self.saved_note.setText(
+            _("Audio saved: {name} — {link}").format(
+                name=html.escape(path.name),
+                link=f'<a href="{folder}">' + _("Open the folder") + "</a>",
+            )
+        )
+        self.saved_note.setVisible(True)
 
     def options(self) -> JobOptions:
         stems = [s for s, c in self.stem_checks.items() if c.isChecked()]

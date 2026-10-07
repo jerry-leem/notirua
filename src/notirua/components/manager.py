@@ -27,6 +27,7 @@ from notirua.components.manifest import (
     ComponentFile,
     components_for_platform,
     current_platform,
+    optional_components_for_platform,
 )
 from notirua.core.errors import (
     ChecksumMismatchError,
@@ -391,3 +392,26 @@ def _dir_size(path: Path) -> int:
 def manager_from_settings(settings: Settings | None = None) -> ComponentManager:
     s = settings or settings_mod.load()
     return ComponentManager(s.components_path)
+
+
+class OptionalComponentManager(ComponentManager):
+    """Manages the optional components (Deno for YouTube links).
+
+    Same downloads, checks, and install folder as the required components, and the same
+    state file (entries merge), but a separate list: the first-run setup, the consent
+    record, and the offline bundle only ever cover the required ones.
+    """
+
+    def __init__(self, install_dir: Path, platform_key: str | None = None) -> None:
+        super().__init__(install_dir, platform_key)
+        self.components = optional_components_for_platform(self.platform_key)
+
+    @staticmethod
+    def make_consent(components: Sequence[Component]) -> ConsentRecord:
+        """Call only after the user pressed the download button of the optional-component dialog."""
+        return ComponentManager.make_consent(components)
+
+
+def optional_manager_from_settings(settings: Settings | None = None) -> OptionalComponentManager:
+    s = settings or settings_mod.load()
+    return OptionalComponentManager(s.components_path)
