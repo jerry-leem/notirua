@@ -61,3 +61,12 @@ def test_unused_qt_modules_are_recognized_on_every_platform() -> None:
         assert check_bundle.FORBIDDEN_QT.search(name), name
     for name in ("QtPdf", "libQt6PdfWidgets.so.6", "Qt6Widgets.dll", "libQt6XcbQpa.so.6"):
         assert not check_bundle.FORBIDDEN_QT.search(name), name
+
+
+def test_installer_clears_the_old_program_folder() -> None:
+    """Installing over an older version must not leave its files (notirua-<old>.dist-info
+    would make the app report the old version)."""
+    iss = (ROOT / "packaging" / "windows" / "notirua.iss").read_text(encoding="utf-8")
+    assert "[InstallDelete]" in iss
+    assert 'Name: "{app}\\_internal"' in iss
+    assert "Type: filesandordirs" in iss

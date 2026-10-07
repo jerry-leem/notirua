@@ -56,7 +56,6 @@ def main(argv: Sequence[str] | None = None, language: str | None = None) -> int:
     app = QApplication.instance() or QApplication(list(argv if argv is not None else sys.argv))
     assert isinstance(app, QApplication)
     app.setApplicationName(APP_NAME)
-    app.setApplicationDisplayName(APP_NAME)
     app.setApplicationVersion(__version__)
     app.setWindowIcon(app_icon())
     if not settings_mod.settings_path().is_file():
