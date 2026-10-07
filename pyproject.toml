@@ -1,6 +1,6 @@
 [project]
 name = "notirua"
-version = "0.4.1"
+version = "0.4.2"
 description = "Convert audio into per-instrument scores, TAB, and PDFs."
 readme = "README.md"
 requires-python = "==3.11.*"
