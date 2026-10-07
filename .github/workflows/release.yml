@@ -4,6 +4,11 @@ name: Release build
 # (packaging/build_app.py, packaging/linux/build.sh); README "릴리스를 만드는 방법".
 on:
   workflow_dispatch:
+    inputs:
+      release_tag:
+        description: "Attach the installer to this existing release (for example v0.4.1); empty = build only"
+        required: false
+        default: ""
   push:
     tags: ["v*"]
 
@@ -119,3 +124,30 @@ jobs:
           path: |
             dist/*.exe
             dist/lgpl-av/*.whl
+
+  # The installer goes from the build job to the release inside GitHub, so nobody
+  # has to download and re-upload it. Needs the release to exist (a draft is fine).
+  publish:
+    needs: windows
+    if: github.ref_type == 'tag' || inputs.release_tag != ''
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: write
+    env:
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: ${{ github.repository }}
+      TAG: ${{ inputs.release_tag || github.ref_name }}
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: notirua-windows
+          path: dist
+      - name: Attach the installer to the release
+        run: |
+          if ! gh release view "$TAG" >/dev/null 2>&1; then
+            echo "::warning::No release named $TAG yet; create it, then run this workflow again with release_tag=$TAG"
+            exit 0
+          fi
+          gh release upload "$TAG" dist/Notirua-*-setup.exe --clobber
+          gh release view "$TAG" --json assets --jq '.assets[].name'
