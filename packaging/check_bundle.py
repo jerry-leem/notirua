@@ -48,6 +48,24 @@ def cli_path(bundle: Path) -> Path:
     raise SystemExit(f"{name} not found in {bundle}")
 
 
+def metadata_problems(root: Path, expected_version: str | None) -> list[str]:
+    """The bundled package metadata is what the frozen app shows as its version.
+
+    Exactly one ``notirua-<version>.dist-info`` must be present, and it must carry
+    ``expected_version`` (read from pyproject.toml, not from the build environment,
+    so a stale environment cannot vouch for itself).
+    """
+    infos = sorted(root.glob("notirua-*.dist-info"))
+    if not infos:
+        return ["missing notirua package metadata (version)"]
+    if len(infos) > 1:
+        return [f"several notirua metadata folders: {[p.name for p in infos]}"]
+    bundled = infos[0].name.removeprefix("notirua-").removesuffix(".dist-info")
+    if expected_version and bundled != expected_version:
+        return [f"bundled metadata is version {bundled}, pyproject.toml says {expected_version}"]
+    return []
+
+
 def problems(bundle: Path, expected_version: str | None) -> list[str]:
     found: list[str] = []
     root = internal_dir(bundle)
@@ -80,8 +98,7 @@ def problems(bundle: Path, expected_version: str | None) -> list[str]:
             found.append(f"missing: {rel}")
     if list(root.glob("locales/en_XA")):
         found.append("pseudo-locale en_XA is bundled")
-    if not list(root.glob("notirua-*.dist-info")):
-        found.append("missing notirua package metadata (version)")
+    found.extend(metadata_problems(root, expected_version))
     if not list(root.rglob("qtbase_ko.qm")):
         found.append("missing Qt's own Korean translation (qtbase_ko.qm)")
 

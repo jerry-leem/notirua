@@ -27,6 +27,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "packaging"))
 
 import icons  # noqa: E402
+import versioning  # noqa: E402
 
 # Wheel platform tag fragments per platform (``build_lgpl_av.py`` output names).
 WHEEL_TAGS = {
@@ -79,7 +80,12 @@ def prepare_venv(venv: Path, av_wheel: Path) -> Path:
         raise SystemExit("av is missing from the exported requirements")
     requirements.write_text("\n".join(kept) + "\n", encoding="utf-8")
     run([uv, "pip", "install", "--python", python, "-r", requirements])
-    run([uv, "pip", "install", "--python", python, "--no-deps", av_wheel, ROOT])
+    # Rebuild Notirua from the current source: a cached wheel of an older version
+    # must never end up in the bundle.
+    run(
+        [uv, "pip", "install", "--python", python, "--no-deps", "--refresh-package", "notirua",
+         "--reinstall-package", "notirua", av_wheel, ROOT],
+    )  # fmt: skip
     return python
 
 
@@ -107,12 +113,7 @@ def main() -> int:
     bundle = args.dist / ("Notirua.app" if sys.platform == "darwin" else "Notirua")
     if args.skip_check:
         return 0
-    version = subprocess.run(
-        [python, "-c", "from importlib.metadata import version; print(version('notirua'))"],
-        check=True,
-        capture_output=True,
-        text=True,
-    ).stdout.strip()
+    version = versioning.project_version()  # not the build venv: it must not vouch for itself
     check = [python, ROOT / "packaging" / "check_bundle.py", bundle, "--version", version]
     return subprocess.run([str(c) for c in check]).returncode
 

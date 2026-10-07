@@ -24,6 +24,13 @@ jobs:
       - uses: astral-sh/setup-uv@v6
         with:
           enable-cache: true
+      # The version is written once, in pyproject.toml. A tag or release_tag that
+      # names another version stops here, before the long build.
+      - name: Tag matches the version in pyproject.toml
+        if: github.ref_type == 'tag' || inputs.release_tag != ''
+        env:
+          RELEASE_TAG: ${{ inputs.release_tag || github.ref_name }}
+        run: uv run --no-project --python 3.11 python packaging/versioning.py --tag "$env:RELEASE_TAG"
       - uses: ilammy/msvc-dev-cmd@v1
         with:
           arch: x64
@@ -99,7 +106,7 @@ jobs:
       - name: Installer
         shell: pwsh
         run: |
-          $version = (uv run python -c "from importlib.metadata import version; print(version('notirua'))").Trim()
+          $version = (uv run --no-project --python 3.11 python packaging/versioning.py).Trim()
           & "${env:ProgramFiles(x86)}\Inno Setup 6\ISCC.exe" `
             "/DAppVersion=$version" `
             "/DSourceDir=$pwd\dist\app\Notirua" `

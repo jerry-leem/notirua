@@ -90,7 +90,11 @@ Python이나 다른 프로그램을 따로 설치하지 않아도 되며, 한·�
 
 ### 릴리스를 만드는 방법 (관리자용)
 
-1. `pyproject.toml`의 `version`을 올리고 `uv lock`을 실행합니다.
+1. `uv run python scripts/bump_version.py <새 버전>`을 실행합니다. `pyproject.toml`,
+   `uv.lock`, README의 "현재 버전" 문장을 한 번에 바꾸며, 앱 창 제목·`--version`·설치 파일
+   이름은 빌드할 때 `pyproject.toml`에서 읽습니다. 버전이 어긋나면 `tests/test_versions.py`와
+   릴리스 빌드(태그 확인, 번들 메타데이터 검사)가 실패합니다. 다운로드 표의 릴리스 링크는
+   직접 고칩니다.
 2. 플랫폼별 설치 파일을 만듭니다.
    - macOS: `uv run python packaging/build_lgpl_av.py`(처음 한 번, FFmpeg 설정이 바뀌면 다시),
      `uv run python packaging/build_app.py`, `uv run python packaging/make_dmg.py`
@@ -100,7 +104,8 @@ Python이나 다른 프로그램을 따로 설치하지 않아도 되며, 한·�
 3. `build_app.py`는 번들을 만든 뒤 `packaging/check_bundle.py`로 검사합니다. GPL
    FFmpeg, torch/tensorflow, 쓰지 않는 Qt 모듈이 들어 있거나, 번역·라이선스·모델이
    빠졌거나, 명령줄이 실행되지 않으면 실패합니다.
-4. `packaging/release_notes.md`의 `{{version}}`을 바꿔 본문으로 쓰고,
+4. `uv run python packaging/versioning.py --notes`가 `{{version}}`을 채운 본문을 출력합니다.
+   이를 본문으로 쓰고,
    `v<버전>` 태그로 GitHub 릴리스를 만들어 설치 파일을 올립니다.
 5. 서명 비밀 값(`NOTIRUA_MACOS_SIGN_IDENTITY`, `NOTIRUA_NOTARY_PROFILE`)이 있으면
    `make_dmg.py`가 서명과 공증까지 합니다.
@@ -333,7 +338,11 @@ a new Windows installer only; on Mac and Linux, keep using the 0.4.0 files.
 
 ### Making a release (maintainers)
 
-1. Raise `version` in `pyproject.toml` and run `uv lock`.
+1. Run `uv run python scripts/bump_version.py <new version>`. It changes `pyproject.toml`,
+   `uv.lock`, and the README's "current version" sentences in one go; the window title,
+   `--version`, and installer file names read `pyproject.toml` when built. If a copy drifts,
+   `tests/test_versions.py` and the release build (tag check, bundle metadata check) fail.
+   Release links in the download table are edited by hand.
 2. Build each platform's installer.
    - macOS: `uv run python packaging/build_lgpl_av.py` (once, and again when the FFmpeg setup changes),
      `uv run python packaging/build_app.py`, `uv run python packaging/make_dmg.py`
@@ -343,7 +352,7 @@ a new Windows installer only; on Mac and Linux, keep using the 0.4.0 files.
 3. `build_app.py` checks the bundle with `packaging/check_bundle.py`. It fails
    on GPL FFmpeg, torch/tensorflow, unused Qt modules, missing catalogs,
    notices, or model, or a command line that does not start.
-4. Use `packaging/release_notes.md` (with `{{version}}` filled in) as the
+4. Use the output of `uv run python packaging/versioning.py --notes` (the notes with `{{version}}` filled in) as the
    body of a GitHub release tagged `v<version>`, and attach the installers.
 5. With the signing secrets (`NOTIRUA_MACOS_SIGN_IDENTITY`,
    `NOTIRUA_NOTARY_PROFILE`), `make_dmg.py` also signs and notarizes.
