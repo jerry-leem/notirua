@@ -40,6 +40,13 @@ Name: "english"; MessagesFile: "compiler:Default.isl"
 [Tasks]
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
 
+; Installing over an older version only adds and overwrites files. Old files that
+; the new bundle no longer has would stay: a leftover notirua-<old>.dist-info makes
+; the app report the old version. Clear the program folder first. Settings,
+; components, and cache live outside {app}, so nothing of the user's is lost.
+[InstallDelete]
+Type: filesandordirs; Name: "{app}\_internal"
+
 [Files]
 Source: "{#SourceDir}\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
 
