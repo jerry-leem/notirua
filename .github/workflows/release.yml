@@ -173,7 +173,8 @@ jobs:
           QT_QPA_PLATFORM: offscreen
         run: |
           APPIMAGE="$(ls "$PWD"/dist/Notirua-*-linux-x86_64.AppImage | head -1)"
-          uv run python packaging/smoke_test.py --cli "$APPIMAGE" --gui "$APPIMAGE"
+          # Not build/: the Docker build made that folder as root.
+          uv run python packaging/smoke_test.py --cli "$APPIMAGE" --gui "$APPIMAGE" --work "$RUNNER_TEMP/smoke"
       - uses: actions/upload-artifact@v4
         with:
           name: notirua-linux
