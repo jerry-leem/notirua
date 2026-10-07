@@ -5,7 +5,8 @@ Usage: uv run python packaging/smoke_test.py --cli PATH [--gui PATH] [--work DIR
 Synthesizes a short song (piano, clicks, a sung line), installs the components
 with the bundled command line, makes sheet music, saves a backing track as MP3
 and a mix as M4A, decodes both back, and checks that the window stays open.
-Needs the internet for the components on first use.
+Needs the internet for the components on first use. Set NOTIRUA_SMOKE_YOUTUBE to a video
+link to also try a real YouTube download.
 """
 
 from __future__ import annotations
@@ -21,14 +22,14 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
 
-def run(cmd: list[str | Path]) -> str:
+def run(cmd: list[str | Path], expect: int = 0) -> str:
     print("+", " ".join(str(c) for c in cmd), flush=True)
     done = subprocess.run(
         [str(c) for c in cmd], capture_output=True, text=True, encoding="utf-8", errors="replace"
     )
     print(done.stdout[-2000:], done.stderr[-2000:], sep="\n", flush=True)
-    if done.returncode != 0:
-        raise SystemExit(f"failed ({done.returncode}): {cmd}")
+    if done.returncode != expect:
+        raise SystemExit(f"failed ({done.returncode}, expected {expect}): {cmd}")
     return done.stdout
 
 
@@ -77,6 +78,27 @@ def main() -> None:
     work = args.work.resolve()
     song = make_song(work / "노래.wav")
     run([args.cli, "--version"])
+    # YouTube support (0.5.0): its parts are in the bundle, and a bad link stops early (exit 2).
+    run([args.cli, "--lang", "en", "youtube", "--check"])
+    run([args.cli, "--lang", "en", "youtube", "not a link"], expect=2)
+    link = os.environ.get("NOTIRUA_SMOKE_YOUTUBE")
+    if link:  # a real download needs the internet and a video that YouTube lets this machine see
+        run([args.cli, "setup", "--youtube", "--accept-licenses"])
+        run(
+            [
+                args.cli,
+                "--lang",
+                "en",
+                "youtube",
+                link,
+                "--out",
+                work / "youtube",
+                "--bitrate",
+                "128",
+            ]
+        )
+        if not list((work / "youtube").glob("*.mp3")):
+            raise SystemExit("no MP3 was saved from the YouTube link")
     run([args.cli, "setup", "--accept-licenses"])
     run([args.cli, "--lang", "ko", "transcribe", song, "--out", work / "out"])
     pdfs = sorted((work / "out").glob("*.pdf"))
