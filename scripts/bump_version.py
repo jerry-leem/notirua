@@ -3,10 +3,10 @@
 Usage: uv run python scripts/bump_version.py 0.4.2
 
 Updates ``version`` in pyproject.toml, runs ``uv lock`` so uv.lock follows, and
-rewrites the README sentences that state the current version. Installers, window
+rewrites the README sentences and release links that state the current version. Installers, window
 titles, ``--version``, and release file names read the version from
 pyproject.toml when they are built, and tests/test_versions.py fails if any copy
-drifts. Links to a specific release in the README are edited by hand.
+drifts.
 """
 
 from __future__ import annotations
