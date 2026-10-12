@@ -25,6 +25,23 @@ def test_fallback_chain() -> None:
     assert i18n.fallback_chain("ko-KR") == ["ko_KR", "ko"]
 
 
+@pytest.mark.parametrize(
+    ("tag", "expected"),
+    [
+        ("zh_CN.UTF-8", "zh_CN"),
+        ("zh-SG", "zh_CN"),
+        ("zh-Hans-CN", "zh_CN"),
+        ("zh", "zh_CN"),
+        ("zh-TW", "zh_TW"),
+        ("zh-HK", "zh_TW"),
+        ("zh-Hant-TW", "zh_TW"),
+        ("zh_Hant", "zh_TW"),
+    ],
+)
+def test_chinese_picks_the_catalog_by_script(tag: str, expected: str) -> None:
+    assert i18n.resolve_language(None, tag) == expected
+
+
 def test_resolve_order_user_then_os_then_english() -> None:
     assert i18n.resolve_language("ko", "en_US") == "ko"
     assert i18n.resolve_language(None, "ko_KR.UTF-8") == "ko"
@@ -106,7 +123,7 @@ def test_catalog_compiles(po: Path, tmp_path: Path) -> None:
         write_mo(fp, catalog)
 
 
-@pytest.mark.parametrize("lang", ["ko", "vi"])
+@pytest.mark.parametrize("lang", ["ko", "vi", "zh_CN", "zh_TW"])
 def test_shipped_language_is_complete(lang: str) -> None:
     with (LOCALES / lang / "LC_MESSAGES" / "notirua.po").open("rb") as fp:
         catalog = read_po(fp)
@@ -283,3 +300,10 @@ def test_missing_std_streams_are_replaced(monkeypatch: pytest.MonkeyPatch) -> No
     monkeypatch.setattr(sys, "stderr", None)
     ensure_std_streams()
     print("warning", file=sys.stderr)
+
+
+def test_chinese_catalogs_are_named_by_script() -> None:
+    from notirua.gui.widgets import language_name
+
+    assert language_name("zh_CN") == "简体中文"
+    assert language_name("zh_TW") == "繁體中文"

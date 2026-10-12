@@ -93,9 +93,9 @@ Python이나 다른 프로그램을 따로 설치하지 않아도 되며, 한·�
 
 ### 다국어 지원
 
-- 화면, 명령줄 도움말, 오류 메시지, Qt 기본 대화상자가 **한국어, 영어, 베트남어**로 나옵니다.
+- 화면, 명령줄 도움말, 오류 메시지, Qt 기본 대화상자가 **한국어, 영어, 베트남어, 중국어**(간체·번체)로 나옵니다.
 - 처음에는 운영체제 언어를 따르고, **설정**에서 바꾸거나 `--lang ko`, `--lang en`,
-  `--lang vi`로 고를 수 있습니다(화면 언어는 다시 시작하면 적용).
+  `--lang vi`, `--lang zh_CN`(간체), `--lang zh_TW`(번체)로 고를 수 있습니다(화면 언어는 다시 시작하면 적용).
 - PDF 안의 글자(악기 이름, 페이지 번호 등) 언어는 화면 언어와 따로 정할 수
   있습니다(**세부 설정**, 명령줄 `--pdf-lang`).
 - 곡명은 어떤 언어로 써도 PDF에 그대로 들어갑니다.
@@ -104,17 +104,17 @@ Python이나 다른 프로그램을 따로 설치하지 않아도 되며, 한·�
 
 ## 내려받기와 설치
 
-최신 배포판은 [**Notirua 0.5.4 릴리스 페이지**](https://github.com/jerry-leem/notirua/releases/tag/v0.5.4)에
+최신 배포판은 [**Notirua 0.5.5 릴리스 페이지**](https://github.com/jerry-leem/notirua/releases/tag/v0.5.5)에
 있습니다. 릴리스 페이지에 한국어 설치 방법, 사용법, 바뀐 점, 알려진 제한이 함께 적혀
 있습니다. 지난 버전은 [모든 릴리스](https://github.com/jerry-leem/notirua/releases)에서
 볼 수 있습니다.
 
 | 컴퓨터 | 내려받기 | 설치 |
 |---|---|---|
-| Windows 10/11 (x64) | [Notirua-0.5.4-windows-x64-setup.exe](https://github.com/jerry-leem/notirua/releases/download/v0.5.4/Notirua-0.5.4-windows-x64-setup.exe) | 실행해서 안내에 따라 설치(관리자 권한 필요 없음) |
-| Mac (Apple Silicon), macOS 14 이상 | [Notirua-0.5.4-macos-arm64.dmg](https://github.com/jerry-leem/notirua/releases/download/v0.5.4/Notirua-0.5.4-macos-arm64.dmg) | 열어서 Notirua를 Applications 폴더로 끌어다 놓기 |
-| Intel Mac, macOS 14 이상 | [Notirua-0.5.4-macos-x86_64.dmg](https://github.com/jerry-leem/notirua/releases/download/v0.5.4/Notirua-0.5.4-macos-x86_64.dmg) | 열어서 Notirua를 Applications 폴더로 끌어다 놓기 |
-| Linux x86_64 (glibc 2.31 이상) | [Notirua-0.5.4-linux-x86_64.AppImage](https://github.com/jerry-leem/notirua/releases/download/v0.5.4/Notirua-0.5.4-linux-x86_64.AppImage) | `chmod +x`로 실행 권한을 주고 실행 |
+| Windows 10/11 (x64) | [Notirua-0.5.5-windows-x64-setup.exe](https://github.com/jerry-leem/notirua/releases/download/v0.5.5/Notirua-0.5.5-windows-x64-setup.exe) | 실행해서 안내에 따라 설치(관리자 권한 필요 없음) |
+| Mac (Apple Silicon), macOS 14 이상 | [Notirua-0.5.5-macos-arm64.dmg](https://github.com/jerry-leem/notirua/releases/download/v0.5.5/Notirua-0.5.5-macos-arm64.dmg) | 열어서 Notirua를 Applications 폴더로 끌어다 놓기 |
+| Intel Mac, macOS 14 이상 | [Notirua-0.5.5-macos-x86_64.dmg](https://github.com/jerry-leem/notirua/releases/download/v0.5.5/Notirua-0.5.5-macos-x86_64.dmg) | 열어서 Notirua를 Applications 폴더로 끌어다 놓기 |
+| Linux x86_64 (glibc 2.31 이상) | [Notirua-0.5.5-linux-x86_64.AppImage](https://github.com/jerry-leem/notirua/releases/download/v0.5.5/Notirua-0.5.5-linux-x86_64.AppImage) | `chmod +x`로 실행 권한을 주고 실행 |
 
 macOS 14에서는 악보를 그리는 조판기(LilyPond)가 시작되지 않을 수 있습니다. 확인된 환경은 macOS 15 이상입니다.
 
@@ -208,7 +208,7 @@ uv sync
 | 파일 열기 / 모두 저장 | **파일** 메뉴 (⌘O / ⌘S) | **파일** 메뉴 (Ctrl+O / Ctrl+S) |
 
 macOS에서는 Dock 아이콘을 오른쪽 클릭해도 **음악 파일 열기…** 메뉴와 **설정…** 메뉴가 나옵니다.
-창 제목에 버전이 표시됩니다(예: `Notirua 0.5.4`).
+창 제목에 버전이 표시됩니다(예: `Notirua 0.5.5`).
 
 ## 명령줄 사용법
 
@@ -245,7 +245,7 @@ uv run notirua cache                   # 저장된 중간 결과 크기
 uv run notirua cache --clear
 uv run notirua --lang ko               # 한국어로 창 열기
 uv run notirua --lang ko transcribe --help     # 모든 옵션 (한국어)
-uv run notirua --version               # notirua 0.5.4
+uv run notirua --version               # notirua 0.5.5
 ```
 
 ## 파일이 저장되는 곳
@@ -260,7 +260,7 @@ Notirua를 지우려면 앱(또는 소스로 내려받은 폴더)과 위 폴더�
 
 ## 버전
 
-시맨틱 버전(`MAJOR.MINOR.PATCH`)을 따릅니다. 현재 버전은 **0.5.4**이며, 1.0 전까지는
+시맨틱 버전(`MAJOR.MINOR.PATCH`)을 따릅니다. 현재 버전은 **0.5.5**이며, 1.0 전까지는
 MINOR 버전에서도 동작이 바뀔 수 있습니다. `notirua --version`이나 창 제목으로 확인하고,
 버전마다 바뀐 내용은 [릴리스 페이지](https://github.com/jerry-leem/notirua/releases)에
 있습니다.
@@ -395,9 +395,9 @@ titles (macOS and Windows use their system fonts).
 #### Languages
 
 - The window, command-line help, error messages, and Qt's own dialogs are in
-  **English, Korean, and Vietnamese**.
+  **English, Korean, Vietnamese, and Chinese (Simplified and Traditional)**.
 - Notirua starts in the system language. Change it in **Settings** or with
-  `--lang en` / `--lang ko` / `--lang vi` (the window language applies after a restart).
+  `--lang en` / `--lang ko` / `--lang vi` / `--lang zh_CN` / `--lang zh_TW` (the window language applies after a restart).
 - The text inside the PDF (instrument names, page numbers, and so on) can use
   a different language from the window (**More settings**, or `--pdf-lang`).
 - Song titles in any language go into the PDF as written.
@@ -408,16 +408,16 @@ titles (macOS and Windows use their system fonts).
 ### Download and install
 
 The latest release is
-[**Notirua 0.5.4**](https://github.com/jerry-leem/notirua/releases/tag/v0.5.4);
+[**Notirua 0.5.5**](https://github.com/jerry-leem/notirua/releases/tag/v0.5.5);
 its page has installation and usage notes (in Korean), changes, and known
 limits. Earlier versions are on [all releases](https://github.com/jerry-leem/notirua/releases).
 
 | Computer | Download | Install |
 |---|---|---|
-| Windows 10/11 (x64) | [Notirua-0.5.4-windows-x64-setup.exe](https://github.com/jerry-leem/notirua/releases/download/v0.5.4/Notirua-0.5.4-windows-x64-setup.exe) | Run it and follow the steps (no administrator rights needed) |
-| Mac (Apple Silicon), macOS 14 or later | [Notirua-0.5.4-macos-arm64.dmg](https://github.com/jerry-leem/notirua/releases/download/v0.5.4/Notirua-0.5.4-macos-arm64.dmg) | Open it and drag Notirua to Applications |
-| Intel Mac, macOS 14 or later | [Notirua-0.5.4-macos-x86_64.dmg](https://github.com/jerry-leem/notirua/releases/download/v0.5.4/Notirua-0.5.4-macos-x86_64.dmg) | Open it and drag Notirua to Applications |
-| Linux x86_64 (glibc 2.31 or later) | [Notirua-0.5.4-linux-x86_64.AppImage](https://github.com/jerry-leem/notirua/releases/download/v0.5.4/Notirua-0.5.4-linux-x86_64.AppImage) | `chmod +x` it and run it |
+| Windows 10/11 (x64) | [Notirua-0.5.5-windows-x64-setup.exe](https://github.com/jerry-leem/notirua/releases/download/v0.5.5/Notirua-0.5.5-windows-x64-setup.exe) | Run it and follow the steps (no administrator rights needed) |
+| Mac (Apple Silicon), macOS 14 or later | [Notirua-0.5.5-macos-arm64.dmg](https://github.com/jerry-leem/notirua/releases/download/v0.5.5/Notirua-0.5.5-macos-arm64.dmg) | Open it and drag Notirua to Applications |
+| Intel Mac, macOS 14 or later | [Notirua-0.5.5-macos-x86_64.dmg](https://github.com/jerry-leem/notirua/releases/download/v0.5.5/Notirua-0.5.5-macos-x86_64.dmg) | Open it and drag Notirua to Applications |
+| Linux x86_64 (glibc 2.31 or later) | [Notirua-0.5.5-linux-x86_64.AppImage](https://github.com/jerry-leem/notirua/releases/download/v0.5.5/Notirua-0.5.5-linux-x86_64.AppImage) | `chmod +x` it and run it |
 
 On macOS 14 the sheet-music engraver (LilyPond) may not start. macOS 15 or later is the tested setup.
 
@@ -523,7 +523,7 @@ right or from the menu:
 
 On macOS, right-clicking the Dock icon also offers **Open a music file…** and
 **Settings…**. The window title shows the version, for example
-`Notirua 0.5.4`.
+`Notirua 0.5.5`.
 
 ### Use the command line
 
@@ -560,7 +560,7 @@ uv run notirua cache                   # size of saved intermediate results
 uv run notirua cache --clear
 uv run notirua --lang en               # open the window in English
 uv run notirua transcribe --help       # every option
-uv run notirua --version               # notirua 0.5.4
+uv run notirua --version               # notirua 0.5.5
 ```
 
 More `transcribe` options: `--to-key "G major"`, `--guitar-tuning drop_d`,
@@ -584,7 +584,7 @@ To remove Notirua, delete the app (or the cloned folder) and these folders.
 ### Version
 
 Notirua uses [Semantic Versioning](https://semver.org): `MAJOR.MINOR.PATCH`.
-The current version is **0.5.4**. While the major version is 0, a minor
+The current version is **0.5.5**. While the major version is 0, a minor
 release may still change behavior. `notirua --version` and the window title
 show it, and the [releases page](https://github.com/jerry-leem/notirua/releases)
 lists what changed in each release.

@@ -1,0 +1,1455 @@
+# Simplified Chinese translations for Notirua.
+# This file is distributed under the same license as the Notirua project.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Notirua 0.5.5\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2026-10-12 20:36+0900\n"
+"PO-Revision-Date: 2026-10-12 22:00+0900\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: zh_CN\n"
+"Language-Team: zh_CN <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.18.0\n"
+
+#, python-format
+msgid " (default: %(default)s)"
+msgstr " （默认：%(default)s）"
+
+#, python-format
+msgid "%(heading)s:"
+msgstr "%(heading)s："
+
+#, python-format
+msgid "%(prog)s: error: %(message)s\n"
+msgstr "%(prog)s：错误：%(message)s\n"
+
+msgid "&File"
+msgstr "文件(&F)"
+
+msgid "&Help"
+msgstr "帮助(&H)"
+
+msgid "5-string"
+msgstr "5 弦"
+
+msgid "A YouTube link is in the clipboard. Press “Paste”."
+msgstr "剪贴板中有 YouTube 链接。请点击“粘贴”。"
+
+msgid ""
+"A company or school network, firewall, or proxy can block it. Enter your proxy address in "
+"Settings, or try another network such as a phone hotspot."
+msgstr "公司或学校的网络、防火墙或代理可能会阻止连接。请在“设置”中填写代理地址，或换一个网络（例如手机热点）再试。"
+
+#, python-brace-format
+msgid "A required component is not installed: {name}."
+msgstr "尚未安装所需组件：{name}。"
+
+msgid "About"
+msgstr "关于"
+
+#, python-brace-format
+msgid "About {name}"
+msgstr "关于 {name}"
+
+msgid "Agree and install"
+msgstr "同意并安装"
+
+msgid "Agree to the component licenses without asking."
+msgstr "不再询问，直接同意各组件的许可协议。"
+
+msgid "Agree to the license and install? [y/N] "
+msgstr "同意许可协议并安装？[y/N] "
+
+msgid "Agree to the licenses and install? [y/N] "
+msgstr "同意各项许可协议并安装？[y/N] "
+
+msgid "All"
+msgstr "全部"
+
+msgid "All components are installed."
+msgstr "所有组件均已安装。"
+
+msgid "All files (*)"
+msgstr "所有文件 (*)"
+
+msgid "Also save MIDI."
+msgstr "同时保存 MIDI。"
+
+msgid "Also save MusicXML."
+msgstr "同时保存 MusicXML。"
+
+msgid "Arranging staves and tablature"
+msgstr "正在编排五线谱和 TAB 谱"
+
+msgid "Ask every time"
+msgstr "每次都询问"
+
+msgid "Audio from YouTube"
+msgstr "来自 YouTube 的音频"
+
+msgid "Audio or video file to read, or a YouTube video link."
+msgstr "要读取的音频或视频文件，或 YouTube 视频链接。"
+
+msgid "Audio or video file to read."
+msgstr "要读取的音频或视频文件。"
+
+#, python-brace-format
+msgid "Audio saved: {name} — {link}"
+msgstr "音频已保存：{name} — {link}"
+
+msgid "Audio track"
+msgstr "音轨"
+
+msgid "Audio track number when the file has several."
+msgstr "文件包含多条音轨时的音轨编号。"
+
+msgid "Automatic"
+msgstr "自动"
+
+msgid "BPM"
+msgstr "BPM"
+
+msgid "Back"
+msgstr "返回"
+
+msgid "Back to file selection"
+msgstr "返回文件选择"
+
+msgid "Bass"
+msgstr "贝斯"
+
+msgid "Bass tuning"
+msgstr "贝斯调弦"
+
+msgid "Beats per minute, if detection is wrong."
+msgstr "每分钟节拍数（检测不准时使用）。"
+
+msgid "Cancel"
+msgstr "取消"
+
+msgid "Cancelled."
+msgstr "已取消。"
+
+msgid "Cancelled. Nothing was saved."
+msgstr "已取消，未保存任何内容。"
+
+msgid "Cannot write to the install location."
+msgstr "无法写入安装位置。"
+
+msgid "Change install location"
+msgstr "更改安装位置"
+
+msgid "Change save folder"
+msgstr "更改保存文件夹"
+
+msgid "Change the folder for audio saved from YouTube"
+msgstr "更改保存 YouTube 音频的文件夹"
+
+msgid "Change…"
+msgstr "更改…"
+
+msgid "Check each component to agree to its license."
+msgstr "请勾选各组件，表示同意其许可协议。"
+
+msgid "Check offline that YouTube support is installed correctly."
+msgstr "离线检查 YouTube 支持是否已正确安装。"
+
+msgid "Check that the file plays in another app, or convert it to WAV or MP3."
+msgstr "请确认该文件能在其他应用中播放，或将其转换为 WAV 或 MP3。"
+
+msgid "Check that the video plays in your browser, or choose another one."
+msgstr "请确认该视频能在浏览器中播放，或选择其他视频。"
+
+msgid "Check the link and your internet connection, then try again."
+msgstr "请检查链接和网络连接，然后重试。"
+
+msgid "Check your internet connection and try again."
+msgstr "请检查网络连接，然后重试。"
+
+msgid "Checking the link"
+msgstr "正在检查链接"
+
+msgid "Choose a component bundle file"
+msgstr "选择组件包文件"
+
+msgid "Choose a file that contains sound."
+msgstr "请选择包含声音的文件。"
+
+msgid "Choose a file…"
+msgstr "选择文件…"
+
+msgid "Choose a folder for audio saved from YouTube"
+msgstr "选择保存 YouTube 音频的文件夹"
+
+msgid "Choose a folder you can write to."
+msgstr "请选择有写入权限的文件夹。"
+
+msgid "Choose a music file"
+msgstr "选择音乐文件"
+
+msgid "Choose a public video that plays without signing in."
+msgstr "请选择无需登录即可播放的公开视频。"
+
+msgid "Choose a save folder"
+msgstr "选择保存文件夹"
+
+#, python-brace-format
+msgid "Choose a section of {limit} minutes or less."
+msgstr "请选择不超过 {limit} 分钟的片段。"
+
+msgid "Choose another file"
+msgstr "选择其他文件"
+
+msgid "Choose at least one instrument."
+msgstr "请至少选择一种乐器。"
+
+msgid ""
+"Choose the instruments to keep. They are put together into one audio file, for example a backing "
+"track without vocals."
+msgstr "选择要保留的乐器，它们会合成为一个音频文件，例如去掉人声的伴奏。"
+
+msgid "Choose where to install components"
+msgstr "选择组件的安装位置"
+
+msgid "Choose where to save"
+msgstr "选择保存位置"
+
+msgid "Choose which audio track to use."
+msgstr "选择要使用的音轨。"
+
+msgid "Clear"
+msgstr "清除"
+
+msgid "Clear all"
+msgstr "全部清除"
+
+msgid "Clear saved intermediate results"
+msgstr "清除已保存的中间结果"
+
+msgid "Clear…"
+msgstr "清除…"
+
+msgid "Close"
+msgstr "关闭"
+
+msgid "Component bundle (*.zip)"
+msgstr "组件包 (*.zip)"
+
+msgid "Components"
+msgstr "组件"
+
+msgid "Components are needed to make sheet music."
+msgstr "制作乐谱需要先安装组件。"
+
+#, python-brace-format
+msgid "Components installed in {seconds} s."
+msgstr "组件已安装，用时 {seconds} 秒。"
+
+msgid ""
+"Copy a video's link, then paste it here. Notirua saves the audio as an MP3 file named after the "
+"video."
+msgstr "复制视频的链接，然后粘贴到这里。Notirua 会把音频保存为以视频标题命名的 MP3 文件。"
+
+msgid "Copy the video's address from your browser (or its Share button) and paste it."
+msgstr "从浏览器复制视频地址（或使用其“分享”按钮）并粘贴。"
+
+msgid "Delete all saved intermediate results."
+msgstr "删除所有已保存的中间结果。"
+
+msgid "Delete all saved intermediate results? Your sheet music files are not touched."
+msgstr "删除所有已保存的中间结果？您的乐谱文件不会受到影响。"
+
+msgid "Delete saved intermediate results and start over"
+msgstr "删除已保存的中间结果并重新开始"
+
+msgid "Delete this file's saved intermediate results and start over."
+msgstr "删除此文件已保存的中间结果并重新开始。"
+
+msgid "Details"
+msgstr "详细信息"
+
+#, python-brace-format
+msgid "Disk space needed: {size}"
+msgstr "所需磁盘空间：{size}"
+
+msgid "Do not make one PDF per instrument."
+msgstr "不为每种乐器单独生成 PDF。"
+
+msgid "Do not make the all-instruments PDF."
+msgstr "不生成全部乐器合一的 PDF。"
+
+msgid "Done"
+msgstr "完成"
+
+#, python-brace-format
+msgid "Done ({time}) · {count}"
+msgstr "完成（{time}）· {count}"
+
+#, python-brace-format
+msgid "Done in {seconds} s: {count}."
+msgstr "用时 {seconds} 秒完成：{count}。"
+
+msgid "Down a semitone"
+msgstr "降低半音"
+
+msgid "Download and continue"
+msgstr "下载并继续"
+
+msgid "Downloading components needs your permission first."
+msgstr "下载组件需要先获得您的许可。"
+
+msgid "Downloading the audio"
+msgstr "正在下载音频"
+
+msgid "Downloading the audio: trying another way"
+msgstr "正在下载音频：尝试其他方式"
+
+#, python-brace-format
+msgid "Downloading the audio: {received} of {total}"
+msgstr "正在下载音频：{received} / {total}"
+
+msgid "Downloading the helper program"
+msgstr "正在下载辅助程序"
+
+#, python-brace-format
+msgid "Downloading {name}"
+msgstr "正在下载 {name}"
+
+#, python-brace-format
+msgid "Downloading {name}: {received} of {total}"
+msgstr "正在下载 {name}：{received} / {total}"
+
+msgid "Drawing the score took too long and was stopped."
+msgstr "绘制乐谱耗时过长，已停止。"
+
+msgid "Drawing the sheet music"
+msgstr "正在绘制乐谱"
+
+#, python-brace-format
+msgid "Drawing {instrument} sheet music ({index}/{count})"
+msgstr "正在绘制{instrument}乐谱（{index}/{count}）"
+
+msgid "Draws the finished sheet music and saves it as PDF."
+msgstr "绘制完成的乐谱并保存为 PDF。"
+
+msgid "Drop D"
+msgstr "Drop D"
+
+msgid "Drop a music file here"
+msgstr "将音乐文件拖到这里"
+
+msgid "Drum sheet music is for reference only."
+msgstr "鼓谱仅供参考。"
+
+msgid "Drums"
+msgstr "鼓"
+
+msgid "Each press moves a semitone (half step). Two presses make a whole step."
+msgstr "每按一次移动一个半音，按两次为一个全音。"
+
+msgid "Empty: use the system settings. Example: http://proxy:8080"
+msgstr "留空则使用系统设置。例如：http://proxy:8080"
+
+msgid "End time in seconds."
+msgstr "结束时间（秒）。"
+
+#, python-brace-format
+msgid "Error code: {code}"
+msgstr "错误代码：{code}"
+
+#, python-brace-format
+msgid "Error: {message}"
+msgstr "错误：{message}"
+
+msgid "Failed"
+msgstr "失败"
+
+#, python-brace-format
+msgid "File not found: {path}"
+msgstr "找不到文件：{path}"
+
+msgid "File type"
+msgstr "文件类型"
+
+msgid "File type of the new audio file."
+msgstr "新音频文件的文件类型。"
+
+msgid "Finding the beat, tempo, and key"
+msgstr "正在分析节拍、速度和调"
+
+msgid "Fitting notes to the beat"
+msgstr "正在将音符对齐节拍"
+
+msgid "Folder for audio saved from YouTube"
+msgstr "保存 YouTube 音频的文件夹"
+
+msgid "Folder for the MP3 file (default: Music/Notirua)."
+msgstr "MP3 文件的保存文件夹（默认：音乐/Notirua）。"
+
+msgid "Folder for the results."
+msgstr "保存结果的文件夹。"
+
+#, python-brace-format
+msgid "For a YouTube link: MP3 quality in kbps (default {kbps})."
+msgstr "对于 YouTube 链接：MP3 音质，单位 kbps（默认 {kbps}）。"
+
+msgid "For a YouTube link: folder for the saved MP3 (default: Music/Notirua)."
+msgstr "对于 YouTube 链接：保存 MP3 的文件夹（默认：音乐/Notirua）。"
+
+msgid "For a YouTube link: proxy server, for example http://proxy.example.com:8080."
+msgstr "对于 YouTube 链接：代理服务器，例如 http://proxy.example.com:8080。"
+
+msgid "For example 4/4 or 3/4."
+msgstr "例如 4/4 或 3/4。"
+
+#, python-brace-format
+msgid "Free space: {size}"
+msgstr "可用空间：{size}"
+
+msgid "Free up disk space or choose another install location."
+msgstr "请释放磁盘空间，或选择其他安装位置。"
+
+msgid "Free up disk space or clear saved intermediate results in Settings."
+msgstr "请释放磁盘空间，或在“设置”中清除已保存的中间结果。"
+
+#, python-brace-format
+msgid "Freed {size}."
+msgstr "已释放 {size}。"
+
+msgid "General"
+msgstr "常规"
+
+msgid "Getting the helper program"
+msgstr "正在获取辅助程序"
+
+msgid "Give the link of a YouTube video."
+msgstr "请提供一个 YouTube 视频的链接。"
+
+msgid "Guitar"
+msgstr "吉他"
+
+msgid "Guitar tuning"
+msgstr "吉他调弦"
+
+msgid "Half step down"
+msgstr "降半音"
+
+msgid "Hear each instrument"
+msgstr "分别试听各乐器"
+
+msgid "Helper program (Deno)"
+msgstr "辅助程序（Deno）"
+
+msgid "In progress"
+msgstr "进行中"
+
+msgid "Install"
+msgstr "安装"
+
+msgid "Install again"
+msgstr "重新安装"
+
+msgid "Install again…"
+msgstr "重新安装…"
+
+msgid "Install from a bundle file…"
+msgstr "从组件包文件安装…"
+
+msgid "Install from a component bundle file (no internet)."
+msgstr "从组件包文件安装（无需联网）。"
+
+msgid "Install location."
+msgstr "安装位置。"
+
+#, python-brace-format
+msgid "Install location: {path}"
+msgstr "安装位置：{path}"
+
+msgid "Install the components Notirua needs."
+msgstr "安装 Notirua 所需的组件。"
+
+msgid "Install the helper program that reads YouTube links (Deno)."
+msgstr "安装读取 YouTube 链接的辅助程序（Deno）。"
+
+msgid "Install the newest Notirua from the releases page and try again."
+msgstr "请从发布页面安装最新版 Notirua，然后重试。"
+
+msgid "Installed"
+msgstr "已安装"
+
+msgid "Installed from the bundle file."
+msgstr "已从组件包文件安装。"
+
+msgid "Installing components"
+msgstr "正在安装组件"
+
+msgid "Installing the helper program"
+msgstr "正在安装辅助程序"
+
+#, python-brace-format
+msgid "Installing {name}"
+msgstr "正在安装 {name}"
+
+msgid "Instrument separation model"
+msgstr "乐器分离模型"
+
+msgid "Instruments"
+msgstr "乐器"
+
+msgid "Instruments are found automatically; ones without sound are skipped."
+msgstr "自动识别乐器，没有声音的乐器会被跳过。"
+
+#, python-brace-format
+msgid "Instruments to include, comma separated: {choices}."
+msgstr "要包含的乐器，以逗号分隔：{choices}。"
+
+#, python-brace-format
+msgid "Instruments to keep, comma separated: {choices}."
+msgstr "要保留的乐器，以逗号分隔：{choices}。"
+
+#, python-brace-format
+msgid "Instruments to leave out, comma separated: {choices}."
+msgstr "要排除的乐器，以逗号分隔：{choices}。"
+
+msgid "Interface language, for example en or ko."
+msgstr "界面语言，例如 en 或 ko。"
+
+msgid "Keep at most"
+msgstr "最多保留"
+
+msgid "Key"
+msgstr "调"
+
+msgid "Key, if detection is wrong, for example \"D minor\"."
+msgstr "检测不准时指定调，例如 \"D minor\"。"
+
+msgid "Language"
+msgstr "语言"
+
+msgid "Language for labels inside the PDF."
+msgstr "PDF 内标签所用的语言。"
+
+msgid "Language inside the PDF"
+msgstr "PDF 内的语言"
+
+msgid "Lets Notirua read YouTube links. Only needed for saving audio from YouTube."
+msgstr "让 Notirua 能够读取 YouTube 链接。仅在保存 YouTube 音频时需要。"
+
+msgid "Letter"
+msgstr "Letter"
+
+#, python-brace-format
+msgid "License: {license} ({url})"
+msgstr "许可协议：{license}（{url}）"
+
+msgid "Licenses"
+msgstr "许可协议"
+
+msgid "Link of one YouTube video."
+msgstr "单个 YouTube 视频的链接。"
+
+msgid "List available languages."
+msgstr "列出可用的语言。"
+
+msgid "Listen first"
+msgstr "先试听"
+
+msgid "Listening for notes"
+msgstr "正在聆听音符"
+
+#, python-brace-format
+msgid "Listening for {instrument} notes ({index}/{count})"
+msgstr "正在聆听{instrument}的音符（{index}/{count}）"
+
+msgid "M4A (AAC)"
+msgstr "M4A (AAC)"
+
+msgid "M4A file (*.m4a)"
+msgstr "M4A 文件 (*.m4a)"
+
+msgid "MIDI file (*.mid)"
+msgstr "MIDI 文件 (*.mid)"
+
+msgid "MP3 (smaller file)"
+msgstr "MP3（文件较小）"
+
+msgid "MP3 file (*.mp3)"
+msgstr "MP3 文件 (*.mp3)"
+
+#, python-brace-format
+msgid "MP3 quality in kbps (default {kbps})."
+msgstr "MP3 音质，单位 kbps（默认 {kbps}）。"
+
+msgid "MP3, M4A, WAV, FLAC, OGG, MP4 video, and more"
+msgstr "MP3、M4A、WAV、FLAC、OGG、MP4 视频等"
+
+msgid "Make an audio file from only the instruments you choose."
+msgstr "仅用您选择的乐器制作音频文件。"
+
+msgid ""
+"Make an audio file from only the instruments you choose. Without --stems or --without, everything"
+" but the vocals is kept."
+msgstr "仅用您选择的乐器制作音频文件。不指定 --stems 或 --without 时，保留除人声以外的全部声音。"
+
+msgid "Make audio file"
+msgstr "制作音频文件"
+
+msgid "Make sheet music"
+msgstr "制作乐谱"
+
+msgid "Make sheet music from an audio file."
+msgstr "用音频文件制作乐谱。"
+
+msgid "Make sheet music from it"
+msgstr "用它制作乐谱"
+
+msgid "Making sheet music failed."
+msgstr "制作乐谱失败。"
+
+#, python-brace-format
+msgid "Making sheet music for {title}"
+msgstr "正在为《{title}》制作乐谱"
+
+msgid "Making the MP3 file"
+msgstr "正在制作 MP3 文件"
+
+msgid "Making the audio file"
+msgstr "正在制作音频文件"
+
+msgid "More settings"
+msgstr "更多设置"
+
+msgid "Move the first beat by (beats)"
+msgstr "将第一拍移动（拍数）"
+
+msgid "Move the first beat by N beats."
+msgstr "将第一拍移动 N 拍。"
+
+msgid "Moved down one octave to fit the instrument."
+msgstr "为适应该乐器，已下移一个八度。"
+
+msgid "Moved up one octave to fit the instrument."
+msgstr "为适应该乐器，已上移一个八度。"
+
+msgid "Music"
+msgstr "音乐"
+
+#, python-brace-format
+msgid "Music and video files ({patterns})"
+msgstr "音乐和视频文件（{patterns}）"
+
+msgid "MusicXML file (*.musicxml)"
+msgstr "MusicXML 文件 (*.musicxml)"
+
+msgid "Name"
+msgstr "名称"
+
+msgid "New file…"
+msgstr "新建文件…"
+
+msgid "Next page"
+msgstr "下一页"
+
+msgid "No"
+msgstr "否"
+
+msgid "No screen found, so the window cannot open."
+msgstr "找不到屏幕，无法打开窗口。"
+
+msgid "No sound"
+msgstr "无声音"
+
+#, python-brace-format
+msgid "No sound in this song: {instruments}"
+msgstr "这首歌中没有声音：{instruments}"
+
+#, python-brace-format
+msgid "Not enough disk space: {needed} needed, {available} available."
+msgstr "磁盘空间不足：需要 {needed}，可用 {available}。"
+
+msgid "Not installed"
+msgstr "未安装"
+
+msgid "Not now"
+msgstr "以后再说"
+
+msgid "Not selected"
+msgstr "未选择"
+
+msgid "Notation + TAB"
+msgstr "五线谱 + TAB"
+
+msgid "Notation only"
+msgstr "仅五线谱"
+
+#, python-brace-format
+msgid "Note: {message}"
+msgstr "注意：{message}"
+
+msgid "Nothing was downloaded."
+msgstr "未下载任何内容。"
+
+msgid "Nothing was downloaded. Run “notirua setup” again any time."
+msgstr "未下载任何内容。随时可以再次运行“notirua setup”。"
+
+msgid "Notirua needs to download these components:"
+msgstr "Notirua 需要下载以下组件："
+
+#, python-brace-format
+msgid "Notirua needs to download {count} component"
+msgid_plural "Notirua needs to download {count} components"
+msgstr[0] "Notirua 需要下载 {count} 个组件"
+
+#, python-brace-format
+msgid "Notirua {version}"
+msgstr "Notirua {version}"
+
+msgid "OK"
+msgstr "确定"
+
+msgid "One more helper is needed"
+msgstr "还需要一个辅助程序"
+
+msgid "Only use videos you have the right to use. YouTube's terms of service and copyright law apply."
+msgstr "请只使用您有权使用的视频。YouTube 的服务条款和版权法同样适用。"
+
+msgid "Open a music file…"
+msgstr "打开音乐文件…"
+
+msgid "Open log folder"
+msgstr "打开日志文件夹"
+
+#, python-brace-format
+msgid "Open recent file {name}"
+msgstr "打开最近的文件 {name}"
+
+msgid "Open setup and install the required components."
+msgstr "打开安装向导，安装所需组件。"
+
+msgid "Open setup…"
+msgstr "打开安装向导…"
+
+msgid "Open the Notirua window (the default with no command)."
+msgstr "打开 Notirua 窗口（不带命令时的默认行为）。"
+
+msgid "Open the folder"
+msgstr "打开文件夹"
+
+msgid "Open the log folder for details and report the problem."
+msgstr "请打开日志文件夹查看详情，并反馈该问题。"
+
+msgid "Or use a YouTube link"
+msgstr "或使用 YouTube 链接"
+
+msgid "Other"
+msgstr "其他"
+
+msgid "Overall progress"
+msgstr "总进度"
+
+#, python-brace-format
+msgid "Page {page} of {count}"
+msgstr "第 {page} 页，共 {count} 页"
+
+msgid "Paper"
+msgstr "纸张"
+
+msgid "Paper size."
+msgstr "纸张大小。"
+
+msgid "Paste"
+msgstr "粘贴"
+
+msgid "Paste a YouTube link"
+msgstr "粘贴 YouTube 链接"
+
+msgid "Paste the link from the clipboard"
+msgstr "粘贴剪贴板中的链接"
+
+msgid "Pause"
+msgstr "暂停"
+
+msgid "Piano"
+msgstr "钢琴"
+
+msgid "Please review the component licenses"
+msgstr "请查看各组件的许可协议"
+
+msgid "Previous page"
+msgstr "上一页"
+
+msgid "Proxy for YouTube"
+msgstr "YouTube 代理"
+
+msgid "Proxy server for YouTube"
+msgstr "YouTube 代理服务器"
+
+msgid "Proxy server, for example http://proxy.example.com:8080 (default: the system's)."
+msgstr "代理服务器，例如 http://proxy.example.com:8080（默认：系统代理）。"
+
+msgid "Quality"
+msgstr "音质"
+
+msgid "Quality of the MP3 file"
+msgstr "MP3 文件的音质"
+
+#, python-brace-format
+msgid "Quit {name}"
+msgstr "退出 {name}"
+
+msgid "Reading YouTube links needs a small helper program."
+msgstr "读取 YouTube 链接需要一个小型辅助程序。"
+
+msgid "Reading YouTube links needs a small helper program:"
+msgstr "读取 YouTube 链接需要一个小型辅助程序："
+
+msgid "Reading the audio file"
+msgstr "正在读取音频文件"
+
+msgid "Recent:"
+msgstr "最近："
+
+msgid "Redrawing the sheet music"
+msgstr "正在重新绘制乐谱"
+
+msgid "Remove"
+msgstr "移除"
+
+msgid "Remove an installed component."
+msgstr "移除已安装的组件。"
+
+msgid "Remove vocals (MR)"
+msgstr "去除人声（MR）"
+
+#, python-brace-format
+msgid "Remove {name} and download it again?"
+msgstr "移除 {name} 并重新下载？"
+
+#, python-brace-format
+msgid "Remove {name}? You need it to make sheet music and can install it again."
+msgstr "移除 {name}？制作乐谱时需要它，之后可以重新安装。"
+
+#, python-brace-format
+msgid "Removed {name}."
+msgstr "已移除 {name}。"
+
+msgid "Remove…"
+msgstr "移除…"
+
+msgid "Resume"
+msgstr "继续"
+
+msgid "Reusing earlier results"
+msgstr "正在复用之前的结果"
+
+msgid "Review the components and choose “Agree and install”."
+msgstr "请查看各组件，然后选择“同意并安装”。"
+
+msgid "Run again with --accept-licenses to agree without a prompt."
+msgstr "再次运行时加上 --accept-licenses，即可不经提示直接同意。"
+
+msgid "Run “notirua setup --youtube” first."
+msgstr "请先运行“notirua setup --youtube”。"
+
+msgid "Run “notirua setup” first."
+msgstr "请先运行“notirua setup”。"
+
+msgid "Same as the app"
+msgstr "与应用相同"
+
+msgid "Same as the system"
+msgstr "与系统相同"
+
+msgid "Save"
+msgstr "保存"
+
+msgid "Save MP3 and make sheet music"
+msgstr "保存 MP3 并制作乐谱"
+
+msgid "Save MP3 only"
+msgstr "仅保存 MP3"
+
+msgid "Save all"
+msgstr "全部保存"
+
+msgid "Save as MIDI"
+msgstr "保存为 MIDI"
+
+msgid "Save as MusicXML"
+msgstr "保存为 MusicXML"
+
+msgid "Save as WAV"
+msgstr "保存为 WAV"
+
+msgid "Save folder"
+msgstr "保存文件夹"
+
+msgid "Save only the instruments you choose as one audio file (MP3, M4A, WAV)."
+msgstr "仅将您选择的乐器保存为一个音频文件（MP3、M4A、WAV）。"
+
+msgid "Save the audio as an MP3 file only"
+msgstr "仅将音频保存为 MP3 文件"
+
+msgid ""
+"Save the audio of a YouTube video as an MP3 file named after the video. Only use videos you have "
+"the right to use."
+msgstr "将 YouTube 视频的音频保存为以视频标题命名的 MP3 文件。请只使用您有权使用的视频。"
+
+msgid "Save the audio of a YouTube video as an MP3 file."
+msgstr "将 YouTube 视频的音频保存为 MP3 文件。"
+
+msgid "Saved intermediate results"
+msgstr "已保存的中间结果"
+
+#, python-brace-format
+msgid "Saved intermediate results: {size} in {path}"
+msgstr "已保存的中间结果：{path} 中共 {size}"
+
+msgid "Saved results make transposing and trying again fast. Older ones are removed first."
+msgstr "保留结果可以让移调和重试更快。较旧的结果会先被移除。"
+
+#, python-brace-format
+msgid "Saved {name}."
+msgstr "已保存 {name}。"
+
+#, python-brace-format
+msgid "Saved {n} file."
+msgid_plural "Saved {n} files."
+msgstr[0] "已保存 {n} 个文件。"
+
+msgid "Saved."
+msgstr "已保存。"
+
+#, python-brace-format
+msgid "Saved: {path}"
+msgstr "已保存：{path}"
+
+msgid "Save…"
+msgstr "保存…"
+
+msgid "Saving files"
+msgstr "正在保存文件"
+
+msgid "Saving the audio failed."
+msgstr "保存音频失败。"
+
+msgid "Saving the audio from YouTube"
+msgstr "正在保存 YouTube 音频"
+
+msgid "Score engraver (LilyPond)"
+msgstr "乐谱排版器（LilyPond）"
+
+msgid "Select all"
+msgstr "全选"
+
+msgid "Semitones to move, -12 to +12."
+msgstr "移动的半音数，-12 到 +12。"
+
+msgid "Settings"
+msgstr "设置"
+
+msgid "Settings…"
+msgstr "设置…"
+
+msgid "Sheet music preview"
+msgstr "乐谱预览"
+
+msgid "Show"
+msgstr "显示"
+
+msgid "Show detailed log output."
+msgstr "显示详细的日志输出。"
+
+msgid "Show installed components."
+msgstr "显示已安装的组件。"
+
+msgid "Show notation, tablature, or both."
+msgstr "显示五线谱、TAB 谱，或两者同时显示。"
+
+msgid "Show or clear saved intermediate results."
+msgstr "显示或清除已保存的中间结果。"
+
+#, python-brace-format
+msgid "Show the license of {name}"
+msgstr "查看 {name} 的许可协议"
+
+msgid "Show the version."
+msgstr "显示版本。"
+
+msgid "Size"
+msgstr "大小"
+
+#, python-brace-format
+msgid "Size: {size}"
+msgstr "大小：{size}"
+
+msgid "Skipped"
+msgstr "已跳过"
+
+#, python-brace-format
+msgid "Skipped {instrument}: {reason}"
+msgstr "已跳过{instrument}：{reason}"
+
+#, python-brace-format
+msgid "Skipped: {list}"
+msgstr "已跳过：{list}"
+
+#, python-brace-format
+msgid "Some components are not installed yet: {names}"
+msgstr "部分组件尚未安装：{names}"
+
+msgid "Some notes outside the instrument's range were moved by an octave."
+msgstr "部分超出乐器音域的音符已移动一个八度。"
+
+msgid "Some notes that cannot be played together were left out."
+msgstr "部分无法同时演奏的音符已被舍去。"
+
+msgid "Something went wrong."
+msgstr "出了点问题。"
+
+msgid "Song title"
+msgstr "歌曲名称"
+
+msgid "Song title printed on every page."
+msgstr "印在每一页上的歌曲名称。"
+
+msgid "Song title used in the file name."
+msgstr "用于文件名的歌曲名称。"
+
+#, python-brace-format
+msgid "Source: {domain}"
+msgstr "来源：{domain}"
+
+msgid "Splits a song into vocals, drums, bass, guitar, piano, and other sounds."
+msgstr "将歌曲拆分为人声、鼓、贝斯、吉他、钢琴和其他声音。"
+
+msgid "Splitting the song into instruments"
+msgstr "正在将歌曲拆分为各个乐器"
+
+msgid "Standard"
+msgstr "标准"
+
+msgid "Start it again whenever you are ready."
+msgstr "准备好后随时可以重新开始。"
+
+msgid "Start time in seconds."
+msgstr "开始时间（秒）。"
+
+msgid "Status"
+msgstr "状态"
+
+msgid "Stop installing? Parts already downloaded are kept for next time."
+msgstr "停止安装？已下载的部分会保留，下次继续使用。"
+
+msgid "Stop making sheet music? Finished steps are kept for next time."
+msgstr "停止制作乐谱？已完成的步骤会保留，下次继续使用。"
+
+msgid "Storage"
+msgstr "存储空间"
+
+msgid "TAB only"
+msgstr "仅 TAB 谱"
+
+msgid "Tempo"
+msgstr "速度"
+
+msgid "The audio from YouTube could not be saved."
+msgstr "无法保存来自 YouTube 的音频。"
+
+#, python-brace-format
+msgid "The audio is longer than {limit} minutes."
+msgstr "音频时长超过 {limit} 分钟。"
+
+msgid "The audio is saved."
+msgstr "音频已保存。"
+
+msgid "The audio keeps its original key, even if you transposed the music."
+msgstr "即使您已对乐谱移调，音频仍保持原调。"
+
+msgid "The download failed."
+msgstr "下载失败。"
+
+msgid "The downloaded file is damaged (checksum mismatch)."
+msgstr "下载的文件已损坏（校验和不一致）。"
+
+msgid "The file appears to be damaged."
+msgstr "文件似乎已损坏。"
+
+msgid "The file could not be read as audio."
+msgstr "无法将该文件作为音频读取。"
+
+msgid "The file has no audio track."
+msgstr "该文件没有音轨。"
+
+#, python-brace-format
+msgid "The file has {count} audio tracks."
+msgstr "该文件有 {count} 条音轨。"
+
+msgid "The file is copy-protected (DRM) and cannot be opened."
+msgstr "该文件受版权保护（DRM），无法打开。"
+
+msgid "The helper program for YouTube links is installed."
+msgstr "读取 YouTube 链接的辅助程序已安装。"
+
+msgid "The helper program is installed."
+msgstr "辅助程序已安装。"
+
+msgid "The internet is used only for this download. Notirua works offline afterwards."
+msgstr "仅在下载时使用网络，之后 Notirua 可离线使用。"
+
+msgid "The license list could not be found."
+msgstr "找不到许可协议列表。"
+
+msgid "The new language is used after you restart Notirua."
+msgstr "重新启动 Notirua 后将使用新的语言。"
+
+msgid "The score could not be drawn."
+msgstr "无法绘制乐谱。"
+
+msgid "The sheet music is ready."
+msgstr "乐谱已准备好。"
+
+msgid "The task was cancelled."
+msgstr "任务已取消。"
+
+msgid "There is no YouTube link in the clipboard."
+msgstr "剪贴板中没有 YouTube 链接。"
+
+msgid "There is not enough disk space."
+msgstr "磁盘空间不足。"
+
+msgid "There is not enough disk space. Free up space or choose another location."
+msgstr "磁盘空间不足。请释放空间或选择其他位置。"
+
+#, python-brace-format
+msgid "This copy of Notirua cannot save {format} files."
+msgstr "此版本的 Notirua 无法保存 {format} 文件。"
+
+msgid "This is a live stream or a video that has not started yet."
+msgstr "这是直播，或是尚未开始的视频。"
+
+msgid "This is not a link to a single YouTube video."
+msgstr "这不是单个 YouTube 视频的链接。"
+
+msgid "This is not a proxy address. It looks like http://proxy.example.com:8080."
+msgstr "这不是代理地址。正确的格式类似 http://proxy.example.com:8080。"
+
+msgid "This looks like a YouTube video link."
+msgstr "这看起来是 YouTube 视频链接。"
+
+msgid "This video is not available (removed, blocked, or not shown in your country)."
+msgstr "该视频不可用（已被删除、被屏蔽，或在您所在的国家/地区不可观看）。"
+
+msgid "This video needs you to sign in (private, members-only, or age-restricted)."
+msgstr "该视频需要登录才能观看（私享、会员专享或有年龄限制）。"
+
+msgid "Time signature"
+msgstr "拍号"
+
+#, python-brace-format
+msgid "Total download {download} · Space needed after install {install} · Free space {free}"
+msgstr "总下载量 {download} · 安装后所需空间 {install} · 可用空间 {free}"
+
+#, python-brace-format
+msgid "Total download: {size}"
+msgstr "总下载量：{size}"
+
+#, python-brace-format
+msgid "Track {number}"
+msgstr "音轨 {number}"
+
+msgid "Transpose"
+msgstr "移调"
+
+msgid "Transpose must be between -12 and +12."
+msgstr "移调必须在 -12 到 +12 之间。"
+
+msgid "Transpose to this key, for example \"G major\"."
+msgstr "移调到该调，例如 \"G major\"。"
+
+#, python-brace-format
+msgid "Transpose: {count} semitones"
+msgstr "移调：{count} 个半音"
+
+msgid "Try a different copy of the file."
+msgstr "请换一份该文件的副本再试。"
+
+msgid "Try again"
+msgstr "重试"
+
+msgid "Try again after the broadcast has ended and the recording is available."
+msgstr "请在直播结束并可观看回放后再试。"
+
+msgid "Try again. If the problem continues, open the log folder and report it."
+msgstr "请重试。如果问题仍然存在，请打开日志文件夹并反馈该问题。"
+
+msgid "Try again. The damaged file has been removed."
+msgstr "请重试。已损坏的文件已被删除。"
+
+msgid "Try fewer instruments or a shorter section."
+msgstr "请减少乐器数量，或选择更短的片段。"
+
+msgid "Turn a song into sheet music and tablature PDFs."
+msgstr "将歌曲转换为乐谱和 TAB 谱 PDF。"
+
+#, python-brace-format
+msgid "Unknown instrument: {name}"
+msgstr "未知乐器：{name}"
+
+msgid "Up a semitone"
+msgstr "升高半音"
+
+msgid "Use a file without copy protection."
+msgstr "请使用没有版权保护的文件。"
+
+msgid "Use this when earlier results for this file look wrong. It takes longer."
+msgstr "当该文件之前的结果看起来不对时使用。耗时较长。"
+
+msgid "Version"
+msgstr "版本"
+
+msgid "Vocals"
+msgstr "人声"
+
+msgid "WAV (no compression)"
+msgstr "WAV（无压缩）"
+
+msgid "WAV file (*.wav)"
+msgstr "WAV 文件 (*.wav)"
+
+msgid "Wait a while, then try again. Another network or video can also help."
+msgstr "请稍等片刻再试。换一个网络或视频也可能有帮助。"
+
+msgid "Waiting"
+msgstr "等待中"
+
+#, python-brace-format
+msgid "What to do: {hint}"
+msgstr "处理办法：{hint}"
+
+msgid "Work is still in progress. Stop it and quit?"
+msgstr "任务仍在进行。要停止并退出吗？"
+
+msgid "Yes"
+msgstr "是"
+
+msgid "YouTube could not be reached."
+msgstr "无法连接到 YouTube。"
+
+msgid "YouTube has changed in a way this version of Notirua cannot follow."
+msgstr "YouTube 发生了变化，此版本的 Notirua 无法适配。"
+
+msgid "YouTube is asking for a check or has limited your requests for now."
+msgstr "YouTube 要求验证，或暂时限制了您的请求。"
+
+msgid "YouTube link"
+msgstr "YouTube 链接"
+
+msgid "YouTube's video server did not send the audio."
+msgstr "YouTube 的视频服务器没有发送音频。"
+
+#, python-brace-format
+msgid "about {time} left"
+msgstr "约剩 {time}"
+
+#, python-format
+msgid "ambiguous option: %(option)s could match %(matches)s"
+msgstr "选项 %(option)s 有歧义，可能匹配 %(matches)s"
+
+#, python-format
+msgid "argument \"-\" with mode %r"
+msgstr "参数 \"-\" 不能使用模式 %r"
+
+#, python-format
+msgid "argument %(argument_name)s: %(message)s"
+msgstr "参数 %(argument_name)s：%(message)s"
+
+#, python-format
+msgid "can't open '%(filename)s': %(error)s"
+msgstr "无法打开“%(filename)s”：%(error)s"
+
+msgid "command"
+msgstr "命令"
+
+#, python-format
+msgid "expected %s argument"
+msgid_plural "expected %s arguments"
+msgstr[0] "需要 %s 个参数"
+
+msgid "expected at least one argument"
+msgstr "至少需要一个参数"
+
+msgid "expected at most one argument"
+msgstr "最多只能有一个参数"
+
+msgid "expected one argument"
+msgstr "需要一个参数"
+
+#, python-format
+msgid "ignored explicit argument %r"
+msgstr "已忽略显式参数 %r"
+
+msgid "installed"
+msgstr "已安装"
+
+#, python-format
+msgid "invalid %(type)s value: %(value)r"
+msgstr "%(type)s 的值无效：%(value)r"
+
+#, python-format
+msgid "invalid choice: %(value)r (choose from %(choices)s)"
+msgstr "无效的选择：%(value)r（可选：%(choices)s）"
+
+#, python-format
+msgid "not allowed with argument %s"
+msgstr "不能与参数 %s 同时使用"
+
+msgid "not installed"
+msgstr "未安装"
+
+#, python-format
+msgid "one of the arguments %s is required"
+msgstr "必须提供参数 %s 之一"
+
+msgid "options"
+msgstr "选项"
+
+msgid "positional arguments"
+msgstr "位置参数"
+
+msgid "show program's version number and exit"
+msgstr "显示程序的版本号并退出"
+
+msgid "show this help message and exit"
+msgstr "显示此帮助信息并退出"
+
+msgid "standard, drop_d, half_down, or MIDI numbers."
+msgstr "standard、drop_d、half_down，或 MIDI 编号。"
+
+msgid "standard, five_string, drop_d, half_down, or MIDI numbers."
+msgstr "standard、five_string、drop_d、half_down，或 MIDI 编号。"
+
+#, python-format
+msgid "the following arguments are required: %s"
+msgstr "必须提供以下参数：%s"
+
+#, python-format
+msgid "unexpected option string: %s"
+msgstr "意外的选项字符串：%s"
+
+#, python-format
+msgid "unknown parser %(parser_name)r (choices: %(choices)s)"
+msgstr "未知的解析器 %(parser_name)r（可选：%(choices)s）"
+
+#, python-format
+msgid "unrecognized arguments: %s"
+msgstr "无法识别的参数：%s"
+
+msgid "usage: "
+msgstr "用法："
+
+msgid "y"
+msgstr "是"
+
+msgid "yes"
+msgstr "是"
+
+#, python-brace-format
+msgid "{first}, {second}"
+msgstr "{first}、{second}"
+
+#, python-brace-format
+msgid "{instrument} (no sound)"
+msgstr "{instrument}（无声音）"
+
+#, python-brace-format
+msgid "{instrument} ({reason})"
+msgstr "{instrument}（{reason}）"
+
+#, python-brace-format
+msgid "{kbps} kbps"
+msgstr "{kbps} kbps"
+
+#, python-brace-format
+msgid "{kbps} kbps (best sound)"
+msgstr "{kbps} kbps（音质最佳）"
+
+#, python-brace-format
+msgid "{kbps} kbps (recommended)"
+msgstr "{kbps} kbps（推荐）"
+
+#, python-brace-format
+msgid "{kbps} kbps (smaller file)"
+msgstr "{kbps} kbps（文件较小）"
+
+#, python-brace-format
+msgid "{message} · {speed}/s"
+msgstr "{message} · {speed}/秒"
+
+#, python-brace-format
+msgid ""
+"{name}: {purpose}\n"
+"\n"
+"Download: {size} (about {installed} on disk) from {source}.\n"
+"License: {license}.\n"
+"\n"
+"It is downloaded once and kept. Nothing else is downloaded."
+msgstr ""
+"{name}：{purpose}\n"
+"\n"
+"下载大小：{size}（安装后约占用 {installed}），来源：{source}。\n"
+"许可协议：{license}。\n"
+"\n"
+"只会下载一次并保留，不会下载其他内容。"
+
+#, python-brace-format
+msgid "{n} file"
+msgid_plural "{n} files"
+msgstr[0] "{n} 个文件"
+
+#, python-brace-format
+msgid "{n} score"
+msgid_plural "{n} scores"
+msgstr[0] "{n} 份乐谱"
+
+#, python-brace-format
+msgid "{title} - all instruments"
+msgstr "{title} - 全部乐器"
+
+#, python-brace-format
+msgid "{title} - backing track"
+msgstr "{title} - 伴奏"
+
+#, python-brace-format
+msgid "{title} - without {instruments}"
+msgstr "{title} - 去掉{instruments}"
+
+#, python-brace-format
+msgid "{title} - {instruments}"
+msgstr "{title} - {instruments}"
+
+#, python-brace-format
+msgid "{tonic} major"
+msgstr "{tonic} 大调"
+
+#, python-brace-format
+msgid "{tonic} minor"
+msgstr "{tonic} 小调"
+
+#, python-brace-format
+msgid "{value} is not a number."
+msgstr "{value} 不是数字。"
+
+#, python-brace-format
+msgid "{value} is not a whole number."
+msgstr "{value} 不是整数。"
+
+#, python-brace-format
+msgid "♩ = {bpm} · {key}"
+msgstr "♩ = {bpm} · {key}"
+
