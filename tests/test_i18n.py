@@ -106,8 +106,9 @@ def test_catalog_compiles(po: Path, tmp_path: Path) -> None:
         write_mo(fp, catalog)
 
 
-def test_korean_is_complete() -> None:
-    with (LOCALES / "ko" / "LC_MESSAGES" / "notirua.po").open("rb") as fp:
+@pytest.mark.parametrize("lang", ["ko", "vi"])
+def test_shipped_language_is_complete(lang: str) -> None:
+    with (LOCALES / lang / "LC_MESSAGES" / "notirua.po").open("rb") as fp:
         catalog = read_po(fp)
     missing = [m.id for m in catalog if m.id and (not m.string or m.fuzzy)]
     assert not missing

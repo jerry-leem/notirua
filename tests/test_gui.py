@@ -17,7 +17,7 @@ import pytest
 from PySide6.QtCore import QMimeData, QPointF, Qt, QTimer, QUrl
 from PySide6.QtGui import QAction, QDropEvent
 from PySide6.QtPdf import QPdfDocument
-from PySide6.QtWidgets import QApplication, QFileDialog, QMessageBox
+from PySide6.QtWidgets import QApplication, QDialogButtonBox, QFileDialog, QMessageBox
 from pytestqt.qtbot import QtBot
 
 from notirua import settings as settings_mod
@@ -763,3 +763,25 @@ def test_make_audio_file_preview_and_stop(
     qtbot.waitUntil(lambda: not dialog.busy.isVisible(), timeout=3_000)
     assert "Nothing was saved" in dialog.status.text()
     assert len(played) == 1
+
+
+def test_standard_buttons_are_translated_without_a_qt_catalog(qtbot: QtBot) -> None:
+    """Qt ships no Vietnamese catalog; Yes/No/Close come from Notirua's own."""
+    from notirua import i18n
+    from notirua.gui.app import install_qt_translations
+
+    app = QApplication.instance()
+    assert isinstance(app, QApplication)
+    assert i18n.set_language("vi") == "vi"
+    translator = install_qt_translations(app, "vi")
+    try:
+        buttons = QDialogButtonBox(
+            QDialogButtonBox.StandardButton.Yes
+            | QDialogButtonBox.StandardButton.No
+            | QDialogButtonBox.StandardButton.Close
+        )
+        qtbot.addWidget(buttons)
+        texts = {b.text().replace("&", "") for b in buttons.buttons()}
+        assert texts == {"Có", "Không", "Đóng"}
+    finally:
+        app.removeTranslator(translator)
