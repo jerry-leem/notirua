@@ -44,6 +44,19 @@ def test_sync_readme_rewrites_only_current_version_sentences() -> None:
     )
 
 
+def test_sync_readme_moves_latest_release_links() -> None:
+    old = "https://github.com/jerry-leem/notirua/releases"
+    text = (
+        f"[**Notirua 0.1.0 릴리스 페이지**]({old}/tag/v0.1.0)에\n"
+        f"[**Notirua 0.1.0**]({old}/tag/v0.1.0);\n"
+        f"| [Notirua-0.1.0-macos-arm64.dmg]({old}/download/v0.1.0/Notirua-0.1.0-macos-arm64.dmg) |"
+    )
+    out = versioning.sync_readme(text, "0.2.0")
+    assert "0.1.0" not in out
+    assert out.count("0.2.0") == 7
+    assert versioning.sync_readme(out, "0.2.0") == out
+
+
 def test_release_notes_have_no_placeholder_or_invisible_separator() -> None:
     notes = versioning.render_notes("9.9.9")
     assert "{{version}}" not in notes

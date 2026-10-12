@@ -32,14 +32,18 @@ LOCK = ROOT / "uv.lock"
 RELEASE_NOTES = ROOT / "packaging" / "release_notes.md"
 SEMVER = re.compile(r"\d+\.\d+\.\d+")
 
-# README sentences that state the *current* version, in Korean and English.
-# Links to a particular release (download tables) are chosen by hand and not listed.
-# Each pattern keeps group 1 (before the version) and group 2 (after it).
+# README sentences that state the *current* version, in Korean and English, and the links
+# to the latest release (its page and the download tables). The README never links to an
+# older release. Each pattern keeps group 1 (before the version) and group 2 (after it).
 README_PATTERNS = (
     re.compile(r"(현재 버전은 \*\*)\d+\.\d+\.\d+(\*\*)"),
     re.compile(r"(The current version is \*\*)\d+\.\d+\.\d+(\*\*)"),
     re.compile(r"(# notirua )\d+\.\d+\.\d+()"),
     re.compile(r"(`Notirua )\d+\.\d+\.\d+(`)"),
+    re.compile(r"(\[\*\*Notirua )\d+\.\d+\.\d+()(?= 릴리스 페이지\*\*\]|\*\*\]\()"),
+    re.compile(r"(/releases/tag/v)\d+\.\d+\.\d+()"),
+    re.compile(r"(/releases/download/v)\d+\.\d+\.\d+()"),
+    re.compile(r"([\[/]Notirua-)\d+\.\d+\.\d+(-(?:windows|macos|linux))"),
 )
 
 
