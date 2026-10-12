@@ -104,7 +104,7 @@ Python이나 다른 프로그램을 따로 설치하지 않아도 되며, 한·�
 
 ## 내려받기와 설치
 
-최신 배포판은 [**Notirua 0.5.2 릴리스 페이지**](https://github.com/jerry-leem/notirua/releases/tag/v0.5.2)에
+최신 배포판은 [**Notirua 0.5.3 릴리스 페이지**](https://github.com/jerry-leem/notirua/releases/tag/v0.5.3)에
 있습니다. 릴리스 페이지에 한국어 설치 방법, 사용법, 바뀐 점, 알려진 제한이 함께 적혀
 있습니다. 지난 버전은 [모든 릴리스](https://github.com/jerry-leem/notirua/releases)에서
 볼 수 있습니다.
@@ -408,7 +408,7 @@ titles (macOS and Windows use their system fonts).
 ### Download and install
 
 The latest release is
-[**Notirua 0.5.2**](https://github.com/jerry-leem/notirua/releases/tag/v0.5.2);
+[**Notirua 0.5.3**](https://github.com/jerry-leem/notirua/releases/tag/v0.5.3);
 its page has installation and usage notes (in Korean), changes, and known
 limits. Earlier versions are on [all releases](https://github.com/jerry-leem/notirua/releases).
 
