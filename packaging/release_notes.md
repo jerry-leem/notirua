@@ -10,7 +10,7 @@
 |---|---|
 | Windows 10/11 (x64) | `Notirua-{{version}}-windows-x64-setup.exe` |
 | Mac (Apple Silicon: M1 이후), macOS 15 Sequoia 이상 권장 | `Notirua-{{version}}-macos-arm64.dmg` |
-| Intel Mac | 준비 중입니다. 지금은 [소스로 실행](https://github.com/jerry-leem/notirua#소스로-실행하기)할 수 있습니다. |
+| Intel Mac, macOS 15 Sequoia 이상 권장 | `Notirua-{{version}}-macos-x86_64.dmg` |
 | Linux x86_64 (Ubuntu 20.04 이상 등 glibc 2.31 이상) | `Notirua-{{version}}-linux-x86_64.AppImage` |
 
 필요 사양: RAM 8GB, 빈 디스크 약 1GB(앱, 구성요소, 중간 결과).
@@ -139,7 +139,6 @@ notirua-cli mix "곡.m4a" --out ./음원 --stems drums,bass --format wav
 ## 알려진 제한
 
 - macOS와 Windows 앱은 아직 코드 서명 전이라 처음 열 때 위의 허용 과정이 필요합니다.
-- Intel Mac 설치 파일은 준비 중입니다.
 - macOS 14에서는 악보를 그리는 조판기(LilyPond)가 시작되지 않을 수 있습니다. 확인된 환경은 macOS 15 이상입니다.
 - 드럼 채보는 아직 거칩니다. 박자는 항상 4/4로 추정하므로, 다른 박자의 곡은 **세부 설정**에서 박자를 직접 고르세요.
 - 15분이 넘는 파일은 명령줄의 `--start`, `--end`로 구간을 나눠 처리하세요. 유튜브 영상은 15분 이하만 받을 수 있습니다.

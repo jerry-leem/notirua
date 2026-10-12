@@ -83,7 +83,7 @@ Notirua의 핵심 기능입니다. 노래 파일(MP3, M4A, WAV, FLAC 등 오디�
 | 운영체제 | 지원 범위 | 설치 파일 |
 |---|---|---|
 | Windows | 10, 11 (x64) | 설치 프로그램 `.exe` |
-| macOS | 14 Sonoma 이상, Apple Silicon과 Intel | Apple Silicon용 `.dmg` (Intel용은 준비 중) |
+| macOS | 14 Sonoma 이상, Apple Silicon과 Intel | `.dmg` (Apple Silicon용, Intel용) |
 | Linux | x86_64, glibc 2.31 이상(Ubuntu 20.04 이상 등) | `.AppImage` 하나로 실행 |
 
 세 운영체제 모두 같은 화면과 기능을 씁니다. 메뉴와 단축키는 각 운영체제의 관례를
@@ -111,10 +111,10 @@ Python이나 다른 프로그램을 따로 설치하지 않아도 되며, 한·�
 
 | 컴퓨터 | 내려받기 | 설치 |
 |---|---|---|
-| Windows 10/11 (x64) | [Notirua-0.5.2-windows-x64-setup.exe](https://github.com/jerry-leem/notirua/releases/download/v0.5.2/Notirua-0.5.2-windows-x64-setup.exe) | 실행해서 안내에 따라 설치(관리자 권한 필요 없음) |
-| Mac (Apple Silicon), macOS 14 이상 | [Notirua-0.5.2-macos-arm64.dmg](https://github.com/jerry-leem/notirua/releases/download/v0.5.2/Notirua-0.5.2-macos-arm64.dmg) | 열어서 Notirua를 Applications 폴더로 끌어다 놓기 |
-| Intel Mac | 준비 중 | 아래 [소스로 실행하기](#소스로-실행하기) |
-| Linux x86_64 (glibc 2.31 이상) | [Notirua-0.5.2-linux-x86_64.AppImage](https://github.com/jerry-leem/notirua/releases/download/v0.5.2/Notirua-0.5.2-linux-x86_64.AppImage) | `chmod +x`로 실행 권한을 주고 실행 |
+| Windows 10/11 (x64) | [Notirua-0.5.3-windows-x64-setup.exe](https://github.com/jerry-leem/notirua/releases/download/v0.5.3/Notirua-0.5.3-windows-x64-setup.exe) | 실행해서 안내에 따라 설치(관리자 권한 필요 없음) |
+| Mac (Apple Silicon), macOS 14 이상 | [Notirua-0.5.3-macos-arm64.dmg](https://github.com/jerry-leem/notirua/releases/download/v0.5.3/Notirua-0.5.3-macos-arm64.dmg) | 열어서 Notirua를 Applications 폴더로 끌어다 놓기 |
+| Intel Mac, macOS 14 이상 | [Notirua-0.5.3-macos-x86_64.dmg](https://github.com/jerry-leem/notirua/releases/download/v0.5.3/Notirua-0.5.3-macos-x86_64.dmg) | 열어서 Notirua를 Applications 폴더로 끌어다 놓기 |
+| Linux x86_64 (glibc 2.31 이상) | [Notirua-0.5.3-linux-x86_64.AppImage](https://github.com/jerry-leem/notirua/releases/download/v0.5.3/Notirua-0.5.3-linux-x86_64.AppImage) | `chmod +x`로 실행 권한을 주고 실행 |
 
 macOS 14에서는 악보를 그리는 조판기(LilyPond)가 시작되지 않을 수 있습니다. 확인된 환경은 macOS 15 이상입니다.
 
@@ -383,7 +383,7 @@ the command line.
 | System | Supported | Installer |
 |---|---|---|
 | Windows | 10 and 11 (x64) | `.exe` setup program |
-| macOS | 14 Sonoma or later, Apple Silicon and Intel | `.dmg` for Apple Silicon (Intel coming) |
+| macOS | 14 Sonoma or later, Apple Silicon and Intel | `.dmg` (Apple Silicon, Intel) |
 | Linux | x86_64 with glibc 2.31 or later (Ubuntu 20.04 or later, and others) | a single `.AppImage` |
 
 The screens and features are the same everywhere; menus and shortcuts follow
@@ -414,10 +414,10 @@ limits. Earlier versions are on [all releases](https://github.com/jerry-leem/not
 
 | Computer | Download | Install |
 |---|---|---|
-| Windows 10/11 (x64) | [Notirua-0.5.2-windows-x64-setup.exe](https://github.com/jerry-leem/notirua/releases/download/v0.5.2/Notirua-0.5.2-windows-x64-setup.exe) | Run it and follow the steps (no administrator rights needed) |
-| Mac (Apple Silicon), macOS 14 or later | [Notirua-0.5.2-macos-arm64.dmg](https://github.com/jerry-leem/notirua/releases/download/v0.5.2/Notirua-0.5.2-macos-arm64.dmg) | Open it and drag Notirua to Applications |
-| Intel Mac | Coming | [Run from source](#run-from-source) |
-| Linux x86_64 (glibc 2.31 or later) | [Notirua-0.5.2-linux-x86_64.AppImage](https://github.com/jerry-leem/notirua/releases/download/v0.5.2/Notirua-0.5.2-linux-x86_64.AppImage) | `chmod +x` it and run it |
+| Windows 10/11 (x64) | [Notirua-0.5.3-windows-x64-setup.exe](https://github.com/jerry-leem/notirua/releases/download/v0.5.3/Notirua-0.5.3-windows-x64-setup.exe) | Run it and follow the steps (no administrator rights needed) |
+| Mac (Apple Silicon), macOS 14 or later | [Notirua-0.5.3-macos-arm64.dmg](https://github.com/jerry-leem/notirua/releases/download/v0.5.3/Notirua-0.5.3-macos-arm64.dmg) | Open it and drag Notirua to Applications |
+| Intel Mac, macOS 14 or later | [Notirua-0.5.3-macos-x86_64.dmg](https://github.com/jerry-leem/notirua/releases/download/v0.5.3/Notirua-0.5.3-macos-x86_64.dmg) | Open it and drag Notirua to Applications |
+| Linux x86_64 (glibc 2.31 or later) | [Notirua-0.5.3-linux-x86_64.AppImage](https://github.com/jerry-leem/notirua/releases/download/v0.5.3/Notirua-0.5.3-linux-x86_64.AppImage) | `chmod +x` it and run it |
 
 On macOS 14 the sheet-music engraver (LilyPond) may not start. macOS 15 or later is the tested setup.
 

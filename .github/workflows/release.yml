@@ -189,8 +189,17 @@ jobs:
     # macOS 15 or newer: the LilyPond build the app downloads needs a newer system than 14
     # to start (its "Try the app" step). The app itself is built for macOS 14 and later
     # (MACOSX_DEPLOYMENT_TARGET in build_lgpl_av.py).
-    runs-on: macos-15
+    # Apple Silicon and Intel each build natively (FFmpeg is built for the runner's CPU).
+    runs-on: ${{ matrix.runner }}
     timeout-minutes: 120
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - arch: arm64
+            runner: macos-15
+          - arch: x86_64
+            runner: macos-15-intel
     steps:
       - uses: actions/checkout@v4
       - uses: astral-sh/setup-uv@v6
@@ -206,7 +215,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: dist/lgpl-av
-          key: lgpl-av-macos-arm64-${{ hashFiles('packaging/build_lgpl_av.py') }}
+          key: lgpl-av-macos-${{ matrix.arch }}-${{ hashFiles('packaging/build_lgpl_av.py') }}
       - name: pkg-config
         run: command -v pkg-config >/dev/null || brew install pkgconf
       - name: Install
@@ -228,7 +237,7 @@ jobs:
           uv run python packaging/smoke_test.py --cli "$APP/notirua-cli" --gui "$APP/Notirua"
       - uses: actions/upload-artifact@v4
         with:
-          name: notirua-macos
+          name: notirua-macos-${{ matrix.arch }}
           path: |
             dist/*.dmg
             dist/lgpl-av/*.whl
