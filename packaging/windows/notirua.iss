@@ -38,6 +38,9 @@ Name: "korean"; MessagesFile: "compiler:Languages\Korean.isl"
 Name: "english"; MessagesFile: "compiler:Default.isl"
 ; Not shipped with Inno Setup (unofficial translation); see licenses/inno-setup/NOTICE.
 Name: "vietnamese"; MessagesFile: "Vietnamese.isl"
+; Official from Inno Setup 6.5.0; bundled so an older ISCC on a build machine still works.
+Name: "chinesesimplified"; MessagesFile: "ChineseSimplified.isl"
+Name: "chinesetraditional"; MessagesFile: "ChineseTraditional.isl"
 
 [Tasks]
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked

@@ -2,3 +2,9 @@ packaging/windows/Vietnamese.isl is the unofficial Vietnamese translation of the
 wizard by memecoder (memecoder17@gmail.com), last modified 2023-10-26, copied unchanged from
 https://github.com/jrsoftware/issrc/blob/main/Files/Languages/Unofficial/Vietnamese.isl
 and used under the Inno Setup License (LICENSE in this folder).
+
+packaging/windows/ChineseSimplified.isl (maintained by Zhenghan Yang) and
+packaging/windows/ChineseTraditional.isl (GoneTone and others) are the Chinese translations of
+the Inno Setup wizard, copied unchanged from
+https://github.com/jrsoftware/issrc/tree/main/Files/Languages (shipped with Inno Setup 6.5.0 and
+later) and used under the Inno Setup License (LICENSE in this folder).

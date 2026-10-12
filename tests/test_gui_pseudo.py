@@ -35,14 +35,14 @@ ALLOWED = re.compile(
 )
 
 
-@pytest.fixture(params=["en_XA", "vi"])
+@pytest.fixture(params=["en_XA", "vi", "zh_CN", "zh_TW"])
 def pseudo(request: pytest.FixtureRequest, tmp_path: Path) -> Iterator[None]:
-    """The pseudo-locale, and Vietnamese (long sentences, stacked diacritics) for real."""
+    """The pseudo-locale, and Vietnamese and Chinese (wide glyphs) for real."""
     global CHECK_UNTRANSLATED
     CHECK_UNTRANSLATED = request.param == "en_XA"
-    if request.param == "vi":
+    if request.param != "en_XA":
         i18n.set_locales_dir(ROOT / "locales")
-        assert i18n.set_language("vi") == "vi"
+        assert i18n.set_language(request.param) == request.param
         yield
         return
     spec = importlib.util.spec_from_file_location(

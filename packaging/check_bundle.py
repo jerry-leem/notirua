@@ -103,8 +103,9 @@ def problems(bundle: Path, expected_version: str | None) -> list[str]:
     if list(root.glob("locales/en_XA")):
         found.append("pseudo-locale en_XA is bundled")
     found.extend(metadata_problems(root, expected_version))
-    if not list(root.rglob("qtbase_ko.qm")):
-        found.append("missing Qt's own Korean translation (qtbase_ko.qm)")
+    for qm in ("qtbase_ko.qm", "qtbase_zh_CN.qm", "qtbase_zh_TW.qm"):
+        if not list(root.rglob(qm)):
+            found.append(f"missing Qt's own translation ({qm})")
 
     cli = cli_path(bundle)
     env = {**os.environ, "QT_QPA_PLATFORM": "offscreen"}

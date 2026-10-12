@@ -63,9 +63,14 @@ def fallback_chain(language: str) -> list[str]:
     if not tag:
         return []
     chain = [tag]
+    if tag.split("_")[0] == "zh":
+        # Chinese catalogs are per script: Traditional for zh-Hant/TW/HK/MO, else Simplified.
+        parts = {part.lower() for part in tag.split("_")[1:]}
+        traditional = "hant" in parts or bool(parts & {"tw", "hk", "mo"})
+        chain.append("zh_TW" if traditional else "zh_CN")
     if "_" in tag:
         chain.append(tag.split("_")[0])
-    return chain
+    return list(dict.fromkeys(chain))
 
 
 def _windows_language() -> str | None:

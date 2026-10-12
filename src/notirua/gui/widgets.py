@@ -45,10 +45,16 @@ def format_duration(seconds: float) -> str:
     return f"{seconds // 60}:{seconds % 60:02d}"
 
 
+# The two Chinese catalogs are told apart by script, not by country.
+CHINESE_NAMES = {"zh_CN": "简体中文", "zh_TW": "繁體中文"}
+
+
 def language_name(code: str) -> str:
     """A language's own name, e.g. ``ko`` -> ``한국어`` (falls back to the code)."""
     from babel import Locale, UnknownLocaleError
 
+    if code in CHINESE_NAMES:  # Babel adds the region ("中文 (中国)"); the script is what differs
+        return CHINESE_NAMES[code]
     try:
         name = Locale.parse(code).get_display_name(code)
     except (ValueError, UnknownLocaleError):
