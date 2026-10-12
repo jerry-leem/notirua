@@ -1,0 +1,1467 @@
+# Vietnamese translations for Notirua.
+# This file is distributed under the same license as the Notirua project.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Notirua 0.5.3\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2026-10-12 20:36+0900\n"
+"PO-Revision-Date: 2026-10-12 20:33+0900\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: vi\n"
+"Language-Team: vi <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.18.0\n"
+
+#, python-format
+msgid " (default: %(default)s)"
+msgstr " (mặc định: %(default)s)"
+
+#, python-format
+msgid "%(heading)s:"
+msgstr "%(heading)s:"
+
+#, python-format
+msgid "%(prog)s: error: %(message)s\n"
+msgstr "%(prog)s: lỗi: %(message)s\n"
+
+msgid "&File"
+msgstr "&Tệp"
+
+msgid "&Help"
+msgstr "Trợ &giúp"
+
+msgid "5-string"
+msgstr "5 dây"
+
+msgid "A YouTube link is in the clipboard. Press “Paste”."
+msgstr "Trong bộ nhớ tạm có liên kết YouTube. Hãy bấm “Dán”."
+
+msgid ""
+"A company or school network, firewall, or proxy can block it. Enter your proxy address in "
+"Settings, or try another network such as a phone hotspot."
+msgstr ""
+"Mạng công ty hoặc trường học, tường lửa hay proxy có thể chặn kết nối này. Hãy nhập địa chỉ proxy"
+" trong Cài đặt, hoặc thử mạng khác như điểm phát sóng từ điện thoại."
+
+#, python-brace-format
+msgid "A required component is not installed: {name}."
+msgstr "Chưa cài thành phần cần thiết: {name}."
+
+msgid "About"
+msgstr "Giới thiệu"
+
+#, python-brace-format
+msgid "About {name}"
+msgstr "Giới thiệu {name}"
+
+msgid "Agree and install"
+msgstr "Đồng ý và cài"
+
+msgid "Agree to the component licenses without asking."
+msgstr "Đồng ý với giấy phép của các thành phần mà không hỏi."
+
+msgid "Agree to the license and install? [y/N] "
+msgstr "Đồng ý với giấy phép và cài? [y/N] "
+
+msgid "Agree to the licenses and install? [y/N] "
+msgstr "Đồng ý với các giấy phép và cài? [y/N] "
+
+msgid "All"
+msgstr "Tất cả"
+
+msgid "All components are installed."
+msgstr "Đã cài tất cả thành phần."
+
+msgid "All files (*)"
+msgstr "Tất cả tệp (*)"
+
+msgid "Also save MIDI."
+msgstr "Lưu thêm tệp MIDI."
+
+msgid "Also save MusicXML."
+msgstr "Lưu thêm tệp MusicXML."
+
+msgid "Arranging staves and tablature"
+msgstr "Đang sắp xếp khuông nhạc và TAB"
+
+msgid "Ask every time"
+msgstr "Hỏi mỗi lần"
+
+msgid "Audio from YouTube"
+msgstr "Âm thanh từ YouTube"
+
+msgid "Audio or video file to read, or a YouTube video link."
+msgstr "Tệp âm thanh hoặc video cần đọc, hoặc liên kết video YouTube."
+
+msgid "Audio or video file to read."
+msgstr "Tệp âm thanh hoặc video cần đọc."
+
+#, python-brace-format
+msgid "Audio saved: {name} — {link}"
+msgstr "Đã lưu âm thanh: {name} — {link}"
+
+msgid "Audio track"
+msgstr "Rãnh âm thanh"
+
+msgid "Audio track number when the file has several."
+msgstr "Số thứ tự rãnh âm thanh khi tệp có nhiều rãnh."
+
+msgid "Automatic"
+msgstr "Tự động"
+
+msgid "BPM"
+msgstr "BPM"
+
+msgid "Back"
+msgstr "Quay lại"
+
+msgid "Back to file selection"
+msgstr "Quay lại bước chọn tệp"
+
+msgid "Bass"
+msgstr "Bass"
+
+msgid "Bass tuning"
+msgstr "Cách lên dây bass"
+
+msgid "Beats per minute, if detection is wrong."
+msgstr "Số nhịp mỗi phút, nếu nhận diện sai."
+
+msgid "Cancel"
+msgstr "Hủy"
+
+msgid "Cancelled."
+msgstr "Đã hủy."
+
+msgid "Cancelled. Nothing was saved."
+msgstr "Đã hủy. Chưa lưu gì cả."
+
+msgid "Cannot write to the install location."
+msgstr "Không thể ghi vào vị trí cài."
+
+msgid "Change install location"
+msgstr "Đổi vị trí cài"
+
+msgid "Change save folder"
+msgstr "Đổi thư mục lưu"
+
+msgid "Change the folder for audio saved from YouTube"
+msgstr "Đổi thư mục lưu âm thanh từ YouTube"
+
+msgid "Change…"
+msgstr "Đổi…"
+
+msgid "Check each component to agree to its license."
+msgstr "Hãy đánh dấu từng thành phần để đồng ý với giấy phép của nó."
+
+msgid "Check offline that YouTube support is installed correctly."
+msgstr "Kiểm tra ngoại tuyến xem hỗ trợ YouTube đã được cài đúng chưa."
+
+msgid "Check that the file plays in another app, or convert it to WAV or MP3."
+msgstr "Hãy kiểm tra xem tệp có phát được trong ứng dụng khác không, hoặc chuyển sang WAV hay MP3."
+
+msgid "Check that the video plays in your browser, or choose another one."
+msgstr "Hãy kiểm tra xem video có phát được trong trình duyệt không, hoặc chọn video khác."
+
+msgid "Check the link and your internet connection, then try again."
+msgstr "Hãy kiểm tra liên kết và kết nối internet rồi thử lại."
+
+msgid "Check your internet connection and try again."
+msgstr "Hãy kiểm tra kết nối internet rồi thử lại."
+
+msgid "Checking the link"
+msgstr "Đang kiểm tra liên kết"
+
+msgid "Choose a component bundle file"
+msgstr "Chọn tệp gói thành phần"
+
+msgid "Choose a file that contains sound."
+msgstr "Hãy chọn tệp có âm thanh."
+
+msgid "Choose a file…"
+msgstr "Chọn tệp…"
+
+msgid "Choose a folder for audio saved from YouTube"
+msgstr "Chọn thư mục lưu âm thanh từ YouTube"
+
+msgid "Choose a folder you can write to."
+msgstr "Hãy chọn thư mục có thể ghi."
+
+msgid "Choose a music file"
+msgstr "Chọn tệp nhạc"
+
+msgid "Choose a public video that plays without signing in."
+msgstr "Hãy chọn video công khai, phát được mà không cần đăng nhập."
+
+msgid "Choose a save folder"
+msgstr "Chọn thư mục lưu"
+
+#, python-brace-format
+msgid "Choose a section of {limit} minutes or less."
+msgstr "Hãy chọn đoạn dài tối đa {limit} phút."
+
+msgid "Choose another file"
+msgstr "Chọn tệp khác"
+
+msgid "Choose at least one instrument."
+msgstr "Hãy chọn ít nhất một nhạc cụ."
+
+msgid ""
+"Choose the instruments to keep. They are put together into one audio file, for example a backing "
+"track without vocals."
+msgstr ""
+"Chọn các nhạc cụ muốn giữ. Chúng được ghép thành một tệp âm thanh, ví dụ nhạc đệm không có giọng "
+"hát."
+
+msgid "Choose where to install components"
+msgstr "Chọn nơi cài thành phần"
+
+msgid "Choose where to save"
+msgstr "Chọn nơi lưu"
+
+msgid "Choose which audio track to use."
+msgstr "Chọn rãnh âm thanh sẽ dùng."
+
+msgid "Clear"
+msgstr "Xóa"
+
+msgid "Clear all"
+msgstr "Xóa tất cả"
+
+msgid "Clear saved intermediate results"
+msgstr "Xóa dữ liệu tạm đã lưu"
+
+msgid "Clear…"
+msgstr "Xóa…"
+
+msgid "Close"
+msgstr "Đóng"
+
+msgid "Component bundle (*.zip)"
+msgstr "Gói thành phần (*.zip)"
+
+msgid "Components"
+msgstr "Thành phần"
+
+msgid "Components are needed to make sheet music."
+msgstr "Cần có các thành phần để tạo bản nhạc."
+
+#, python-brace-format
+msgid "Components installed in {seconds} s."
+msgstr "Đã cài thành phần trong {seconds} giây."
+
+msgid ""
+"Copy a video's link, then paste it here. Notirua saves the audio as an MP3 file named after the "
+"video."
+msgstr ""
+"Hãy sao chép liên kết của video rồi dán vào đây. Notirua lưu âm thanh thành tệp MP3 đặt tên theo "
+"video."
+
+msgid "Copy the video's address from your browser (or its Share button) and paste it."
+msgstr "Hãy sao chép địa chỉ video từ trình duyệt (hoặc nút Chia sẻ) rồi dán vào."
+
+msgid "Delete all saved intermediate results."
+msgstr "Xóa toàn bộ dữ liệu tạm đã lưu."
+
+msgid "Delete all saved intermediate results? Your sheet music files are not touched."
+msgstr "Xóa toàn bộ dữ liệu tạm đã lưu? Các tệp bản nhạc của bạn không bị ảnh hưởng."
+
+msgid "Delete saved intermediate results and start over"
+msgstr "Xóa dữ liệu tạm đã lưu và làm lại từ đầu"
+
+msgid "Delete this file's saved intermediate results and start over."
+msgstr "Xóa dữ liệu tạm đã lưu của tệp này và làm lại từ đầu."
+
+msgid "Details"
+msgstr "Chi tiết"
+
+#, python-brace-format
+msgid "Disk space needed: {size}"
+msgstr "Dung lượng đĩa cần dùng: {size}"
+
+msgid "Do not make one PDF per instrument."
+msgstr "Không tạo PDF riêng cho từng nhạc cụ."
+
+msgid "Do not make the all-instruments PDF."
+msgstr "Không tạo PDF gộp tất cả nhạc cụ."
+
+msgid "Done"
+msgstr "Xong"
+
+#, python-brace-format
+msgid "Done ({time}) · {count}"
+msgstr "Xong ({time}) · {count}"
+
+#, python-brace-format
+msgid "Done in {seconds} s: {count}."
+msgstr "Xong sau {seconds} giây: {count}."
+
+msgid "Down a semitone"
+msgstr "Giảm nửa cung"
+
+msgid "Download and continue"
+msgstr "Tải và tiếp tục"
+
+msgid "Downloading components needs your permission first."
+msgstr "Tải các thành phần cần có sự cho phép của bạn trước."
+
+msgid "Downloading the audio"
+msgstr "Đang tải âm thanh"
+
+msgid "Downloading the audio: trying another way"
+msgstr "Đang tải âm thanh: thử cách khác"
+
+#, python-brace-format
+msgid "Downloading the audio: {received} of {total}"
+msgstr "Đang tải âm thanh: {received} / {total}"
+
+msgid "Downloading the helper program"
+msgstr "Đang tải chương trình trợ giúp"
+
+#, python-brace-format
+msgid "Downloading {name}"
+msgstr "Đang tải {name}"
+
+#, python-brace-format
+msgid "Downloading {name}: {received} of {total}"
+msgstr "Đang tải {name}: {received} / {total}"
+
+msgid "Drawing the score took too long and was stopped."
+msgstr "Việc vẽ bản nhạc mất quá nhiều thời gian nên đã bị dừng."
+
+msgid "Drawing the sheet music"
+msgstr "Đang vẽ bản nhạc"
+
+#, python-brace-format
+msgid "Drawing {instrument} sheet music ({index}/{count})"
+msgstr "Đang vẽ bản nhạc {instrument} ({index}/{count})"
+
+msgid "Draws the finished sheet music and saves it as PDF."
+msgstr "Vẽ bản nhạc hoàn chỉnh và lưu thành PDF."
+
+msgid "Drop D"
+msgstr "Drop D"
+
+msgid "Drop a music file here"
+msgstr "Thả tệp nhạc vào đây"
+
+msgid "Drum sheet music is for reference only."
+msgstr "Bản nhạc trống chỉ để tham khảo."
+
+msgid "Drums"
+msgstr "Trống"
+
+msgid "Each press moves a semitone (half step). Two presses make a whole step."
+msgstr "Mỗi lần bấm dịch nửa cung (nửa bậc). Bấm hai lần là một cung."
+
+msgid "Empty: use the system settings. Example: http://proxy:8080"
+msgstr "Để trống: dùng cài đặt hệ thống. Ví dụ: http://proxy:8080"
+
+msgid "End time in seconds."
+msgstr "Thời điểm kết thúc, tính bằng giây."
+
+#, python-brace-format
+msgid "Error code: {code}"
+msgstr "Mã lỗi: {code}"
+
+#, python-brace-format
+msgid "Error: {message}"
+msgstr "Lỗi: {message}"
+
+msgid "Failed"
+msgstr "Thất bại"
+
+#, python-brace-format
+msgid "File not found: {path}"
+msgstr "Không tìm thấy tệp: {path}"
+
+msgid "File type"
+msgstr "Loại tệp"
+
+msgid "File type of the new audio file."
+msgstr "Loại tệp của tệp âm thanh mới."
+
+msgid "Finding the beat, tempo, and key"
+msgstr "Đang xác định nhịp, tốc độ và tông"
+
+msgid "Fitting notes to the beat"
+msgstr "Đang chỉnh các nốt khớp với nhịp"
+
+msgid "Folder for audio saved from YouTube"
+msgstr "Thư mục lưu âm thanh từ YouTube"
+
+msgid "Folder for the MP3 file (default: Music/Notirua)."
+msgstr "Thư mục lưu tệp MP3 (mặc định: Music/Notirua)."
+
+msgid "Folder for the results."
+msgstr "Thư mục lưu kết quả."
+
+#, python-brace-format
+msgid "For a YouTube link: MP3 quality in kbps (default {kbps})."
+msgstr "Với liên kết YouTube: chất lượng MP3 tính bằng kbps (mặc định {kbps})."
+
+msgid "For a YouTube link: folder for the saved MP3 (default: Music/Notirua)."
+msgstr "Với liên kết YouTube: thư mục lưu MP3 (mặc định: Music/Notirua)."
+
+msgid "For a YouTube link: proxy server, for example http://proxy.example.com:8080."
+msgstr "Với liên kết YouTube: máy chủ proxy, ví dụ http://proxy.example.com:8080."
+
+msgid "For example 4/4 or 3/4."
+msgstr "Ví dụ 4/4 hoặc 3/4."
+
+#, python-brace-format
+msgid "Free space: {size}"
+msgstr "Dung lượng trống: {size}"
+
+msgid "Free up disk space or choose another install location."
+msgstr "Hãy giải phóng dung lượng đĩa hoặc chọn vị trí cài khác."
+
+msgid "Free up disk space or clear saved intermediate results in Settings."
+msgstr "Hãy giải phóng dung lượng đĩa hoặc xóa dữ liệu tạm đã lưu trong Cài đặt."
+
+#, python-brace-format
+msgid "Freed {size}."
+msgstr "Đã giải phóng {size}."
+
+msgid "General"
+msgstr "Chung"
+
+msgid "Getting the helper program"
+msgstr "Đang lấy chương trình trợ giúp"
+
+msgid "Give the link of a YouTube video."
+msgstr "Hãy nhập liên kết của một video YouTube."
+
+msgid "Guitar"
+msgstr "Guitar"
+
+msgid "Guitar tuning"
+msgstr "Cách lên dây guitar"
+
+msgid "Half step down"
+msgstr "Hạ nửa cung"
+
+msgid "Hear each instrument"
+msgstr "Nghe từng nhạc cụ"
+
+msgid "Helper program (Deno)"
+msgstr "Chương trình trợ giúp (Deno)"
+
+msgid "In progress"
+msgstr "Đang thực hiện"
+
+msgid "Install"
+msgstr "Cài"
+
+msgid "Install again"
+msgstr "Cài lại"
+
+msgid "Install again…"
+msgstr "Cài lại…"
+
+msgid "Install from a bundle file…"
+msgstr "Cài từ tệp gói…"
+
+msgid "Install from a component bundle file (no internet)."
+msgstr "Cài từ tệp gói thành phần (không cần internet)."
+
+msgid "Install location."
+msgstr "Vị trí cài."
+
+#, python-brace-format
+msgid "Install location: {path}"
+msgstr "Vị trí cài: {path}"
+
+msgid "Install the components Notirua needs."
+msgstr "Cài các thành phần Notirua cần."
+
+msgid "Install the helper program that reads YouTube links (Deno)."
+msgstr "Cài chương trình trợ giúp đọc liên kết YouTube (Deno)."
+
+msgid "Install the newest Notirua from the releases page and try again."
+msgstr "Hãy cài bản Notirua mới nhất từ trang phát hành rồi thử lại."
+
+msgid "Installed"
+msgstr "Đã cài"
+
+msgid "Installed from the bundle file."
+msgstr "Đã cài từ tệp gói."
+
+msgid "Installing components"
+msgstr "Đang cài các thành phần"
+
+msgid "Installing the helper program"
+msgstr "Đang cài chương trình trợ giúp"
+
+#, python-brace-format
+msgid "Installing {name}"
+msgstr "Đang cài {name}"
+
+msgid "Instrument separation model"
+msgstr "Mô hình tách nhạc cụ"
+
+msgid "Instruments"
+msgstr "Nhạc cụ"
+
+msgid "Instruments are found automatically; ones without sound are skipped."
+msgstr "Nhạc cụ được tìm tự động; nhạc cụ không có âm thanh sẽ bị bỏ qua."
+
+#, python-brace-format
+msgid "Instruments to include, comma separated: {choices}."
+msgstr "Các nhạc cụ cần đưa vào, cách nhau bằng dấu phẩy: {choices}."
+
+#, python-brace-format
+msgid "Instruments to keep, comma separated: {choices}."
+msgstr "Các nhạc cụ cần giữ, cách nhau bằng dấu phẩy: {choices}."
+
+#, python-brace-format
+msgid "Instruments to leave out, comma separated: {choices}."
+msgstr "Các nhạc cụ cần bỏ, cách nhau bằng dấu phẩy: {choices}."
+
+msgid "Interface language, for example en or ko."
+msgstr "Ngôn ngữ giao diện, ví dụ en hoặc vi."
+
+msgid "Keep at most"
+msgstr "Giữ tối đa"
+
+msgid "Key"
+msgstr "Tông"
+
+msgid "Key, if detection is wrong, for example \"D minor\"."
+msgstr "Tông nhạc, nếu nhận diện sai, ví dụ \"D minor\"."
+
+msgid "Language"
+msgstr "Ngôn ngữ"
+
+msgid "Language for labels inside the PDF."
+msgstr "Ngôn ngữ của các nhãn trong PDF."
+
+msgid "Language inside the PDF"
+msgstr "Ngôn ngữ trong PDF"
+
+msgid "Lets Notirua read YouTube links. Only needed for saving audio from YouTube."
+msgstr "Cho phép Notirua đọc liên kết YouTube. Chỉ cần khi lưu âm thanh từ YouTube."
+
+msgid "Letter"
+msgstr "Letter"
+
+#, python-brace-format
+msgid "License: {license} ({url})"
+msgstr "Giấy phép: {license} ({url})"
+
+msgid "Licenses"
+msgstr "Giấy phép"
+
+msgid "Link of one YouTube video."
+msgstr "Liên kết của một video YouTube."
+
+msgid "List available languages."
+msgstr "Liệt kê các ngôn ngữ có sẵn."
+
+msgid "Listen first"
+msgstr "Nghe thử trước"
+
+msgid "Listening for notes"
+msgstr "Đang nghe các nốt nhạc"
+
+#, python-brace-format
+msgid "Listening for {instrument} notes ({index}/{count})"
+msgstr "Đang nghe các nốt của {instrument} ({index}/{count})"
+
+msgid "M4A (AAC)"
+msgstr "M4A (AAC)"
+
+msgid "M4A file (*.m4a)"
+msgstr "Tệp M4A (*.m4a)"
+
+msgid "MIDI file (*.mid)"
+msgstr "Tệp MIDI (*.mid)"
+
+msgid "MP3 (smaller file)"
+msgstr "MP3 (tệp nhỏ hơn)"
+
+msgid "MP3 file (*.mp3)"
+msgstr "Tệp MP3 (*.mp3)"
+
+#, python-brace-format
+msgid "MP3 quality in kbps (default {kbps})."
+msgstr "Chất lượng MP3 tính bằng kbps (mặc định {kbps})."
+
+msgid "MP3, M4A, WAV, FLAC, OGG, MP4 video, and more"
+msgstr "MP3, M4A, WAV, FLAC, OGG, video MP4 và nhiều loại khác"
+
+msgid "Make an audio file from only the instruments you choose."
+msgstr "Tạo tệp âm thanh chỉ từ các nhạc cụ bạn chọn."
+
+msgid ""
+"Make an audio file from only the instruments you choose. Without --stems or --without, everything"
+" but the vocals is kept."
+msgstr ""
+"Tạo tệp âm thanh chỉ từ các nhạc cụ bạn chọn. Nếu không có --stems hoặc --without, mọi thứ trừ "
+"giọng hát được giữ lại."
+
+msgid "Make audio file"
+msgstr "Tạo tệp âm thanh"
+
+msgid "Make sheet music"
+msgstr "Tạo bản nhạc"
+
+msgid "Make sheet music from an audio file."
+msgstr "Tạo bản nhạc từ tệp âm thanh."
+
+msgid "Make sheet music from it"
+msgstr "Tạo bản nhạc từ tệp này"
+
+msgid "Making sheet music failed."
+msgstr "Tạo bản nhạc không thành công."
+
+#, python-brace-format
+msgid "Making sheet music for {title}"
+msgstr "Đang tạo bản nhạc cho {title}"
+
+msgid "Making the MP3 file"
+msgstr "Đang tạo tệp MP3"
+
+msgid "Making the audio file"
+msgstr "Đang tạo tệp âm thanh"
+
+msgid "More settings"
+msgstr "Tùy chọn thêm"
+
+msgid "Move the first beat by (beats)"
+msgstr "Dịch phách đầu tiên đi (số phách)"
+
+msgid "Move the first beat by N beats."
+msgstr "Dịch phách đầu tiên đi N phách."
+
+msgid "Moved down one octave to fit the instrument."
+msgstr "Đã hạ một quãng tám cho vừa với nhạc cụ."
+
+msgid "Moved up one octave to fit the instrument."
+msgstr "Đã nâng một quãng tám cho vừa với nhạc cụ."
+
+msgid "Music"
+msgstr "Âm nhạc"
+
+#, python-brace-format
+msgid "Music and video files ({patterns})"
+msgstr "Tệp nhạc và video ({patterns})"
+
+msgid "MusicXML file (*.musicxml)"
+msgstr "Tệp MusicXML (*.musicxml)"
+
+msgid "Name"
+msgstr "Tên"
+
+msgid "New file…"
+msgstr "Tệp mới…"
+
+msgid "Next page"
+msgstr "Trang sau"
+
+msgid "No"
+msgstr "Không"
+
+msgid "No screen found, so the window cannot open."
+msgstr "Không tìm thấy màn hình nên không thể mở cửa sổ."
+
+msgid "No sound"
+msgstr "Không có âm thanh"
+
+#, python-brace-format
+msgid "No sound in this song: {instruments}"
+msgstr "Bài hát không có tiếng của: {instruments}"
+
+#, python-brace-format
+msgid "Not enough disk space: {needed} needed, {available} available."
+msgstr "Không đủ dung lượng đĩa: cần {needed}, còn {available}."
+
+msgid "Not installed"
+msgstr "Chưa cài"
+
+msgid "Not now"
+msgstr "Để sau"
+
+msgid "Not selected"
+msgstr "Chưa chọn"
+
+msgid "Notation + TAB"
+msgstr "Khuông nhạc + TAB"
+
+msgid "Notation only"
+msgstr "Chỉ khuông nhạc"
+
+#, python-brace-format
+msgid "Note: {message}"
+msgstr "Lưu ý: {message}"
+
+msgid "Nothing was downloaded."
+msgstr "Chưa tải gì cả."
+
+msgid "Nothing was downloaded. Run “notirua setup” again any time."
+msgstr "Chưa tải gì cả. Bạn có thể chạy lại “notirua setup” bất cứ lúc nào."
+
+msgid "Notirua needs to download these components:"
+msgstr "Notirua cần tải các thành phần sau:"
+
+#, python-brace-format
+msgid "Notirua needs to download {count} component"
+msgid_plural "Notirua needs to download {count} components"
+msgstr[0] "Notirua cần tải {count} thành phần"
+
+#, python-brace-format
+msgid "Notirua {version}"
+msgstr "Notirua {version}"
+
+msgid "OK"
+msgstr "OK"
+
+msgid "One more helper is needed"
+msgstr "Cần thêm một chương trình trợ giúp"
+
+msgid "Only use videos you have the right to use. YouTube's terms of service and copyright law apply."
+msgstr ""
+"Chỉ dùng video bạn có quyền sử dụng. Điều khoản dịch vụ của YouTube và luật bản quyền được áp "
+"dụng."
+
+msgid "Open a music file…"
+msgstr "Mở tệp nhạc…"
+
+msgid "Open log folder"
+msgstr "Mở thư mục nhật ký"
+
+#, python-brace-format
+msgid "Open recent file {name}"
+msgstr "Mở tệp gần đây {name}"
+
+msgid "Open setup and install the required components."
+msgstr "Mở phần thiết lập và cài các thành phần cần thiết."
+
+msgid "Open setup…"
+msgstr "Mở phần thiết lập…"
+
+msgid "Open the Notirua window (the default with no command)."
+msgstr "Mở cửa sổ Notirua (mặc định khi không có lệnh)."
+
+msgid "Open the folder"
+msgstr "Mở thư mục"
+
+msgid "Open the log folder for details and report the problem."
+msgstr "Hãy mở thư mục nhật ký để xem chi tiết và báo lỗi."
+
+msgid "Or use a YouTube link"
+msgstr "Hoặc dùng liên kết YouTube"
+
+msgid "Other"
+msgstr "Khác"
+
+msgid "Overall progress"
+msgstr "Tiến độ chung"
+
+#, python-brace-format
+msgid "Page {page} of {count}"
+msgstr "Trang {page} / {count}"
+
+msgid "Paper"
+msgstr "Khổ giấy"
+
+msgid "Paper size."
+msgstr "Khổ giấy."
+
+msgid "Paste"
+msgstr "Dán"
+
+msgid "Paste a YouTube link"
+msgstr "Dán liên kết YouTube"
+
+msgid "Paste the link from the clipboard"
+msgstr "Dán liên kết từ bộ nhớ tạm"
+
+msgid "Pause"
+msgstr "Tạm dừng"
+
+msgid "Piano"
+msgstr "Piano"
+
+msgid "Please review the component licenses"
+msgstr "Vui lòng xem lại giấy phép của các thành phần"
+
+msgid "Previous page"
+msgstr "Trang trước"
+
+msgid "Proxy for YouTube"
+msgstr "Proxy cho YouTube"
+
+msgid "Proxy server for YouTube"
+msgstr "Máy chủ proxy cho YouTube"
+
+msgid "Proxy server, for example http://proxy.example.com:8080 (default: the system's)."
+msgstr "Máy chủ proxy, ví dụ http://proxy.example.com:8080 (mặc định: của hệ thống)."
+
+msgid "Quality"
+msgstr "Chất lượng"
+
+msgid "Quality of the MP3 file"
+msgstr "Chất lượng của tệp MP3"
+
+#, python-brace-format
+msgid "Quit {name}"
+msgstr "Thoát {name}"
+
+msgid "Reading YouTube links needs a small helper program."
+msgstr "Đọc liên kết YouTube cần một chương trình trợ giúp nhỏ."
+
+msgid "Reading YouTube links needs a small helper program:"
+msgstr "Đọc liên kết YouTube cần một chương trình trợ giúp nhỏ:"
+
+msgid "Reading the audio file"
+msgstr "Đang đọc tệp âm thanh"
+
+msgid "Recent:"
+msgstr "Gần đây:"
+
+msgid "Redrawing the sheet music"
+msgstr "Đang vẽ lại bản nhạc"
+
+msgid "Remove"
+msgstr "Gỡ"
+
+msgid "Remove an installed component."
+msgstr "Gỡ một thành phần đã cài."
+
+msgid "Remove vocals (MR)"
+msgstr "Bỏ giọng hát (nhạc nền)"
+
+#, python-brace-format
+msgid "Remove {name} and download it again?"
+msgstr "Gỡ {name} và tải lại?"
+
+#, python-brace-format
+msgid "Remove {name}? You need it to make sheet music and can install it again."
+msgstr "Gỡ {name}? Bạn cần nó để tạo bản nhạc và có thể cài lại."
+
+#, python-brace-format
+msgid "Removed {name}."
+msgstr "Đã gỡ {name}."
+
+msgid "Remove…"
+msgstr "Gỡ…"
+
+msgid "Resume"
+msgstr "Tiếp tục"
+
+msgid "Reusing earlier results"
+msgstr "Đang dùng lại kết quả trước"
+
+msgid "Review the components and choose “Agree and install”."
+msgstr "Hãy xem lại các thành phần rồi chọn “Đồng ý và cài”."
+
+msgid "Run again with --accept-licenses to agree without a prompt."
+msgstr "Chạy lại với --accept-licenses để đồng ý mà không cần hỏi."
+
+msgid "Run “notirua setup --youtube” first."
+msgstr "Hãy chạy “notirua setup --youtube” trước."
+
+msgid "Run “notirua setup” first."
+msgstr "Hãy chạy “notirua setup” trước."
+
+msgid "Same as the app"
+msgstr "Giống ứng dụng"
+
+msgid "Same as the system"
+msgstr "Giống hệ thống"
+
+msgid "Save"
+msgstr "Lưu"
+
+msgid "Save MP3 and make sheet music"
+msgstr "Lưu MP3 và tạo bản nhạc"
+
+msgid "Save MP3 only"
+msgstr "Chỉ lưu MP3"
+
+msgid "Save all"
+msgstr "Lưu tất cả"
+
+msgid "Save as MIDI"
+msgstr "Lưu thành MIDI"
+
+msgid "Save as MusicXML"
+msgstr "Lưu thành MusicXML"
+
+msgid "Save as WAV"
+msgstr "Lưu thành WAV"
+
+msgid "Save folder"
+msgstr "Thư mục lưu"
+
+msgid "Save only the instruments you choose as one audio file (MP3, M4A, WAV)."
+msgstr "Chỉ lưu các nhạc cụ bạn chọn thành một tệp âm thanh (MP3, M4A, WAV)."
+
+msgid "Save the audio as an MP3 file only"
+msgstr "Chỉ lưu âm thanh thành tệp MP3"
+
+msgid ""
+"Save the audio of a YouTube video as an MP3 file named after the video. Only use videos you have "
+"the right to use."
+msgstr ""
+"Lưu âm thanh của video YouTube thành tệp MP3 đặt tên theo video. Chỉ dùng video bạn có quyền sử "
+"dụng."
+
+msgid "Save the audio of a YouTube video as an MP3 file."
+msgstr "Lưu âm thanh của video YouTube thành tệp MP3."
+
+msgid "Saved intermediate results"
+msgstr "Dữ liệu tạm đã lưu"
+
+#, python-brace-format
+msgid "Saved intermediate results: {size} in {path}"
+msgstr "Dữ liệu tạm đã lưu: {size} trong {path}"
+
+msgid "Saved results make transposing and trying again fast. Older ones are removed first."
+msgstr "Dữ liệu đã lưu giúp đổi tông và thử lại nhanh hơn. Dữ liệu cũ nhất được xóa trước."
+
+#, python-brace-format
+msgid "Saved {name}."
+msgstr "Đã lưu {name}."
+
+#, python-brace-format
+msgid "Saved {n} file."
+msgid_plural "Saved {n} files."
+msgstr[0] "Đã lưu {n} tệp."
+
+msgid "Saved."
+msgstr "Đã lưu."
+
+#, python-brace-format
+msgid "Saved: {path}"
+msgstr "Đã lưu: {path}"
+
+msgid "Save…"
+msgstr "Lưu…"
+
+msgid "Saving files"
+msgstr "Đang lưu tệp"
+
+msgid "Saving the audio failed."
+msgstr "Lưu âm thanh không thành công."
+
+msgid "Saving the audio from YouTube"
+msgstr "Đang lưu âm thanh từ YouTube"
+
+msgid "Score engraver (LilyPond)"
+msgstr "Trình vẽ bản nhạc (LilyPond)"
+
+msgid "Select all"
+msgstr "Chọn tất cả"
+
+msgid "Semitones to move, -12 to +12."
+msgstr "Số nửa cung cần dịch, từ -12 đến +12."
+
+msgid "Settings"
+msgstr "Cài đặt"
+
+msgid "Settings…"
+msgstr "Cài đặt…"
+
+msgid "Sheet music preview"
+msgstr "Xem trước bản nhạc"
+
+msgid "Show"
+msgstr "Hiển thị"
+
+msgid "Show detailed log output."
+msgstr "Hiện nhật ký chi tiết."
+
+msgid "Show installed components."
+msgstr "Hiện các thành phần đã cài."
+
+msgid "Show notation, tablature, or both."
+msgstr "Hiện khuông nhạc, TAB hoặc cả hai."
+
+msgid "Show or clear saved intermediate results."
+msgstr "Xem hoặc xóa dữ liệu tạm đã lưu."
+
+#, python-brace-format
+msgid "Show the license of {name}"
+msgstr "Xem giấy phép của {name}"
+
+msgid "Show the version."
+msgstr "Hiện số phiên bản."
+
+msgid "Size"
+msgstr "Kích thước"
+
+#, python-brace-format
+msgid "Size: {size}"
+msgstr "Kích thước: {size}"
+
+msgid "Skipped"
+msgstr "Đã bỏ qua"
+
+#, python-brace-format
+msgid "Skipped {instrument}: {reason}"
+msgstr "Đã bỏ qua {instrument}: {reason}"
+
+#, python-brace-format
+msgid "Skipped: {list}"
+msgstr "Đã bỏ qua: {list}"
+
+#, python-brace-format
+msgid "Some components are not installed yet: {names}"
+msgstr "Một số thành phần chưa được cài: {names}"
+
+msgid "Some notes outside the instrument's range were moved by an octave."
+msgstr "Một số nốt nằm ngoài âm vực của nhạc cụ đã được dời một quãng tám."
+
+msgid "Some notes that cannot be played together were left out."
+msgstr "Một số nốt không thể chơi cùng lúc đã bị bỏ."
+
+msgid "Something went wrong."
+msgstr "Đã xảy ra sự cố."
+
+msgid "Song title"
+msgstr "Tên bài hát"
+
+msgid "Song title printed on every page."
+msgstr "Tên bài hát in trên mọi trang."
+
+msgid "Song title used in the file name."
+msgstr "Tên bài hát dùng trong tên tệp."
+
+#, python-brace-format
+msgid "Source: {domain}"
+msgstr "Nguồn: {domain}"
+
+msgid "Splits a song into vocals, drums, bass, guitar, piano, and other sounds."
+msgstr "Tách bài hát thành giọng hát, trống, bass, guitar, piano và các âm thanh khác."
+
+msgid "Splitting the song into instruments"
+msgstr "Đang tách bài hát thành các nhạc cụ"
+
+msgid "Standard"
+msgstr "Chuẩn"
+
+msgid "Start it again whenever you are ready."
+msgstr "Hãy bắt đầu lại khi bạn sẵn sàng."
+
+msgid "Start time in seconds."
+msgstr "Thời điểm bắt đầu, tính bằng giây."
+
+msgid "Status"
+msgstr "Trạng thái"
+
+msgid "Stop installing? Parts already downloaded are kept for next time."
+msgstr "Dừng cài? Các phần đã tải được giữ lại cho lần sau."
+
+msgid "Stop making sheet music? Finished steps are kept for next time."
+msgstr "Dừng tạo bản nhạc? Các bước đã xong được giữ lại cho lần sau."
+
+msgid "Storage"
+msgstr "Lưu trữ"
+
+msgid "TAB only"
+msgstr "Chỉ TAB"
+
+msgid "Tempo"
+msgstr "Tốc độ"
+
+msgid "The audio from YouTube could not be saved."
+msgstr "Không thể lưu âm thanh từ YouTube."
+
+#, python-brace-format
+msgid "The audio is longer than {limit} minutes."
+msgstr "Âm thanh dài hơn {limit} phút."
+
+msgid "The audio is saved."
+msgstr "Đã lưu âm thanh."
+
+msgid "The audio keeps its original key, even if you transposed the music."
+msgstr "Âm thanh giữ nguyên tông gốc, kể cả khi bạn đã đổi tông bản nhạc."
+
+msgid "The download failed."
+msgstr "Tải xuống không thành công."
+
+msgid "The downloaded file is damaged (checksum mismatch)."
+msgstr "Tệp tải về bị hỏng (mã kiểm tra không khớp)."
+
+msgid "The file appears to be damaged."
+msgstr "Tệp có vẻ đã bị hỏng."
+
+msgid "The file could not be read as audio."
+msgstr "Không thể đọc tệp này như âm thanh."
+
+msgid "The file has no audio track."
+msgstr "Tệp không có rãnh âm thanh."
+
+#, python-brace-format
+msgid "The file has {count} audio tracks."
+msgstr "Tệp có {count} rãnh âm thanh."
+
+msgid "The file is copy-protected (DRM) and cannot be opened."
+msgstr "Tệp được bảo vệ chống sao chép (DRM) nên không thể mở."
+
+msgid "The helper program for YouTube links is installed."
+msgstr "Đã cài chương trình trợ giúp cho liên kết YouTube."
+
+msgid "The helper program is installed."
+msgstr "Đã cài chương trình trợ giúp."
+
+msgid "The internet is used only for this download. Notirua works offline afterwards."
+msgstr "Internet chỉ được dùng cho lần tải này. Sau đó Notirua hoạt động ngoại tuyến."
+
+msgid "The license list could not be found."
+msgstr "Không tìm thấy danh sách giấy phép."
+
+msgid "The new language is used after you restart Notirua."
+msgstr "Ngôn ngữ mới được dùng sau khi bạn khởi động lại Notirua."
+
+msgid "The score could not be drawn."
+msgstr "Không thể vẽ bản nhạc."
+
+msgid "The sheet music is ready."
+msgstr "Bản nhạc đã sẵn sàng."
+
+msgid "The task was cancelled."
+msgstr "Tác vụ đã bị hủy."
+
+msgid "There is no YouTube link in the clipboard."
+msgstr "Trong bộ nhớ tạm không có liên kết YouTube."
+
+msgid "There is not enough disk space."
+msgstr "Không đủ dung lượng đĩa."
+
+msgid "There is not enough disk space. Free up space or choose another location."
+msgstr "Không đủ dung lượng đĩa. Hãy giải phóng dung lượng hoặc chọn vị trí khác."
+
+#, python-brace-format
+msgid "This copy of Notirua cannot save {format} files."
+msgstr "Bản Notirua này không thể lưu tệp {format}."
+
+msgid "This is a live stream or a video that has not started yet."
+msgstr "Đây là buổi phát trực tiếp hoặc video chưa bắt đầu."
+
+msgid "This is not a link to a single YouTube video."
+msgstr "Đây không phải liên kết của một video YouTube."
+
+msgid "This is not a proxy address. It looks like http://proxy.example.com:8080."
+msgstr "Đây không phải địa chỉ proxy. Địa chỉ có dạng http://proxy.example.com:8080."
+
+msgid "This looks like a YouTube video link."
+msgstr "Có vẻ đây là liên kết video YouTube."
+
+msgid "This video is not available (removed, blocked, or not shown in your country)."
+msgstr "Video này không khả dụng (đã bị gỡ, bị chặn hoặc không hiển thị ở quốc gia của bạn)."
+
+msgid "This video needs you to sign in (private, members-only, or age-restricted)."
+msgstr "Video này yêu cầu đăng nhập (riêng tư, dành cho hội viên hoặc giới hạn độ tuổi)."
+
+msgid "Time signature"
+msgstr "Số chỉ nhịp"
+
+#, python-brace-format
+msgid "Total download {download} · Space needed after install {install} · Free space {free}"
+msgstr "Tổng dung lượng tải {download} · Cần sau khi cài {install} · Còn trống {free}"
+
+#, python-brace-format
+msgid "Total download: {size}"
+msgstr "Tổng dung lượng tải: {size}"
+
+#, python-brace-format
+msgid "Track {number}"
+msgstr "Rãnh {number}"
+
+msgid "Transpose"
+msgstr "Đổi tông"
+
+msgid "Transpose must be between -12 and +12."
+msgstr "Mức đổi tông phải nằm trong khoảng từ -12 đến +12."
+
+msgid "Transpose to this key, for example \"G major\"."
+msgstr "Đổi sang tông này, ví dụ \"G major\"."
+
+#, python-brace-format
+msgid "Transpose: {count} semitones"
+msgstr "Đổi tông: {count} nửa cung"
+
+msgid "Try a different copy of the file."
+msgstr "Hãy thử một bản sao khác của tệp."
+
+msgid "Try again"
+msgstr "Thử lại"
+
+msgid "Try again after the broadcast has ended and the recording is available."
+msgstr "Hãy thử lại sau khi buổi phát kết thúc và bản ghi có sẵn."
+
+msgid "Try again. If the problem continues, open the log folder and report it."
+msgstr "Hãy thử lại. Nếu sự cố vẫn tiếp diễn, hãy mở thư mục nhật ký và báo lỗi."
+
+msgid "Try again. The damaged file has been removed."
+msgstr "Hãy thử lại. Tệp bị hỏng đã được xóa."
+
+msgid "Try fewer instruments or a shorter section."
+msgstr "Hãy thử ít nhạc cụ hơn hoặc đoạn ngắn hơn."
+
+msgid "Turn a song into sheet music and tablature PDFs."
+msgstr "Biến bài hát thành bản nhạc và PDF TAB."
+
+#, python-brace-format
+msgid "Unknown instrument: {name}"
+msgstr "Nhạc cụ không xác định: {name}"
+
+msgid "Up a semitone"
+msgstr "Tăng nửa cung"
+
+msgid "Use a file without copy protection."
+msgstr "Hãy dùng tệp không có bảo vệ sao chép."
+
+msgid "Use this when earlier results for this file look wrong. It takes longer."
+msgstr "Dùng khi kết quả trước đó của tệp này trông sai. Sẽ mất nhiều thời gian hơn."
+
+msgid "Version"
+msgstr "Phiên bản"
+
+msgid "Vocals"
+msgstr "Giọng hát"
+
+msgid "WAV (no compression)"
+msgstr "WAV (không nén)"
+
+msgid "WAV file (*.wav)"
+msgstr "Tệp WAV (*.wav)"
+
+msgid "Wait a while, then try again. Another network or video can also help."
+msgstr "Hãy đợi một lúc rồi thử lại. Đổi mạng hoặc video khác cũng có thể giúp ích."
+
+msgid "Waiting"
+msgstr "Đang chờ"
+
+#, python-brace-format
+msgid "What to do: {hint}"
+msgstr "Cần làm gì: {hint}"
+
+msgid "Work is still in progress. Stop it and quit?"
+msgstr "Công việc vẫn đang chạy. Dừng lại và thoát?"
+
+msgid "Yes"
+msgstr "Có"
+
+msgid "YouTube could not be reached."
+msgstr "Không thể kết nối đến YouTube."
+
+msgid "YouTube has changed in a way this version of Notirua cannot follow."
+msgstr "YouTube đã thay đổi theo cách mà bản Notirua này không theo kịp."
+
+msgid "YouTube is asking for a check or has limited your requests for now."
+msgstr "YouTube đang yêu cầu xác minh hoặc đã tạm giới hạn các yêu cầu của bạn."
+
+msgid "YouTube link"
+msgstr "Liên kết YouTube"
+
+msgid "YouTube's video server did not send the audio."
+msgstr "Máy chủ video của YouTube không gửi âm thanh."
+
+#, python-brace-format
+msgid "about {time} left"
+msgstr "còn khoảng {time}"
+
+#, python-format
+msgid "ambiguous option: %(option)s could match %(matches)s"
+msgstr "tùy chọn không rõ ràng: %(option)s có thể khớp với %(matches)s"
+
+#, python-format
+msgid "argument \"-\" with mode %r"
+msgstr "đối số \"-\" với chế độ %r"
+
+#, python-format
+msgid "argument %(argument_name)s: %(message)s"
+msgstr "đối số %(argument_name)s: %(message)s"
+
+#, python-format
+msgid "can't open '%(filename)s': %(error)s"
+msgstr "không thể mở '%(filename)s': %(error)s"
+
+msgid "command"
+msgstr "lệnh"
+
+#, python-format
+msgid "expected %s argument"
+msgid_plural "expected %s arguments"
+msgstr[0] "cần %s đối số"
+
+msgid "expected at least one argument"
+msgstr "cần ít nhất một đối số"
+
+msgid "expected at most one argument"
+msgstr "chỉ cần tối đa một đối số"
+
+msgid "expected one argument"
+msgstr "cần một đối số"
+
+#, python-format
+msgid "ignored explicit argument %r"
+msgstr "đã bỏ qua đối số được chỉ định rõ %r"
+
+msgid "installed"
+msgstr "đã cài"
+
+#, python-format
+msgid "invalid %(type)s value: %(value)r"
+msgstr "giá trị %(type)s không hợp lệ: %(value)r"
+
+#, python-format
+msgid "invalid choice: %(value)r (choose from %(choices)s)"
+msgstr "lựa chọn không hợp lệ: %(value)r (hãy chọn trong %(choices)s)"
+
+#, python-format
+msgid "not allowed with argument %s"
+msgstr "không được dùng cùng đối số %s"
+
+msgid "not installed"
+msgstr "chưa cài"
+
+#, python-format
+msgid "one of the arguments %s is required"
+msgstr "cần một trong các đối số %s"
+
+msgid "options"
+msgstr "tùy chọn"
+
+msgid "positional arguments"
+msgstr "đối số vị trí"
+
+msgid "show program's version number and exit"
+msgstr "hiện số phiên bản của chương trình rồi thoát"
+
+msgid "show this help message and exit"
+msgstr "hiện trợ giúp này rồi thoát"
+
+msgid "standard, drop_d, half_down, or MIDI numbers."
+msgstr "standard, drop_d, half_down hoặc số MIDI."
+
+msgid "standard, five_string, drop_d, half_down, or MIDI numbers."
+msgstr "standard, five_string, drop_d, half_down hoặc số MIDI."
+
+#, python-format
+msgid "the following arguments are required: %s"
+msgstr "cần có các đối số sau: %s"
+
+#, python-format
+msgid "unexpected option string: %s"
+msgstr "chuỗi tùy chọn không mong đợi: %s"
+
+#, python-format
+msgid "unknown parser %(parser_name)r (choices: %(choices)s)"
+msgstr "trình phân tích không xác định %(parser_name)r (lựa chọn: %(choices)s)"
+
+#, python-format
+msgid "unrecognized arguments: %s"
+msgstr "đối số không nhận ra: %s"
+
+msgid "usage: "
+msgstr "cách dùng: "
+
+msgid "y"
+msgstr "c"
+
+msgid "yes"
+msgstr "có"
+
+#, python-brace-format
+msgid "{first}, {second}"
+msgstr "{first}, {second}"
+
+#, python-brace-format
+msgid "{instrument} (no sound)"
+msgstr "{instrument} (không có âm thanh)"
+
+#, python-brace-format
+msgid "{instrument} ({reason})"
+msgstr "{instrument} ({reason})"
+
+#, python-brace-format
+msgid "{kbps} kbps"
+msgstr "{kbps} kbps"
+
+#, python-brace-format
+msgid "{kbps} kbps (best sound)"
+msgstr "{kbps} kbps (âm thanh tốt nhất)"
+
+#, python-brace-format
+msgid "{kbps} kbps (recommended)"
+msgstr "{kbps} kbps (khuyên dùng)"
+
+#, python-brace-format
+msgid "{kbps} kbps (smaller file)"
+msgstr "{kbps} kbps (tệp nhỏ hơn)"
+
+#, python-brace-format
+msgid "{message} · {speed}/s"
+msgstr "{message} · {speed}/s"
+
+#, python-brace-format
+msgid ""
+"{name}: {purpose}\n"
+"\n"
+"Download: {size} (about {installed} on disk) from {source}.\n"
+"License: {license}.\n"
+"\n"
+"It is downloaded once and kept. Nothing else is downloaded."
+msgstr ""
+"{name}: {purpose}\n"
+"\n"
+"Dung lượng tải: {size} (chiếm khoảng {installed} trên đĩa) từ {source}.\n"
+"Giấy phép: {license}.\n"
+"\n"
+"Chỉ tải một lần và được giữ lại. Không tải gì khác."
+
+#, python-brace-format
+msgid "{n} file"
+msgid_plural "{n} files"
+msgstr[0] "{n} tệp"
+
+#, python-brace-format
+msgid "{n} score"
+msgid_plural "{n} scores"
+msgstr[0] "{n} bản nhạc"
+
+#, python-brace-format
+msgid "{title} - all instruments"
+msgstr "{title} - tất cả nhạc cụ"
+
+#, python-brace-format
+msgid "{title} - backing track"
+msgstr "{title} - nhạc đệm"
+
+#, python-brace-format
+msgid "{title} - without {instruments}"
+msgstr "{title} - không có {instruments}"
+
+#, python-brace-format
+msgid "{title} - {instruments}"
+msgstr "{title} - {instruments}"
+
+#, python-brace-format
+msgid "{tonic} major"
+msgstr "{tonic} trưởng"
+
+#, python-brace-format
+msgid "{tonic} minor"
+msgstr "{tonic} thứ"
+
+#, python-brace-format
+msgid "{value} is not a number."
+msgstr "{value} không phải là số."
+
+#, python-brace-format
+msgid "{value} is not a whole number."
+msgstr "{value} không phải là số nguyên."
+
+#, python-brace-format
+msgid "♩ = {bpm} · {key}"
+msgstr "♩ = {bpm} · {key}"
+

@@ -13,17 +13,39 @@ from PySide6.QtWidgets import QApplication
 
 from notirua import settings as settings_mod
 from notirua.gui import macos
-from notirua.i18n import resolve_language, set_language
+from notirua.i18n import N_, _, resolve_language, set_language
+
+# Qt's standard button texts, for languages that have no qtbase catalog (for example Vietnamese).
+STANDARD_BUTTONS = {
+    "OK": N_("OK"),
+    "Cancel": N_("Cancel"),
+    "Close": N_("Close"),
+    "Yes": N_("Yes"),
+    "&Yes": N_("Yes"),
+    "No": N_("No"),
+    "&No": N_("No"),
+}
 
 
-def install_qt_translations(app: QApplication, language: str) -> QTranslator | None:
+class StandardButtonTranslator(QTranslator):
+    """Translates Qt's standard buttons from Notirua's own catalog."""
+
+    def translate(
+        self, context: str, sourceText: str, disambiguation: str | None = None, n: int = -1
+    ) -> str:
+        if context == "QPlatformTheme" and sourceText in STANDARD_BUTTONS:
+            return _(STANDARD_BUTTONS[sourceText])
+        return ""
+
+
+def install_qt_translations(app: QApplication, language: str) -> QTranslator:
     """Translate Qt's own dialogs and buttons (qtbase catalogs shipped with PySide6)."""
     translator = QTranslator(app)
     folder = QLibraryInfo.path(QLibraryInfo.LibraryPath.TranslationsPath)
-    if translator.load(QLocale(language), "qtbase", "_", folder):
-        app.installTranslator(translator)
-        return translator
-    return None
+    if not translator.load(QLocale(language), "qtbase", "_", folder):
+        translator = StandardButtonTranslator(app)
+    app.installTranslator(translator)
+    return translator
 
 
 ICONS = Path(__file__).resolve().parents[1] / "resources" / "icons"

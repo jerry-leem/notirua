@@ -24,6 +24,8 @@ from tests.gui_fakes import FakeJob, make_pdf, no_components
 
 ROOT = Path(__file__).resolve().parents[1]
 WINDOW = (900, 680)  # the default window size
+# Real translations are Latin text too, so the "still English" check only fits the pseudo-locale.
+CHECK_UNTRANSLATED = True
 # Visible text that is not translated on purpose: names, formats, numbers, paths.
 ALLOWED = re.compile(
     r"^(Notirua|MusicXML|MIDI|A4|BPM|[‹›←−+♫]|[\d\s/.:+%\-]*|"
@@ -33,8 +35,16 @@ ALLOWED = re.compile(
 )
 
 
-@pytest.fixture
-def pseudo(tmp_path: Path) -> Iterator[None]:
+@pytest.fixture(params=["en_XA", "vi"])
+def pseudo(request: pytest.FixtureRequest, tmp_path: Path) -> Iterator[None]:
+    """The pseudo-locale, and Vietnamese (long sentences, stacked diacritics) for real."""
+    global CHECK_UNTRANSLATED
+    CHECK_UNTRANSLATED = request.param == "en_XA"
+    if request.param == "vi":
+        i18n.set_locales_dir(ROOT / "locales")
+        assert i18n.set_language("vi") == "vi"
+        yield
+        return
     spec = importlib.util.spec_from_file_location(
         "make_pseudo_locale", ROOT / "scripts" / "make_pseudo_locale.py"
     )
@@ -68,7 +78,12 @@ def problems(root: QWidget) -> list[str]:
             need = widget.minimumSizeHint().width()
             issues.append(f"clipped: {text!r} ({widget.width()} < {need})")
         plain = re.sub(r"<[^>]+>", "", text).strip()
-        if "[" not in plain and re.search(r"[A-Za-z]{3,}", plain) and not ALLOWED.match(plain):
+        if (
+            CHECK_UNTRANSLATED
+            and "[" not in plain
+            and re.search(r"[A-Za-z]{3,}", plain)
+            and not ALLOWED.match(plain)
+        ):
             issues.append(f"not translated: {plain!r}")
     return issues
 
