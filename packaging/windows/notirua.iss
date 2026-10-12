@@ -36,6 +36,8 @@ WizardStyle=modern
 [Languages]
 Name: "korean"; MessagesFile: "compiler:Languages\Korean.isl"
 Name: "english"; MessagesFile: "compiler:Default.isl"
+; Not shipped with Inno Setup (unofficial translation); see licenses/inno-setup/NOTICE.
+Name: "vietnamese"; MessagesFile: "Vietnamese.isl"
 
 [Tasks]
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
