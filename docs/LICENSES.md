@@ -28,6 +28,7 @@ unlicensed components are never included (SPEC 7.4).
 | certifi (CA certificates for HTTPS) | 2026.7 | MPL-2.0 (`licenses/certifi/`) | https://github.com/certifi/python-certifi |
 | PySide6 / Qt 6 (Essentials + QtPdf from Addons) | 6.9 | LGPL-3.0 (dynamically linked) | https://www.qt.io/qt-for-python |
 | Noto Sans CJK KR (Linux build only) | Sans2.004 | OFL-1.1 (`licenses/noto-cjk/`) | https://github.com/notofonts/noto-cjk |
+| Inno Setup Vietnamese wizard text (Windows installer only; `packaging/windows/Vietnamese.isl`, by memecoder) | 2023-10-26 | Inno Setup License (`licenses/inno-setup/`) | https://github.com/jrsoftware/issrc |
 | PDFium (inside QtPdf) | Qt 6.9 | BSD-3-Clause | https://pdfium.googlesource.com/pdfium |
 
 ## Downloaded on first run (with consent)
