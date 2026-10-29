@@ -115,3 +115,28 @@ def test_redirected_output_in_a_narrow_code_page_does_not_crash(
     assert cli.main(["--lang", "ko", "cache"]) == cli.EXIT_OK
     narrow.flush()
     assert b"?" in raw.getvalue()
+
+
+def test_transcribe_downloads_a_tiktok_link_first(
+    tmp_path: pytest.TempPathFactory, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    from pathlib import Path
+
+    from notirua.core import fetch
+
+    work = Path(str(tmp_path))
+    downloaded = work / "tiktok.mp4"
+    downloaded.write_bytes(b"x")
+    monkeypatch.setattr(
+        fetch, "download_audio", lambda url, folder, **_k: fetch.Downloaded(downloaded, "곡")
+    )
+    args = argparse.Namespace(
+        file="https://www.tiktok.com/@a/video/1", workdir=str(work), title=None
+    )
+    cli._fetch_tiktok(args)
+    assert args.file == downloaded
+    assert args.title == "곡"
+    cli._fetch_tiktok(args)  # already a file: nothing more to do
+    other = argparse.Namespace(file="song.mp3", workdir=str(work), title=None)
+    cli._fetch_tiktok(other)
+    assert other.file == "song.mp3"

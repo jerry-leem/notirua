@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-10-12 20:36+0900\n"
+"POT-Creation-Date: 2026-10-29 03:07+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -94,7 +94,7 @@ msgstr ""
 msgid "Audio from YouTube"
 msgstr ""
 
-msgid "Audio or video file to read, or a YouTube video link."
+msgid "Audio or video file to read, or a YouTube or TikTok video link."
 msgstr ""
 
 msgid "Audio or video file to read."
@@ -258,8 +258,16 @@ msgid ""
 msgstr ""
 
 msgid ""
+"Copy the link from TikTok’s Share menu, for example "
+"https://www.tiktok.com/@name/video/123."
+msgstr ""
+
+msgid ""
 "Copy the video's address from your browser (or its Share button) and "
 "paste it."
+msgstr ""
+
+msgid "Could not reach TikTok."
 msgstr ""
 
 msgid "Delete all saved intermediate results."
@@ -320,6 +328,16 @@ msgid "Downloading the audio: {received} of {total}"
 msgstr ""
 
 msgid "Downloading the helper program"
+msgstr ""
+
+msgid "Downloading the video"
+msgstr ""
+
+#, python-brace-format
+msgid "Downloading the video: {percent}%"
+msgstr ""
+
+msgid "Downloading the video…"
 msgstr ""
 
 #, python-brace-format
@@ -433,6 +451,12 @@ msgid "General"
 msgstr ""
 
 msgid "Getting the helper program"
+msgstr ""
+
+msgid "Getting the video failed."
+msgstr ""
+
+msgid "Getting the video from TikTok"
 msgstr ""
 
 msgid "Give the link of a YouTube video."
@@ -563,6 +587,9 @@ msgstr ""
 msgid "Link of one YouTube video."
 msgstr ""
 
+msgid "Link status"
+msgstr ""
+
 msgid "List available languages."
 msgstr ""
 
@@ -616,6 +643,9 @@ msgid "Make sheet music from an audio file."
 msgstr ""
 
 msgid "Make sheet music from it"
+msgstr ""
+
+msgid "Make sheet music from the video"
 msgstr ""
 
 msgid "Making sheet music failed."
@@ -753,7 +783,13 @@ msgstr ""
 msgid "Open the folder"
 msgstr ""
 
+msgid "Open the link in a browser to check it plays, or try a public video."
+msgstr ""
+
 msgid "Open the log folder for details and report the problem."
+msgstr ""
+
+msgid "Or use a TikTok link"
 msgstr ""
 
 msgid "Or use a YouTube link"
@@ -776,6 +812,9 @@ msgid "Paper size."
 msgstr ""
 
 msgid "Paste"
+msgstr ""
+
+msgid "Paste a TikTok video link"
 msgstr ""
 
 msgid "Paste a YouTube link"
@@ -1137,6 +1176,12 @@ msgstr ""
 msgid "The task was cancelled."
 msgstr ""
 
+msgid "The video could not be downloaded."
+msgstr ""
+
+msgid "The video is private, removed, or not available in your region."
+msgstr ""
+
 msgid "There is no YouTube link in the clipboard."
 msgstr ""
 
@@ -1151,6 +1196,9 @@ msgid "This copy of Notirua cannot save {format} files."
 msgstr ""
 
 msgid "This is a live stream or a video that has not started yet."
+msgstr ""
+
+msgid "This is not a TikTok video link."
 msgstr ""
 
 msgid "This is not a link to a single YouTube video."
@@ -1170,6 +1218,9 @@ msgstr ""
 msgid ""
 "This video needs you to sign in (private, members-only, or age-"
 "restricted)."
+msgstr ""
+
+msgid "TikTok video link"
 msgstr ""
 
 msgid "Time signature"

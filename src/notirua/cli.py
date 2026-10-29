@@ -7,6 +7,7 @@ import io
 import math
 import shutil
 import sys
+import tempfile
 import time
 from collections.abc import Sequence
 from pathlib import Path
@@ -124,7 +125,9 @@ def build_parser() -> argparse.ArgumentParser:
     sub = parser.add_subparsers(dest="command", metavar=_("command"))
 
     t = sub.add_parser("transcribe", help=_("Make sheet music from an audio file."))
-    t.add_argument("file", help=_("Audio or video file to read, or a YouTube video link."))
+    t.add_argument(
+        "file", help=_("Audio or video file to read, or a YouTube or TikTok video link.")
+    )
     t.add_argument("--out", type=Path, default=Path("."), help=_("Folder for the results."))
     t.add_argument("--title", help=_("Song title printed on every page."))
     t.add_argument(
@@ -321,7 +324,9 @@ def main(argv: Sequence[str] | None = None) -> int:
         return gui_main([sys.argv[0]], language=args.lang)
     try:
         if args.command == "transcribe":
-            return cmd_transcribe(args, user)
+            with tempfile.TemporaryDirectory(prefix="notirua-link-") as workdir:
+                args.workdir = workdir
+                return cmd_transcribe(args, user)
         if args.command == "mix":
             return cmd_mix(args, user)
         if args.command == "youtube":
@@ -451,6 +456,34 @@ def _use_youtube_source(args: argparse.Namespace, user: settings_mod.Settings) -
     return None
 
 
+def _fetch_tiktok(args: argparse.Namespace) -> None:
+    """When ``transcribe`` got a TikTok link instead of a file: download it and use it."""
+    from notirua.core.fetch import download_audio, find_tiktok_url
+
+    if Path(args.file).exists() or find_tiktok_url(args.file) is None:
+        return
+    last = [-1]
+
+    def show(fraction: float) -> None:
+        percent = int(fraction * 100)
+        if percent != last[0] and sys.stderr.isatty():
+            last[0] = percent
+            print(f"\r{_('Downloading the video…')} {percent}%", end="", file=sys.stderr)
+
+    print(_("Downloading the video…"), file=sys.stderr)
+    cancel = CancelToken()
+    try:
+        got = download_audio(args.file, Path(args.workdir), progress=show, cancel=cancel)
+    except KeyboardInterrupt:
+        cancel.cancel()
+        raise Cancelled() from None
+    finally:
+        if last[0] >= 0:
+            print(file=sys.stderr)
+    args.file = got.path
+    args.title = args.title or got.title
+
+
 def cmd_transcribe(args: argparse.Namespace, user: settings_mod.Settings) -> int:
     from notirua.components.manager import manager_from_settings
     from notirua.core.pipeline import INSTRUMENT_NAMES, JobOptions, Pipeline
@@ -467,6 +500,7 @@ def cmd_transcribe(args: argparse.Namespace, user: settings_mod.Settings) -> int
     code = _use_youtube_source(args, user)
     if code is not None:
         return code
+    _fetch_tiktok(args)
     args.file = Path(args.file)
     if not args.file.is_file():
         print(_("File not found: {path}").format(path=args.file), file=sys.stderr)
