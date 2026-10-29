@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Notirua VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-10-07 02:26+0900\n"
+"POT-Creation-Date: 2026-10-29 02:39+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: ko\n"
@@ -80,8 +80,8 @@ msgstr "오선보와 TAB 악보를 배치하는 중"
 msgid "Ask every time"
 msgstr "매번 묻기"
 
-msgid "Audio or video file to read."
-msgstr "읽을 음악 또는 동영상 파일."
+msgid "Audio or video file, or a TikTok video link, to read."
+msgstr "읽을 음악·동영상 파일 또는 TikTok 동영상 링크."
 
 msgid "Audio track"
 msgstr "오디오 트랙"
@@ -136,6 +136,9 @@ msgstr "구성요소마다 체크해서 라이선스에 동의해 주세요."
 
 msgid "Check that the file plays in another app, or convert it to WAV or MP3."
 msgstr "다른 앱에서 재생되는지 확인하거나 WAV 또는 MP3로 변환해 보세요."
+
+msgid "Check the link and your internet connection, then try again."
+msgstr "링크와 인터넷 연결을 확인한 뒤 다시 해 보세요."
 
 msgid "Check your internet connection and try again."
 msgstr "인터넷 연결을 확인한 뒤 다시 시도하세요."
@@ -210,6 +213,14 @@ msgstr "악보를 만들려면 구성요소가 필요합니다."
 msgid "Components installed in {seconds} s."
 msgstr "구성요소를 {seconds}초 만에 설치했습니다."
 
+msgid ""
+"Copy the link from TikTok’s Share menu, for example "
+"https://www.tiktok.com/@name/video/123."
+msgstr "TikTok의 공유 메뉴에서 링크를 복사하세요. 예: https://www.tiktok.com/@name/video/123"
+
+msgid "Could not reach TikTok."
+msgstr "TikTok에 연결하지 못했습니다."
+
 msgid "Delete all saved intermediate results."
 msgstr "저장된 중간 결과를 모두 지웁니다."
 
@@ -253,6 +264,9 @@ msgstr "반음 내리기"
 
 msgid "Downloading components needs your permission first."
 msgstr "구성요소를 내려받으려면 먼저 동의가 필요합니다."
+
+msgid "Downloading the video…"
+msgstr "동영상을 내려받는 중…"
 
 #, python-brace-format
 msgid "Downloading {name}"
@@ -448,6 +462,9 @@ msgstr "라이선스: {license} ({url})"
 msgid "Licenses"
 msgstr "라이선스"
 
+msgid "Link status"
+msgstr "링크 상태"
+
 msgid "List available languages."
 msgstr "사용할 수 있는 언어를 보여 줍니다."
 
@@ -607,8 +624,14 @@ msgstr "설정 화면 열기…"
 msgid "Open the Notirua window (the default with no command)."
 msgstr "Notirua 창을 엽니다 (명령 없이 실행할 때의 기본값)."
 
+msgid "Open the link in a browser to check it plays, or try a public video."
+msgstr "브라우저에서 링크가 열리는지 확인하거나 공개된 동영상을 써 보세요."
+
 msgid "Open the log folder for details and report the problem."
 msgstr "로그 폴더에서 자세한 내용을 확인하고 문제를 알려 주세요."
+
+msgid "Or paste a TikTok video link:"
+msgstr "또는 TikTok 동영상 링크를 붙여 넣으세요:"
 
 msgid "Other"
 msgstr "다른 악기"
@@ -910,6 +933,12 @@ msgstr "악보가 완성되었습니다."
 msgid "The task was cancelled."
 msgstr "작업을 취소했습니다."
 
+msgid "The video could not be downloaded."
+msgstr "동영상을 내려받지 못했습니다."
+
+msgid "The video is private, removed, or not available in your region."
+msgstr "비공개이거나 삭제된 동영상이거나, 내 지역에서는 볼 수 없는 동영상입니다."
+
 msgid "There is not enough disk space."
 msgstr "디스크 공간이 부족합니다."
 
@@ -919,6 +948,12 @@ msgstr "디스크 공간이 부족합니다. 공간을 비우거나 다른 위�
 #, python-brace-format
 msgid "This copy of Notirua cannot save {format} files."
 msgstr "이 Notirua에서는 {format} 파일을 저장할 수 없습니다."
+
+msgid "This is not a TikTok video link."
+msgstr "TikTok 동영상 링크가 아닙니다."
+
+msgid "TikTok video link"
+msgstr "TikTok 동영상 링크"
 
 msgid "Time signature"
 msgstr "박자"
@@ -977,6 +1012,9 @@ msgstr "반음 올리기"
 
 msgid "Use a file without copy protection."
 msgstr "복제 방지가 없는 파일을 사용하세요."
+
+msgid "Use this link"
+msgstr "이 링크 사용"
 
 msgid "Use this when earlier results for this file look wrong. It takes longer."
 msgstr "이 파일의 이전 결과가 이상할 때 쓰세요. 시간이 더 걸립니다."
@@ -1039,6 +1077,9 @@ msgstr "값은 하나까지만 줄 수 있습니다"
 
 msgid "expected one argument"
 msgstr "값이 하나 필요합니다"
+
+msgid "https://www.tiktok.com/@name/video/…"
+msgstr "https://www.tiktok.com/@이름/video/…"
 
 #, python-format
 msgid "ignored explicit argument %r"

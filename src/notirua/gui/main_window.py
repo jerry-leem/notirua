@@ -35,7 +35,8 @@ from PySide6.QtWidgets import (
 
 from notirua import APP_NAME, APP_TITLE
 from notirua import settings as settings_mod
-from notirua.core.errors import NotiruaError
+from notirua.core.errors import NotiruaError, UnsupportedLinkError
+from notirua.core.fetch import download_audio, find_tiktok_url
 from notirua.core.pipeline import (
     INSTRUMENT_NAMES,
     SKIP_SILENT,
@@ -86,6 +87,7 @@ class MainWindow(QMainWindow):
         self.setWindowTitle(APP_TITLE)
         self.setAcceptDrops(True)
         self.job_task: Task | None = None
+        self.link_task: Task | None = None
         self.render_task: Task | None = None
         self.side_tasks: list[Task] = []
         self.mix_dialog: MixDialog | None = None
@@ -126,6 +128,8 @@ class MainWindow(QMainWindow):
         self.setup_page.postponed.connect(self._setup_postponed)
         self.file_page = FilePage()
         self.file_page.file_chosen.connect(self.open_file)
+        self.file_page.link_chosen.connect(self.open_link)
+        self.file_page.link_cancelled.connect(self.cancel_link)
         self.file_page.set_recent(user.recent_files)
         self.options_page = OptionsPage(user)
         self.options_page.start_requested.connect(self.start_job)
@@ -216,18 +220,60 @@ class MainWindow(QMainWindow):
         self.show_file_page()
         self.file_page.choose_file()
 
-    def open_file(self, path: Path) -> None:
+    def open_link(self, text: str) -> None:
+        """Download a TikTok video by its link, then continue as if its file had been chosen."""
+        if self.busy() or (self.link_task is not None and self.link_task.running):
+            return
+        url = find_tiktok_url(text)
+        if url is None:
+            self.file_page.set_link_busy(False, "✗ " + UnsupportedLinkError().user_message())
+            return
+        self._run_number += 1
+        folder = self._workdir / f"link-{self._run_number}"
+
+        def work(progress: ProgressCallback, cancel: CancelToken) -> Any:
+            return download_audio(
+                url, folder, progress=self.file_page.set_link_progress, cancel=cancel
+            )
+
+        task = Task(work, "link", self)
+        self.link_task = task
+        task.succeeded.connect(self._link_done)
+        task.failed.connect(self._link_failed)
+        task.cancelled.connect(self._link_cancelled)
+        self.file_page.set_link_busy(True, _("Downloading the video…"))
+        task.start()
+
+    def cancel_link(self) -> None:
+        if self.link_task is not None:
+            self.link_task.cancel()
+
+    def _link_done(self, got: Any) -> None:
+        self.file_page.set_link_busy(False)
+        self.file_page.link_edit.clear()
+        self.open_file(got.path, title=got.title, remember=False)
+
+    def _link_failed(self, error: BaseException) -> None:
+        message = error.user_message() if isinstance(error, NotiruaError) else str(error)
+        hint = error.user_hint() if isinstance(error, NotiruaError) else ""
+        self.file_page.set_link_busy(False, f"✗ {message} {hint}".strip())
+
+    def _link_cancelled(self) -> None:
+        self.file_page.set_link_busy(False, _("Cancelled."))
+
+    def open_file(self, path: Path, title: str | None = None, remember: bool = True) -> None:
         if self.busy():
             return
         self.input_path = path
         self.file_page.start_dir = str(path.parent)
-        recent = [str(path), *(f for f in self.user.recent_files if f != str(path))]
-        self.user.recent_files = recent[:MAX_RECENT]
-        settings_mod.save(self.user)
-        duration, title, tracks = None, None, None
+        if remember:
+            recent = [str(path), *(f for f in self.user.recent_files if f != str(path))]
+            self.user.recent_files = recent[:MAX_RECENT]
+            settings_mod.save(self.user)
+        duration, tracks = None, None
         try:
             info = inspect(path)
-            duration, title = info.duration_s, info.title
+            duration, title = info.duration_s, title or info.title
             tracks = [(s.index, s.language) for s in info.streams]
         except NotiruaError as exc:
             # The progress screen explains the problem when the job starts.
@@ -244,12 +290,16 @@ class MainWindow(QMainWindow):
     # -- drag and drop anywhere in the window (FR-8) -------------------------
     def dragEnterEvent(self, event: QDragEnterEvent) -> None:
         urls = event.mimeData().urls()
-        if not self.busy() and urls and urls[0].isLocalFile():
+        if not self.busy() and urls and (urls[0].isLocalFile() or _tiktok_drop(event)):
             event.acceptProposedAction()
 
     def dropEvent(self, event: QDropEvent) -> None:
         urls = event.mimeData().urls()
-        if urls and urls[0].isLocalFile():
+        if urls and not urls[0].isLocalFile() and _tiktok_drop(event):
+            event.acceptProposedAction()
+            self.file_page.link_edit.setText(urls[0].toString())
+            self.open_link(urls[0].toString())
+        elif urls and urls[0].isLocalFile():
             path = Path(urls[0].toLocalFile())
             if path.is_file():
                 event.acceptProposedAction()
@@ -553,6 +603,7 @@ class MainWindow(QMainWindow):
             t
             for t in (
                 self.job_task,
+                self.link_task,
                 self.render_task,
                 self.setup_page.task,
                 mix_task,
@@ -580,6 +631,11 @@ class MainWindow(QMainWindow):
         settings_mod.save(self.user)
         shutil.rmtree(self._workdir, ignore_errors=True)
         event.accept()
+
+
+def _tiktok_drop(event: QDragEnterEvent | QDropEvent) -> bool:
+    urls = event.mimeData().urls()
+    return bool(urls) and find_tiktok_url(urls[0].toString()) is not None
 
 
 def _copy_unique(source: Path, folder: Path) -> Path:

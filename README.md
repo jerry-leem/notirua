@@ -23,7 +23,17 @@ Notirua의 핵심 기능입니다. 노래 파일(MP3, M4A, WAV, FLAC 등 오디�
    있습니다.
 
 모든 처리는 내 컴퓨터에서 이루어지며, 처음 한 번 구성요소를 설치한 뒤에는 인터넷을
-쓰지 않습니다. 사용 방법은 [앱 사용법](#앱-사용법)을 보세요.
+쓰지 않습니다(TikTok 링크로 시작할 때만 그 동영상을 내려받습니다). 사용 방법은
+[앱 사용법](#앱-사용법)을 보세요.
+
+#### TikTok 동영상 링크로 만들기
+
+파일 대신 **TikTok 동영상 링크**를 붙여 넣으면 그 영상의 소리로 악보를 만듭니다.
+앱의 첫 화면 아래쪽 입력칸에 링크(공유 메뉴에서 복사한 글 전체도 됩니다)를 붙여
+넣고 **이 링크 사용**을 누르거나, 브라우저의 링크를 창에 끌어다 놓으세요. 영상은
+임시 폴더에 내려받아 쓰고, 끝나면 지웁니다. 공개된 영상만 되며, 저작권이 있는 음악은
+개인 연습 용도로만 쓰세요. 곡명은 영상에 붙은 음악 정보(없으면 설명글)로 채워지고
+옵션 화면에서 고칠 수 있습니다.
 
 ### 트랙을 골라 새 음원 만들기
 
@@ -138,7 +148,8 @@ uv sync
    열려 있고 위쪽에 **설치하기** 버튼이 남습니다. 인터넷이 없으면 **묶음 파일로
    설치…** 버튼을 누르세요.
 2. **파일 선택.** 창 아무 곳에나 음악·동영상 파일을 끌어다 놓거나 **파일 고르기…** 버튼을
-   누르세요(MP3, M4A, WAV, FLAC, OGG, AIFF, MP4 동영상 등, 15분 이하).
+   누르세요(MP3, M4A, WAV, FLAC, OGG, AIFF, MP4 동영상 등, 15분 이하). TikTok 영상은
+   아래 입력칸에 링크를 붙여 넣고 **이 링크 사용**을 누르세요.
 3. **옵션.** 곡명과 악기를 확인하고 **악보 만들기**를 누르세요. 줄 맞춤, 박자,
    빠르기, 조성, 용지, PDF 언어는 **세부 설정** 안에 있고 기본값은 자동입니다.
    같은 파일의 이전 결과가 이상하면 **세부 설정**에서 **저장된 중간 결과를 지우고
@@ -166,7 +177,7 @@ uv sync
 | 파일 열기 / 모두 저장 | **파일** 메뉴 (⌘O / ⌘S) | **파일** 메뉴 (Ctrl+O / Ctrl+S) |
 
 macOS에서는 Dock 아이콘을 오른쪽 클릭해도 **음악 파일 열기…** 메뉴와 **설정…** 메뉴가 나옵니다.
-창 제목에 버전이 표시됩니다(예: `Notirua 0.4.2`).
+창 제목에 버전이 표시됩니다(예: `Notirua 0.5.0`).
 
 ## 명령줄 사용법
 
@@ -186,6 +197,7 @@ uv run notirua transcribe "곡.m4a" --out ./out --title "봄날" \
     --stems guitar,bass --transpose +2 --paper a4 --musicxml --midi
 uv run notirua transcribe "공연.mp4" --start 30 --end 210 --out ./out
 uv run notirua transcribe "곡.m4a" --out ./out --fresh   # 중간 결과를 지우고 처음부터
+uv run notirua transcribe "https://www.tiktok.com/@이름/video/123" --out ./out  # TikTok 링크
 
 uv run notirua mix "곡.m4a" --out ./out                  # 보컬만 뺀 MR (MP3)
 uv run notirua mix "곡.m4a" --out ./out --without guitar # 기타만 뺀 반주
@@ -196,7 +208,7 @@ uv run notirua cache                   # 저장된 중간 결과 크기
 uv run notirua cache --clear
 uv run notirua --lang ko               # 한국어로 창 열기
 uv run notirua --lang ko transcribe --help     # 모든 옵션 (한국어)
-uv run notirua --version               # notirua 0.4.2
+uv run notirua --version               # notirua 0.5.0
 ```
 
 ## 파일이 저장되는 곳
@@ -211,7 +223,7 @@ Notirua를 지우려면 앱(또는 소스로 내려받은 폴더)과 위 폴더�
 
 ## 버전
 
-시맨틱 버전(`MAJOR.MINOR.PATCH`)을 따릅니다. 현재 버전은 **0.4.2**이며, 1.0 전까지는
+시맨틱 버전(`MAJOR.MINOR.PATCH`)을 따릅니다. 현재 버전은 **0.5.0**이며, 1.0 전까지는
 MINOR 버전에서도 동작이 바뀔 수 있습니다. `notirua --version`이나 창 제목으로 확인하고,
 버전마다 바뀐 내용은 [릴리스 페이지](https://github.com/jerry-leem/notirua/releases)에
 있습니다.
@@ -256,6 +268,10 @@ FLAC, or a video such as MP4) and get sheet music as a PDF with the song title
 and page numbers.
 
 1. **Split into instruments**: vocals, drums, bass, guitar, piano, and other.
+   Instead of a file you can paste a public **TikTok video link**: Notirua
+   downloads that video to a temporary folder, uses its sound, and deletes it
+   afterwards. This is the only time the internet is used after setup. Use
+   copyrighted music for personal practice only.
 2. **Write it down**: each instrument gets a staff score, and guitar and bass
    also get tablature. Chord symbols (such as C, Am, G7) appear above the
    score wherever the chord changes.
@@ -390,7 +406,8 @@ Open the installed app from its icon, or run `uv run notirua` from source.
    **Install from a bundle file…**.
 2. **Choose a file.** Drop a music or video file anywhere in the window, or
    use **Choose a file…** (MP3, M4A, WAV, FLAC, OGG, AIFF, MP4 video, and
-   more, up to 15 minutes).
+   more, up to 15 minutes). For a TikTok video, paste its link into the box
+   below and choose **Use this link**.
 3. **Options.** Check the title and instruments, then choose **Make sheet
    music**. Tuning, time signature, tempo, key, paper, and the language inside
    the PDF are under **More settings**; the defaults are automatic. If earlier
@@ -425,7 +442,7 @@ right or from the menu:
 
 On macOS, right-clicking the Dock icon also offers **Open a music file…** and
 **Settings…**. The window title shows the version, for example
-`Notirua 0.4.2`.
+`Notirua 0.5.0`.
 
 ### Use the command line
 
@@ -441,6 +458,7 @@ uv run notirua setup --accept-licenses # same, without asking (automation)
 uv run notirua setup --bundle components.zip   # install without internet
 
 uv run notirua transcribe "song.m4a" --out ./out
+uv run notirua transcribe "https://www.tiktok.com/@name/video/123" --out ./out  # TikTok link
 uv run notirua transcribe "song.m4a" --out ./out --title "Spring" \
     --stems guitar,bass --transpose +2 --paper letter --musicxml --midi
 uv run notirua transcribe "live.mp4" --start 30 --end 210 --out ./out
@@ -455,7 +473,7 @@ uv run notirua cache                   # size of saved intermediate results
 uv run notirua cache --clear
 uv run notirua --lang en               # open the window in English
 uv run notirua transcribe --help       # every option
-uv run notirua --version               # notirua 0.4.2
+uv run notirua --version               # notirua 0.5.0
 ```
 
 More `transcribe` options: `--to-key "G major"`, `--guitar-tuning drop_d`,
@@ -479,7 +497,7 @@ To remove Notirua, delete the app (or the cloned folder) and these folders.
 ### Version
 
 Notirua uses [Semantic Versioning](https://semver.org): `MAJOR.MINOR.PATCH`.
-The current version is **0.4.2**. While the major version is 0, a minor
+The current version is **0.5.0**. While the major version is 0, a minor
 release may still change behavior. `notirua --version` and the window title
 show it, and the [releases page](https://github.com/jerry-leem/notirua/releases)
 lists what changed in each release.

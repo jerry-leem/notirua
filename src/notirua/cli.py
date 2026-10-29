@@ -7,6 +7,7 @@ import io
 import math
 import shutil
 import sys
+import tempfile
 import time
 from collections.abc import Sequence
 from pathlib import Path
@@ -91,6 +92,45 @@ def _print_error(exc: NotiruaError) -> None:
     print(_("Error code: {code}").format(code=exc.code), file=sys.stderr)
 
 
+def _input_source(text: str) -> Path | str:
+    """A file path, or the text itself when it is a TikTok link (no file of that name)."""
+    from notirua.core.fetch import find_tiktok_url
+
+    path = Path(text)
+    if not path.exists() and find_tiktok_url(text) is not None:
+        return text
+    return path
+
+
+def _fetch_input(args: argparse.Namespace) -> None:
+    """Download a TikTok link given instead of a file; errors surface as NotiruaError."""
+    if isinstance(args.file, Path):
+        return
+    from notirua.core.fetch import download_audio
+
+    last = [-1]
+
+    def show(fraction: float) -> None:
+        percent = int(fraction * 100)
+        if percent != last[0] and sys.stderr.isatty():
+            last[0] = percent
+            print(f"\r{_('Downloading the video…')} {percent}%", end="", file=sys.stderr)
+
+    print(_("Downloading the video…"), file=sys.stderr)
+    cancel = CancelToken()
+    try:
+        got = download_audio(args.file, Path(args.workdir), progress=show, cancel=cancel)
+    except KeyboardInterrupt:
+        cancel.cancel()
+        raise Cancelled() from None
+    finally:
+        if last[0] >= 0:
+            print(file=sys.stderr)
+    args.file = got.path
+    if not args.title and got.title:
+        args.title = got.title
+
+
 def _whole_number(text: str) -> int:
     try:
         return int(text)
@@ -123,7 +163,9 @@ def build_parser() -> argparse.ArgumentParser:
     sub = parser.add_subparsers(dest="command", metavar=_("command"))
 
     t = sub.add_parser("transcribe", help=_("Make sheet music from an audio file."))
-    t.add_argument("file", type=Path, help=_("Audio or video file to read."))
+    t.add_argument(
+        "file", type=_input_source, help=_("Audio or video file, or a TikTok video link, to read.")
+    )
     t.add_argument("--out", type=Path, default=Path("."), help=_("Folder for the results."))
     t.add_argument("--title", help=_("Song title printed on every page."))
     t.add_argument(
@@ -185,7 +227,9 @@ def build_parser() -> argparse.ArgumentParser:
             "Without --stems or --without, everything but the vocals is kept."
         ),
     )
-    m.add_argument("file", type=Path, help=_("Audio or video file to read."))
+    m.add_argument(
+        "file", type=_input_source, help=_("Audio or video file, or a TikTok video link, to read.")
+    )
     m.add_argument("--out", type=Path, default=Path("."), help=_("Folder for the results."))
     picks = m.add_mutually_exclusive_group()
     picks.add_argument(
@@ -271,10 +315,11 @@ def main(argv: Sequence[str] | None = None) -> int:
             return EXIT_USAGE
         return gui_main([sys.argv[0]], language=args.lang)
     try:
-        if args.command == "transcribe":
-            return cmd_transcribe(args, user)
-        if args.command == "mix":
-            return cmd_mix(args, user)
+        if args.command in ("transcribe", "mix"):
+            with tempfile.TemporaryDirectory(prefix="notirua-link-") as workdir:
+                args.workdir = workdir
+                run = cmd_transcribe if args.command == "transcribe" else cmd_mix
+                return run(args, user)
         if args.command == "setup":
             return cmd_setup(args, user)
         if args.command == "components":
@@ -308,6 +353,7 @@ def cmd_transcribe(args: argparse.Namespace, user: settings_mod.Settings) -> int
         )
         print(_("Run “notirua setup” first."), file=sys.stderr)
         return EXIT_SETUP
+    _fetch_input(args)
     if not args.file.is_file():
         print(_("File not found: {path}").format(path=args.file), file=sys.stderr)
         return EXIT_USAGE
@@ -412,6 +458,7 @@ def cmd_mix(args: argparse.Namespace, user: settings_mod.Settings) -> int:
         )
         print(_("Run “notirua setup” first."), file=sys.stderr)
         return EXIT_SETUP
+    _fetch_input(args)
     if not args.file.is_file():
         print(_("File not found: {path}").format(path=args.file), file=sys.stderr)
         return EXIT_USAGE

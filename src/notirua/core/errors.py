@@ -70,6 +70,32 @@ class MultipleAudioTracksError(DecodeError):
     hint_id = N_("Choose which audio track to use.")
 
 
+class VideoDownloadError(NotiruaError):
+    code = "E-VIDEO-DOWNLOAD"
+    message_id = N_("The video could not be downloaded.")
+    hint_id = N_("Check the link and your internet connection, then try again.")
+
+
+class UnsupportedLinkError(VideoDownloadError):
+    code = "E-VIDEO-LINK"
+    message_id = N_("This is not a TikTok video link.")
+    hint_id = N_(
+        "Copy the link from TikTok’s Share menu, for example https://www.tiktok.com/@name/video/123."
+    )
+
+
+class VideoUnavailableError(VideoDownloadError):
+    code = "E-VIDEO-UNAVAILABLE"
+    message_id = N_("The video is private, removed, or not available in your region.")
+    hint_id = N_("Open the link in a browser to check it plays, or try a public video.")
+
+
+class DownloadNetworkError(VideoDownloadError):
+    code = "E-VIDEO-NETWORK"
+    message_id = N_("Could not reach TikTok.")
+    hint_id = N_("Check your internet connection and try again.")
+
+
 class ComponentMissingError(NotiruaError):
     code = "E-COMPONENT-MISSING"
     message_id = N_("A required component is not installed: {name}.")

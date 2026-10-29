@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-10-07 02:26+0900\n"
+"POT-Creation-Date: 2026-10-29 02:39+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -79,7 +79,7 @@ msgstr ""
 msgid "Ask every time"
 msgstr ""
 
-msgid "Audio or video file to read."
+msgid "Audio or video file, or a TikTok video link, to read."
 msgstr ""
 
 msgid "Audio track"
@@ -134,6 +134,9 @@ msgid "Check each component to agree to its license."
 msgstr ""
 
 msgid "Check that the file plays in another app, or convert it to WAV or MP3."
+msgstr ""
+
+msgid "Check the link and your internet connection, then try again."
 msgstr ""
 
 msgid "Check your internet connection and try again."
@@ -209,6 +212,14 @@ msgstr ""
 msgid "Components installed in {seconds} s."
 msgstr ""
 
+msgid ""
+"Copy the link from TikTok’s Share menu, for example "
+"https://www.tiktok.com/@name/video/123."
+msgstr ""
+
+msgid "Could not reach TikTok."
+msgstr ""
+
 msgid "Delete all saved intermediate results."
 msgstr ""
 
@@ -251,6 +262,9 @@ msgid "Down a semitone"
 msgstr ""
 
 msgid "Downloading components needs your permission first."
+msgstr ""
+
+msgid "Downloading the video…"
 msgstr ""
 
 #, python-brace-format
@@ -447,6 +461,9 @@ msgstr ""
 msgid "Licenses"
 msgstr ""
 
+msgid "Link status"
+msgstr ""
+
 msgid "List available languages."
 msgstr ""
 
@@ -607,7 +624,13 @@ msgstr ""
 msgid "Open the Notirua window (the default with no command)."
 msgstr ""
 
+msgid "Open the link in a browser to check it plays, or try a public video."
+msgstr ""
+
 msgid "Open the log folder for details and report the problem."
+msgstr ""
+
+msgid "Or paste a TikTok video link:"
 msgstr ""
 
 msgid "Other"
@@ -911,6 +934,12 @@ msgstr ""
 msgid "The task was cancelled."
 msgstr ""
 
+msgid "The video could not be downloaded."
+msgstr ""
+
+msgid "The video is private, removed, or not available in your region."
+msgstr ""
+
 msgid "There is not enough disk space."
 msgstr ""
 
@@ -919,6 +948,12 @@ msgstr ""
 
 #, python-brace-format
 msgid "This copy of Notirua cannot save {format} files."
+msgstr ""
+
+msgid "This is not a TikTok video link."
+msgstr ""
+
+msgid "TikTok video link"
 msgstr ""
 
 msgid "Time signature"
@@ -977,6 +1012,9 @@ msgid "Up a semitone"
 msgstr ""
 
 msgid "Use a file without copy protection."
+msgstr ""
+
+msgid "Use this link"
 msgstr ""
 
 msgid "Use this when earlier results for this file look wrong. It takes longer."
@@ -1040,6 +1078,9 @@ msgid "expected at most one argument"
 msgstr ""
 
 msgid "expected one argument"
+msgstr ""
+
+msgid "https://www.tiktok.com/@name/video/…"
 msgstr ""
 
 #, python-format

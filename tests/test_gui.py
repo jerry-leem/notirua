@@ -759,3 +759,81 @@ def test_make_audio_file_preview_and_stop(
     qtbot.waitUntil(lambda: not dialog.busy.isVisible(), timeout=3_000)
     assert "Nothing was saved" in dialog.status.text()
     assert len(played) == 1
+
+
+# -- TikTok link ---------------------------------------------------------------
+TIKTOK = "https://www.tiktok.com/@name/video/6718335390845095173"
+
+
+def test_link_downloads_then_opens_options_with_its_title(
+    qtbot: QtBot,
+    ready_user: settings_mod.Settings,
+    job: FakeJob,
+    song: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    from notirua.core.fetch import Downloaded
+    from notirua.gui import main_window
+
+    def fake_download(url: str, folder: Path, *, progress: Callable[[float], None], **_k: object):
+        assert url == TIKTOK
+        progress(0.5)
+        return Downloaded(path=song, title="BTS - Spring Day")
+
+    monkeypatch.setattr(main_window, "download_audio", fake_download)
+    window = make_window(qtbot, ready_user, no_components, job.pipeline)
+    page = window.file_page
+    page.link_edit.setText(f"좋아요 {TIKTOK} 들어보세요")
+    qtbot.mouseClick(page.link_button, Qt.MouseButton.LeftButton)
+    qtbot.waitUntil(lambda: window.stack.currentWidget() is window.options_page, timeout=WAIT_MS)
+    assert window.options_page.title_edit.text() == "BTS - Spring Day"
+    assert str(song) not in ready_user.recent_files, "temporary downloads are not remembered"
+    assert page.link_edit.isEnabled()
+    qtbot.mouseClick(window.options_page.start_button, Qt.MouseButton.LeftButton)
+    wait_result(qtbot, window)
+
+
+def test_link_from_another_site_is_explained(
+    qtbot: QtBot, ready_user: settings_mod.Settings, job: FakeJob
+) -> None:
+    window = make_window(qtbot, ready_user, no_components, job.pipeline)
+    window.file_page.link_edit.setText("https://www.youtube.com/watch?v=1")
+    window.file_page.submit_link()
+    assert window.stack.currentWidget() is window.file_page
+    assert "TikTok" in window.file_page.link_status.text()
+
+
+def test_link_failure_and_cancel_unlock_the_page(
+    qtbot: QtBot,
+    ready_user: settings_mod.Settings,
+    job: FakeJob,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    from notirua.core.errors import VideoUnavailableError
+    from notirua.gui import main_window
+
+    outcome: list[str] = ["fail"]
+
+    def fake_download(url: str, folder: Path, *, cancel: object, **_k: object):
+        if outcome[0] == "fail":
+            raise VideoUnavailableError("private")
+        while not cancel.cancelled:  # type: ignore[attr-defined]
+            time.sleep(0.01)
+        cancel.raise_if_cancelled()  # type: ignore[attr-defined]
+
+    monkeypatch.setattr(main_window, "download_audio", fake_download)
+    window = make_window(qtbot, ready_user, no_components, job.pipeline)
+    page = window.file_page
+    page.link_edit.setText(TIKTOK)
+    page.submit_link()
+    qtbot.waitUntil(lambda: page.link_edit.isEnabled(), timeout=WAIT_MS)
+    assert page.link_status.text().startswith("✗")
+    assert window.stack.currentWidget() is page
+
+    outcome[0] = "wait"
+    page.submit_link()
+    qtbot.waitUntil(lambda: page.link_cancel_button.isVisible(), timeout=WAIT_MS)
+    assert not page.link_edit.isEnabled()
+    qtbot.mouseClick(page.link_cancel_button, Qt.MouseButton.LeftButton)
+    qtbot.waitUntil(lambda: page.link_edit.isEnabled(), timeout=WAIT_MS)
+    assert window.stack.currentWidget() is page

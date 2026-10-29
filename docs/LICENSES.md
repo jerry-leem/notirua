@@ -20,6 +20,7 @@ unlicensed components are never included (SPEC 7.4).
 | FFmpeg (built by `packaging/build_lgpl_av.py`: decoders, plus AAC, MP3, and WAV saving) | 8.1.2 | LGPL-2.1-or-later (no GPL or nonfree parts; D13) | https://ffmpeg.org |
 | LAME (libmp3lame, linked into FFmpeg's libavcodec for MP3 saving) | 3.100 | LGPL-2.0-or-later | https://lame.sourceforge.io |
 | python-soxr / libsoxr | 1.1 | LGPL-2.1+ | https://github.com/dofuuz/python-soxr |
+| yt-dlp (fetches the sound of a TikTok video from its link) | 2026.10 | Unlicense (public domain) | https://github.com/yt-dlp/yt-dlp |
 | platformdirs | 4.x | MIT | https://github.com/tox-dev/platformdirs |
 | Babel | 2.18 | BSD-3-Clause | https://babel.pocoo.org |
 | music21 | 10.x | BSD-3-Clause | https://github.com/cuthbertLab/music21 |

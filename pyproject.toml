@@ -1,6 +1,6 @@
 [project]
 name = "notirua"
-version = "0.4.2"
+version = "0.5.0"
 description = "Convert audio into per-instrument scores, TAB, and PDFs."
 readme = "README.md"
 requires-python = "==3.11.*"
@@ -23,6 +23,7 @@ dependencies = [
     # which keeps glibc 2.31 supported (DECISIONS D14). Same Qt on every platform.
     "PySide6-Essentials>=6.9,<6.10",
     "PySide6-Addons>=6.9,<6.10",
+    "yt-dlp>=2026.10.26",
 ]
 
 [project.scripts]
@@ -76,7 +77,7 @@ mypy_path = "src"
 packages = ["notirua"]
 
 [[tool.mypy.overrides]]
-module = ["av.*", "soxr.*", "onnxruntime.*", "pypdf.*"]
+module = ["av.*", "soxr.*", "onnxruntime.*", "pypdf.*", "yt_dlp.*"]
 ignore_missing_imports = true
 
 [[tool.mypy.overrides]]

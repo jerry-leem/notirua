@@ -12,7 +12,7 @@ import sys
 from importlib.metadata import version
 from pathlib import Path
 
-from PyInstaller.utils.hooks import copy_metadata
+from PyInstaller.utils.hooks import collect_submodules, copy_metadata
 
 ROOT = Path(SPECPATH).resolve().parent
 PACKAGING = ROOT / "packaging"
@@ -91,7 +91,7 @@ def analysis(script):
         [str(PACKAGING / script)],
         pathex=[str(ROOT / "src")],
         datas=datas,
-        hiddenimports=["notirua.resources.models"],
+        hiddenimports=["notirua.resources.models", *collect_submodules("yt_dlp")],
         excludes=EXCLUDES,
         noarchive=False,
     )

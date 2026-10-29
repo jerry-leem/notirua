@@ -10,6 +10,8 @@ from PySide6.QtWidgets import (
     QFrame,
     QHBoxLayout,
     QLabel,
+    QLineEdit,
+    QProgressBar,
     QPushButton,
     QVBoxLayout,
     QWidget,
@@ -26,6 +28,8 @@ MAX_RECENT = 5
 
 class FilePage(QWidget):
     file_chosen = Signal(Path)
+    link_chosen = Signal(str)
+    link_cancelled = Signal()
 
     def __init__(self, parent: QWidget | None = None) -> None:
         super().__init__(parent)
@@ -60,10 +64,55 @@ class FilePage(QWidget):
         formats.setWordWrap(True)
         dl.addWidget(formats)
         layout.addWidget(drop)
+        layout.addSpacing(12)
+        layout.addWidget(QLabel(_("Or paste a TikTok video link:")))
+        link_row = QHBoxLayout()
+        self.link_edit = QLineEdit()
+        self.link_edit.setPlaceholderText(_("https://www.tiktok.com/@name/video/…"))
+        self.link_edit.setAccessibleName(_("TikTok video link"))
+        self.link_edit.setClearButtonEnabled(True)
+        self.link_edit.returnPressed.connect(self.submit_link)
+        link_row.addWidget(self.link_edit, 1)
+        self.link_button = QPushButton(_("Use this link"))
+        self.link_button.clicked.connect(self.submit_link)
+        link_row.addWidget(self.link_button)
+        self.link_cancel_button = QPushButton(_("Cancel"))
+        self.link_cancel_button.clicked.connect(self.link_cancelled)
+        self.link_cancel_button.setVisible(False)
+        link_row.addWidget(self.link_cancel_button)
+        layout.addLayout(link_row)
+        self.link_bar = QProgressBar()
+        self.link_bar.setRange(0, 100)
+        self.link_bar.setVisible(False)
+        layout.addWidget(self.link_bar)
+        self.link_status = QLabel()
+        self.link_status.setWordWrap(True)
+        self.link_status.setAccessibleName(_("Link status"))
+        layout.addWidget(self.link_status)
         self.recent_row = QHBoxLayout()
         layout.addLayout(self.recent_row)
         layout.addStretch(1)
         self.start_dir = ""
+
+    def submit_link(self) -> None:
+        text = self.link_edit.text().strip()
+        if not text:
+            return
+        self.link_chosen.emit(text)
+
+    def set_link_busy(self, busy: bool, message: str = "") -> None:
+        """Lock the link box while a video downloads; ``message`` shows progress or an error."""
+        self.link_edit.setEnabled(not busy)
+        self.link_button.setEnabled(not busy)
+        self.pick_button.setEnabled(not busy)
+        self.link_cancel_button.setVisible(busy)
+        self.link_bar.setVisible(busy)
+        if busy:
+            self.link_bar.setValue(0)
+        self.link_status.setText(message)
+
+    def set_link_progress(self, fraction: float) -> None:
+        self.link_bar.setValue(int(max(0.0, min(1.0, fraction)) * 100))
 
     def set_recent(self, files: list[str]) -> None:
         while self.recent_row.count():
