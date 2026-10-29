@@ -10,6 +10,7 @@ from PySide6.QtWidgets import (
     QFrame,
     QHBoxLayout,
     QLabel,
+    QLineEdit,
     QPushButton,
     QVBoxLayout,
     QWidget,
@@ -28,6 +29,7 @@ MAX_RECENT = 5
 class FilePage(QWidget):
     file_chosen = Signal(Path)
     youtube_requested = Signal(str, int, bool)  # link, kbps, also make the sheet music
+    tiktok_requested = Signal(str)  # link
 
     def __init__(self, parent: QWidget | None = None) -> None:
         super().__init__(parent)
@@ -65,10 +67,39 @@ class FilePage(QWidget):
         self.youtube = YoutubeBox()
         self.youtube.requested.connect(self.youtube_requested)
         layout.addWidget(self.youtube)
+        layout.addWidget(self._tiktok_row())
         self.recent_row = QHBoxLayout()
         layout.addLayout(self.recent_row)
         layout.addStretch(1)
         self.start_dir = ""
+
+    def _tiktok_row(self) -> QFrame:
+        box = QFrame()
+        box.setFrameShape(QFrame.Shape.StyledPanel)
+        col = QVBoxLayout(box)
+        col.setContentsMargins(16, 12, 16, 12)
+        col.addWidget(heading(_("Or use a TikTok link"), scale=1.1))
+        row = QHBoxLayout()
+        self.tiktok_edit = QLineEdit()
+        self.tiktok_edit.setPlaceholderText(_("Paste a TikTok video link"))
+        self.tiktok_edit.setAccessibleName(_("TikTok video link"))
+        self.tiktok_edit.setClearButtonEnabled(True)
+        self.tiktok_edit.returnPressed.connect(self.submit_tiktok)
+        row.addWidget(self.tiktok_edit, 1)
+        self.tiktok_button = QPushButton(_("Make sheet music from the video"))
+        self.tiktok_button.clicked.connect(self.submit_tiktok)
+        row.addWidget(self.tiktok_button)
+        col.addLayout(row)
+        self.tiktok_status = QLabel()
+        self.tiktok_status.setWordWrap(True)
+        self.tiktok_status.setAccessibleName(_("Link status"))
+        col.addWidget(self.tiktok_status)
+        return box
+
+    def submit_tiktok(self) -> None:
+        text = self.tiktok_edit.text().strip()
+        if text:
+            self.tiktok_requested.emit(text)
 
     def set_recent(self, files: list[str]) -> None:
         while self.recent_row.count():

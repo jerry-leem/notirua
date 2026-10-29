@@ -94,8 +94,8 @@ msgstr "Hỏi mỗi lần"
 msgid "Audio from YouTube"
 msgstr "Âm thanh từ YouTube"
 
-msgid "Audio or video file to read, or a YouTube video link."
-msgstr "Tệp âm thanh hoặc video cần đọc, hoặc liên kết video YouTube."
+msgid "Audio or video file to read, or a YouTube or TikTok video link."
+msgstr "Tệp âm thanh hoặc video cần đọc, hoặc liên kết video YouTube hay TikTok."
 
 msgid "Audio or video file to read."
 msgstr "Tệp âm thanh hoặc video cần đọc."
@@ -1465,3 +1465,51 @@ msgstr "{value} không phải là số nguyên."
 msgid "♩ = {bpm} · {key}"
 msgstr "♩ = {bpm} · {key}"
 
+msgid "Could not reach TikTok."
+msgstr "Không kết nối được với TikTok."
+
+msgid "Downloading the video"
+msgstr "Đang tải video"
+
+#, python-brace-format
+msgid "Downloading the video: {percent}%"
+msgstr "Đang tải video: {percent}%"
+
+msgid "Downloading the video…"
+msgstr "Đang tải video…"
+
+msgid "Getting the video failed."
+msgstr "Không lấy được video."
+
+msgid "Getting the video from TikTok"
+msgstr "Lấy video từ TikTok"
+
+msgid "Link status"
+msgstr "Trạng thái liên kết"
+
+msgid "Make sheet music from the video"
+msgstr "Tạo bản nhạc từ video"
+
+msgid "Open the link in a browser to check it plays, or try a public video."
+msgstr "Hãy mở liên kết trong trình duyệt để kiểm tra, hoặc thử một video công khai."
+
+msgid "Or use a TikTok link"
+msgstr "Hoặc dùng liên kết TikTok"
+
+msgid "Paste a TikTok video link"
+msgstr "Dán liên kết video TikTok"
+
+msgid "The video could not be downloaded."
+msgstr "Không tải được video."
+
+msgid "The video is private, removed, or not available in your region."
+msgstr "Video ở chế độ riêng tư, đã bị xóa hoặc không có sẵn ở khu vực của bạn."
+
+msgid "This is not a TikTok video link."
+msgstr "Đây không phải là liên kết video TikTok."
+
+msgid "TikTok video link"
+msgstr "Liên kết video TikTok"
+
+msgid "Copy the link from TikTok’s Share menu, for example https://www.tiktok.com/@name/video/123."
+msgstr "Hãy sao chép liên kết từ menu Chia sẻ của TikTok, ví dụ https://www.tiktok.com/@name/video/123."

@@ -42,7 +42,14 @@ from notirua.components.manager import (
 )
 from notirua.components.manifest import JS_RUNTIME
 from notirua.core import youtube as yt
-from notirua.core.errors import ComponentMissingError, InvalidYoutubeLinkError, NotiruaError
+from notirua.core.errors import (
+    ComponentMissingError,
+    InvalidYoutubeLinkError,
+    NotiruaError,
+    UnsupportedLinkError,
+)
+from notirua.core.fetch import STAGES as TIKTOK_STAGES
+from notirua.core.fetch import download_with_progress, find_tiktok_url
 from notirua.core.pipeline import (
     INSTRUMENT_NAMES,
     SKIP_SILENT,
@@ -101,7 +108,8 @@ class MainWindow(QMainWindow):
         self.runtime_manager_factory = runtime_manager_factory
         self.youtube_client_factory = youtube_client_factory or self._default_youtube_client
         self._youtube_request: tuple[yt.YoutubeLink, int, bool] | None = None
-        self._retry_kind = "score"  # what "Try again" repeats: "score" or "youtube"
+        self._tiktok_url: str | None = None
+        self._retry_kind = "score"  # what "Try again" repeats: "score", "youtube", or "tiktok"
         self.saved_audio: yt.SavedAudio | None = None
         self.setWindowTitle(APP_TITLE)
         self.setAcceptDrops(True)
@@ -147,6 +155,7 @@ class MainWindow(QMainWindow):
         self.file_page = FilePage()
         self.file_page.file_chosen.connect(self.open_file)
         self.file_page.youtube_requested.connect(self.start_youtube)
+        self.file_page.tiktok_requested.connect(self.start_tiktok)
         self.file_page.youtube.load_settings(user)
         self.file_page.youtube.score_requested.connect(self.score_saved_audio)
         self.file_page.set_recent(user.recent_files)
@@ -240,15 +249,16 @@ class MainWindow(QMainWindow):
         self.show_file_page()
         self.file_page.choose_file()
 
-    def open_file(self, path: Path) -> None:
+    def open_file(self, path: Path, title: str | None = None, remember: bool = True) -> None:
         if self.busy():
             return
         self.input_path = path
-        self._remember_recent(path)
-        duration, title, tracks = None, None, None
+        if remember:
+            self._remember_recent(path)
+        duration, tracks = None, None
         try:
             info = inspect(path)
-            duration, title = info.duration_s, info.title
+            duration, title = info.duration_s, title or info.title
             tracks = [(s.index, s.language) for s in info.streams]
         except NotiruaError as exc:
             # The progress screen explains the problem when the job starts.
@@ -273,7 +283,12 @@ class MainWindow(QMainWindow):
         urls = event.mimeData().urls()
         if self.busy() or not urls:
             return
-        if urls[0].isLocalFile() or yt.find_link(urls[0].toString()) is not None:
+        text = urls[0].toString()
+        if (
+            urls[0].isLocalFile()
+            or yt.find_link(text) is not None
+            or find_tiktok_url(text) is not None
+        ):
             event.acceptProposedAction()
 
     def dropEvent(self, event: QDropEvent) -> None:
@@ -290,6 +305,55 @@ class MainWindow(QMainWindow):
             event.acceptProposedAction()
             self.show_file_page()
             self.file_page.youtube.set_link(link.url)
+        elif (tiktok := find_tiktok_url(urls[0].toString())) is not None:
+            event.acceptProposedAction()
+            self.show_file_page()
+            self.file_page.tiktok_edit.setText(tiktok)
+            self.start_tiktok(tiktok)
+
+    # -- sheet music from a TikTok link (0.6.0) ----------------------------------
+    def start_tiktok(self, text: str) -> None:
+        """Download the video behind a TikTok link, then go on to the options screen."""
+        if self.busy():
+            return
+        url = find_tiktok_url(text)
+        if url is None:
+            message = UnsupportedLinkError()
+            self.file_page.tiktok_status.setText(
+                f"✗ {message.user_message()} {message.user_hint()}"
+            )
+            return
+        self.file_page.tiktok_status.clear()
+        self._tiktok_url = url
+        self._retry_kind = "tiktok"
+        self._run_number += 1
+        folder = self._workdir / f"link-{self._run_number}"
+
+        def work(progress: ProgressCallback, cancel: CancelToken) -> Any:
+            return download_with_progress(url, folder, progress, cancel)
+
+        self.progress_page.begin_stages(
+            _("Getting the video from TikTok"),
+            [(spec.name, spec.message_id) for spec in TIKTOK_STAGES],
+        )
+        self.stack.setCurrentWidget(self.progress_page)
+        self.progress_page.cancel_button.setFocus()
+        self._start_task(work, "tiktok", self._tiktok_done, self._tiktok_failed)
+
+    def _tiktok_done(self, got: Any) -> None:
+        self.job_task = None
+        self.progress_page.panel.finish()
+        self.progress_page.running = False
+        self.setWindowTitle(APP_TITLE)
+        self.file_page.tiktok_edit.clear()
+        self.open_file(got.path, title=got.title, remember=False)
+
+    def _tiktok_failed(self, error: BaseException) -> None:
+        self.job_task = None
+        self.setWindowTitle(APP_TITLE)
+        self.progress_page.show_error(error)
+        message = error.user_message() if isinstance(error, NotiruaError) else str(error)
+        self._notify(_("Getting the video failed."), message)
 
     # -- saving audio from a YouTube link (0.5.0) --------------------------------
     def _shortcut_paste(self) -> None:
@@ -501,7 +565,9 @@ class MainWindow(QMainWindow):
         task.start()
 
     def retry_job(self) -> None:
-        if self._retry_kind == "youtube" and self._youtube_request is not None:
+        if self._retry_kind == "tiktok" and self._tiktok_url is not None:
+            self.start_tiktok(self._tiktok_url)
+        elif self._retry_kind == "youtube" and self._youtube_request is not None:
             link, kbps, make_score = self._youtube_request
             self.start_youtube(link.url, kbps, make_score)
         elif self.options is not None:

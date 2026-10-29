@@ -63,6 +63,20 @@ Notirua의 핵심 기능입니다. 노래 파일(MP3, M4A, WAV, FLAC 등 오디�
 - 유튜브가 바뀌면 링크가 갑자기 안 될 수 있습니다. 그럴 때는 새 버전의 Notirua를
   설치하세요.
 
+### TikTok 동영상 링크로 악보 만들기
+
+파일 대신 **TikTok 동영상 링크**를 붙여 넣어도 됩니다. 첫 화면의 **TikTok 링크** 칸에
+링크(공유 메뉴에서 복사한 글 전체도 됩니다)를 붙여 넣고 **동영상으로 악보 만들기**를
+누르거나, 브라우저의 링크를 창에 끌어다 놓으세요. 영상은 임시 폴더에 내려받아 소리를
+쓰고, 끝나면 지웁니다. 곡명은 영상에 붙은 음악 정보(없으면 설명글)로 채워지며 옵션
+화면에서 고칠 수 있습니다. 명령줄은 `notirua transcribe "TikTok 링크"`입니다.
+
+- 공개된 영상만 받을 수 있습니다. 비공개·삭제된 영상이나 내 지역에서 볼 수 없는 영상은
+  이유를 알려 줍니다.
+- 사용할 권리가 있는 영상만 쓰세요. TikTok 이용약관과 저작권법이 적용됩니다.
+- TikTok이 바뀌면 링크가 갑자기 안 될 수 있습니다. 그럴 때는 새 버전의 Notirua를
+  설치하세요.
+
 ### 트랙을 골라 새 음원 만들기
 
 악기별로 나눈 트랙(보컬, 드럼, 베이스, 기타, 피아노, 다른 악기) 가운데 원하는 것만
@@ -104,17 +118,17 @@ Python이나 다른 프로그램을 따로 설치하지 않아도 되며, 한·�
 
 ## 내려받기와 설치
 
-최신 배포판은 [**Notirua 0.5.5 릴리스 페이지**](https://github.com/jerry-leem/notirua/releases/tag/v0.5.5)에
+최신 배포판은 [**Notirua 0.6.0 릴리스 페이지**](https://github.com/jerry-leem/notirua/releases/tag/v0.6.0)에
 있습니다. 릴리스 페이지에 한국어 설치 방법, 사용법, 바뀐 점, 알려진 제한이 함께 적혀
 있습니다. 지난 버전은 [모든 릴리스](https://github.com/jerry-leem/notirua/releases)에서
 볼 수 있습니다.
 
 | 컴퓨터 | 내려받기 | 설치 |
 |---|---|---|
-| Windows 10/11 (x64) | [Notirua-0.5.5-windows-x64-setup.exe](https://github.com/jerry-leem/notirua/releases/download/v0.5.5/Notirua-0.5.5-windows-x64-setup.exe) | 실행해서 안내에 따라 설치(관리자 권한 필요 없음) |
-| Mac (Apple Silicon), macOS 14 이상 | [Notirua-0.5.5-macos-arm64.dmg](https://github.com/jerry-leem/notirua/releases/download/v0.5.5/Notirua-0.5.5-macos-arm64.dmg) | 열어서 Notirua를 Applications 폴더로 끌어다 놓기 |
-| Intel Mac, macOS 14 이상 | [Notirua-0.5.5-macos-x86_64.dmg](https://github.com/jerry-leem/notirua/releases/download/v0.5.5/Notirua-0.5.5-macos-x86_64.dmg) | 열어서 Notirua를 Applications 폴더로 끌어다 놓기 |
-| Linux x86_64 (glibc 2.31 이상) | [Notirua-0.5.5-linux-x86_64.AppImage](https://github.com/jerry-leem/notirua/releases/download/v0.5.5/Notirua-0.5.5-linux-x86_64.AppImage) | `chmod +x`로 실행 권한을 주고 실행 |
+| Windows 10/11 (x64) | [Notirua-0.6.0-windows-x64-setup.exe](https://github.com/jerry-leem/notirua/releases/download/v0.6.0/Notirua-0.6.0-windows-x64-setup.exe) | 실행해서 안내에 따라 설치(관리자 권한 필요 없음) |
+| Mac (Apple Silicon), macOS 14 이상 | [Notirua-0.6.0-macos-arm64.dmg](https://github.com/jerry-leem/notirua/releases/download/v0.6.0/Notirua-0.6.0-macos-arm64.dmg) | 열어서 Notirua를 Applications 폴더로 끌어다 놓기 |
+| Intel Mac, macOS 14 이상 | [Notirua-0.6.0-macos-x86_64.dmg](https://github.com/jerry-leem/notirua/releases/download/v0.6.0/Notirua-0.6.0-macos-x86_64.dmg) | 열어서 Notirua를 Applications 폴더로 끌어다 놓기 |
+| Linux x86_64 (glibc 2.31 이상) | [Notirua-0.6.0-linux-x86_64.AppImage](https://github.com/jerry-leem/notirua/releases/download/v0.6.0/Notirua-0.6.0-linux-x86_64.AppImage) | `chmod +x`로 실행 권한을 주고 실행 |
 
 macOS 14에서는 악보를 그리는 조판기(LilyPond)가 시작되지 않을 수 있습니다. 확인된 환경은 macOS 15 이상입니다.
 
@@ -180,7 +194,8 @@ uv sync
    누르세요(MP3, M4A, WAV, FLAC, OGG, AIFF, MP4 동영상 등, 15분 이하). 파일 대신 클립보드에
    복사한 **유튜브 링크**를 **붙여넣기**(또는 Ctrl+V, macOS는 ⌘V)로 넣을 수도 있습니다.
    링크는 검사한 뒤 소리만 MP3로 저장하고, 기본값으로는 곧바로 악보까지 만듭니다
-   ([유튜브 링크로 음원 받기](#유튜브-링크로-음원-받기)).
+   ([유튜브 링크로 음원 받기](#유튜브-링크로-음원-받기)). TikTok 영상은 아래 **TikTok 링크**
+   칸에 붙여 넣으세요([TikTok 동영상 링크로 악보 만들기](#tiktok-동영상-링크로-악보-만들기)).
 3. **옵션.** 곡명과 악기를 확인하고 **악보 만들기**를 누르세요. 줄 맞춤, 박자,
    빠르기, 조성, 용지, PDF 언어는 **세부 설정** 안에 있고 기본값은 자동입니다.
    같은 파일의 이전 결과가 이상하면 **세부 설정**에서 **저장된 중간 결과를 지우고
@@ -208,7 +223,7 @@ uv sync
 | 파일 열기 / 모두 저장 | **파일** 메뉴 (⌘O / ⌘S) | **파일** 메뉴 (Ctrl+O / Ctrl+S) |
 
 macOS에서는 Dock 아이콘을 오른쪽 클릭해도 **음악 파일 열기…** 메뉴와 **설정…** 메뉴가 나옵니다.
-창 제목에 버전이 표시됩니다(예: `Notirua 0.5.5`).
+창 제목에 버전이 표시됩니다(예: `Notirua 0.6.0`).
 
 ## 명령줄 사용법
 
@@ -245,7 +260,7 @@ uv run notirua cache                   # 저장된 중간 결과 크기
 uv run notirua cache --clear
 uv run notirua --lang ko               # 한국어로 창 열기
 uv run notirua --lang ko transcribe --help     # 모든 옵션 (한국어)
-uv run notirua --version               # notirua 0.5.5
+uv run notirua --version               # notirua 0.6.0
 ```
 
 ## 파일이 저장되는 곳
@@ -260,7 +275,7 @@ Notirua를 지우려면 앱(또는 소스로 내려받은 폴더)과 위 폴더�
 
 ## 버전
 
-시맨틱 버전(`MAJOR.MINOR.PATCH`)을 따릅니다. 현재 버전은 **0.5.5**이며, 1.0 전까지는
+시맨틱 버전(`MAJOR.MINOR.PATCH`)을 따릅니다. 현재 버전은 **0.6.0**이며, 1.0 전까지는
 MINOR 버전에서도 동작이 바뀔 수 있습니다. `notirua --version`이나 창 제목으로 확인하고,
 버전마다 바뀐 내용은 [릴리스 페이지](https://github.com/jerry-leem/notirua/releases)에
 있습니다.
@@ -360,6 +375,23 @@ Please note:
 - When YouTube changes, links may suddenly stop working. Install the newest
   Notirua when that happens.
 
+#### Make sheet music from a TikTok link
+
+You can also paste a **TikTok video link** instead of a file. Put the link (or
+the whole text copied from TikTok's Share menu) in the **TikTok link** box on
+the first screen and choose **Make sheet music from the video**, or drag a link
+from your browser into the window. Notirua downloads the video to a temporary
+folder, uses its sound, and deletes it afterwards. The song title is filled in
+from the video's music information (or its caption) and can be changed on the
+options screen. On the command line, use `notirua transcribe "TikTok link"`.
+
+- Only public videos can be downloaded. Private or removed videos, and videos
+  not available in your region, are explained.
+- Only use videos you have the right to use. TikTok's terms of service and
+  copyright law apply.
+- When TikTok changes, links may suddenly stop working. Install the newest
+  Notirua when that happens.
+
 #### Make a new audio file from chosen tracks
 
 Pick any of the separated tracks (vocals, drums, bass, guitar, piano, other)
@@ -408,16 +440,16 @@ titles (macOS and Windows use their system fonts).
 ### Download and install
 
 The latest release is
-[**Notirua 0.5.5**](https://github.com/jerry-leem/notirua/releases/tag/v0.5.5);
+[**Notirua 0.6.0**](https://github.com/jerry-leem/notirua/releases/tag/v0.6.0);
 its page has installation and usage notes (in Korean), changes, and known
 limits. Earlier versions are on [all releases](https://github.com/jerry-leem/notirua/releases).
 
 | Computer | Download | Install |
 |---|---|---|
-| Windows 10/11 (x64) | [Notirua-0.5.5-windows-x64-setup.exe](https://github.com/jerry-leem/notirua/releases/download/v0.5.5/Notirua-0.5.5-windows-x64-setup.exe) | Run it and follow the steps (no administrator rights needed) |
-| Mac (Apple Silicon), macOS 14 or later | [Notirua-0.5.5-macos-arm64.dmg](https://github.com/jerry-leem/notirua/releases/download/v0.5.5/Notirua-0.5.5-macos-arm64.dmg) | Open it and drag Notirua to Applications |
-| Intel Mac, macOS 14 or later | [Notirua-0.5.5-macos-x86_64.dmg](https://github.com/jerry-leem/notirua/releases/download/v0.5.5/Notirua-0.5.5-macos-x86_64.dmg) | Open it and drag Notirua to Applications |
-| Linux x86_64 (glibc 2.31 or later) | [Notirua-0.5.5-linux-x86_64.AppImage](https://github.com/jerry-leem/notirua/releases/download/v0.5.5/Notirua-0.5.5-linux-x86_64.AppImage) | `chmod +x` it and run it |
+| Windows 10/11 (x64) | [Notirua-0.6.0-windows-x64-setup.exe](https://github.com/jerry-leem/notirua/releases/download/v0.6.0/Notirua-0.6.0-windows-x64-setup.exe) | Run it and follow the steps (no administrator rights needed) |
+| Mac (Apple Silicon), macOS 14 or later | [Notirua-0.6.0-macos-arm64.dmg](https://github.com/jerry-leem/notirua/releases/download/v0.6.0/Notirua-0.6.0-macos-arm64.dmg) | Open it and drag Notirua to Applications |
+| Intel Mac, macOS 14 or later | [Notirua-0.6.0-macos-x86_64.dmg](https://github.com/jerry-leem/notirua/releases/download/v0.6.0/Notirua-0.6.0-macos-x86_64.dmg) | Open it and drag Notirua to Applications |
+| Linux x86_64 (glibc 2.31 or later) | [Notirua-0.6.0-linux-x86_64.AppImage](https://github.com/jerry-leem/notirua/releases/download/v0.6.0/Notirua-0.6.0-linux-x86_64.AppImage) | `chmod +x` it and run it |
 
 On macOS 14 the sheet-music engraver (LilyPond) may not start. macOS 15 or later is the tested setup.
 
@@ -523,7 +555,7 @@ right or from the menu:
 
 On macOS, right-clicking the Dock icon also offers **Open a music file…** and
 **Settings…**. The window title shows the version, for example
-`Notirua 0.5.5`.
+`Notirua 0.6.0`.
 
 ### Use the command line
 
@@ -560,7 +592,7 @@ uv run notirua cache                   # size of saved intermediate results
 uv run notirua cache --clear
 uv run notirua --lang en               # open the window in English
 uv run notirua transcribe --help       # every option
-uv run notirua --version               # notirua 0.5.5
+uv run notirua --version               # notirua 0.6.0
 ```
 
 More `transcribe` options: `--to-key "G major"`, `--guitar-tuning drop_d`,
@@ -584,7 +616,7 @@ To remove Notirua, delete the app (or the cloned folder) and these folders.
 ### Version
 
 Notirua uses [Semantic Versioning](https://semver.org): `MAJOR.MINOR.PATCH`.
-The current version is **0.5.5**. While the major version is 0, a minor
+The current version is **0.6.0**. While the major version is 0, a minor
 release may still change behavior. `notirua --version` and the window title
 show it, and the [releases page](https://github.com/jerry-leem/notirua/releases)
 lists what changed in each release.

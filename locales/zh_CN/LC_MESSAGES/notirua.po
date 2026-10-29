@@ -92,8 +92,8 @@ msgstr "每次都询问"
 msgid "Audio from YouTube"
 msgstr "来自 YouTube 的音频"
 
-msgid "Audio or video file to read, or a YouTube video link."
-msgstr "要读取的音频或视频文件，或 YouTube 视频链接。"
+msgid "Audio or video file to read, or a YouTube or TikTok video link."
+msgstr "要读取的音频或视频文件，或 YouTube、TikTok 视频链接。"
 
 msgid "Audio or video file to read."
 msgstr "要读取的音频或视频文件。"
@@ -1453,3 +1453,51 @@ msgstr "{value} 不是整数。"
 msgid "♩ = {bpm} · {key}"
 msgstr "♩ = {bpm} · {key}"
 
+msgid "Could not reach TikTok."
+msgstr "无法连接到 TikTok。"
+
+msgid "Downloading the video"
+msgstr "正在下载视频"
+
+#, python-brace-format
+msgid "Downloading the video: {percent}%"
+msgstr "正在下载视频：{percent}%"
+
+msgid "Downloading the video…"
+msgstr "正在下载视频…"
+
+msgid "Getting the video failed."
+msgstr "获取视频失败。"
+
+msgid "Getting the video from TikTok"
+msgstr "从 TikTok 获取视频"
+
+msgid "Link status"
+msgstr "链接状态"
+
+msgid "Make sheet music from the video"
+msgstr "用视频制作乐谱"
+
+msgid "Open the link in a browser to check it plays, or try a public video."
+msgstr "请在浏览器中打开链接确认能播放，或试试公开的视频。"
+
+msgid "Or use a TikTok link"
+msgstr "或使用 TikTok 链接"
+
+msgid "Paste a TikTok video link"
+msgstr "粘贴 TikTok 视频链接"
+
+msgid "The video could not be downloaded."
+msgstr "无法下载视频。"
+
+msgid "The video is private, removed, or not available in your region."
+msgstr "该视频是私密的、已被删除，或在你所在的地区不可用。"
+
+msgid "This is not a TikTok video link."
+msgstr "这不是 TikTok 视频链接。"
+
+msgid "TikTok video link"
+msgstr "TikTok 视频链接"
+
+msgid "Copy the link from TikTok’s Share menu, for example https://www.tiktok.com/@name/video/123."
+msgstr "请从 TikTok 的分享菜单复制链接，例如 https://www.tiktok.com/@name/video/123。"

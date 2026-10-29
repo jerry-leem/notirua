@@ -97,8 +97,8 @@ msgstr "매번 묻기"
 msgid "Audio from YouTube"
 msgstr "유튜브에서 받은 음원"
 
-msgid "Audio or video file to read, or a YouTube video link."
-msgstr "읽을 오디오·동영상 파일 또는 유튜브 영상 링크."
+msgid "Audio or video file to read, or a YouTube or TikTok video link."
+msgstr "읽을 음악·동영상 파일 또는 YouTube·TikTok 동영상 링크."
 
 msgid "Audio or video file to read."
 msgstr "읽을 음악 또는 동영상 파일."
@@ -1492,3 +1492,51 @@ msgstr "♩ = {bpm} · {key}"
 #~ msgid "Save audio and make sheet music"
 #~ msgstr "음원 저장 후 악보 만들기"
 
+msgid "Could not reach TikTok."
+msgstr "TikTok에 연결하지 못했습니다."
+
+msgid "Downloading the video"
+msgstr "동영상을 내려받는 중"
+
+#, python-brace-format
+msgid "Downloading the video: {percent}%"
+msgstr "동영상을 내려받는 중: {percent}%"
+
+msgid "Downloading the video…"
+msgstr "동영상을 내려받는 중…"
+
+msgid "Getting the video failed."
+msgstr "동영상을 가져오지 못했습니다."
+
+msgid "Getting the video from TikTok"
+msgstr "TikTok에서 동영상 가져오기"
+
+msgid "Link status"
+msgstr "링크 상태"
+
+msgid "Make sheet music from the video"
+msgstr "동영상으로 악보 만들기"
+
+msgid "Open the link in a browser to check it plays, or try a public video."
+msgstr "브라우저에서 링크가 열리는지 확인하거나 공개된 동영상을 써 보세요."
+
+msgid "Or use a TikTok link"
+msgstr "또는 TikTok 링크 사용"
+
+msgid "Paste a TikTok video link"
+msgstr "TikTok 동영상 링크 붙여넣기"
+
+msgid "The video could not be downloaded."
+msgstr "동영상을 내려받지 못했습니다."
+
+msgid "The video is private, removed, or not available in your region."
+msgstr "비공개이거나 삭제된 동영상이거나, 내 지역에서는 볼 수 없는 동영상입니다."
+
+msgid "This is not a TikTok video link."
+msgstr "TikTok 동영상 링크가 아닙니다."
+
+msgid "TikTok video link"
+msgstr "TikTok 동영상 링크"
+
+msgid "Copy the link from TikTok’s Share menu, for example https://www.tiktok.com/@name/video/123."
+msgstr "TikTok의 공유 메뉴에서 링크를 복사하세요. 예: https://www.tiktok.com/@name/video/123"

@@ -23,7 +23,7 @@ unlicensed components are never included (SPEC 7.4).
 | platformdirs | 4.x | MIT | https://github.com/tox-dev/platformdirs |
 | Babel | 2.18 | BSD-3-Clause | https://babel.pocoo.org |
 | music21 | 10.x | BSD-3-Clause | https://github.com/cuthbertLab/music21 |
-| yt-dlp (reads YouTube links; 0.5.0) | 2026.8.19 | Unlicense (`licenses/yt-dlp/`) | https://github.com/yt-dlp/yt-dlp |
+| yt-dlp (reads YouTube links, 0.5.0; downloads TikTok videos, 0.6.0) | 2026.8.19 | Unlicense (`licenses/yt-dlp/`) | https://github.com/yt-dlp/yt-dlp |
 | yt-dlp-ejs (scripts that answer YouTube's player check) | 0.8.0 | Unlicense, MIT, and ISC (`licenses/yt-dlp-ejs/`) | https://github.com/yt-dlp/ejs |
 | certifi (CA certificates for HTTPS) | 2026.7 | MPL-2.0 (`licenses/certifi/`) | https://github.com/certifi/python-certifi |
 | PySide6 / Qt 6 (Essentials + QtPdf from Addons) | 6.9 | LGPL-3.0 (dynamically linked) | https://www.qt.io/qt-for-python |
